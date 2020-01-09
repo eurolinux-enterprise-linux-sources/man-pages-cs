@@ -1,0 +1,29 @@
+.TH DREM 3  "5.ledna 1997" "" "Linux - příručka programátora"
+.do hla cs
+.do hpf hyphen.cs
+.SH JMÉNO
+drem \- desetinný zbytek po dělení
+.SH SYNTAXE
+.nf
+.B #include <math.h>
+.sp
+.BI "double drem(double " x ", double " y );
+.fi
+.SH POPIS
+Funkce \fBdrem()\fP počítá zbytek po dělení čísla \fIx\fP číslem
+\fIy\fP. Vrácená hodnota je \fIx\fP - \fIn\fP * \fIy\fP, kde \fIn\fP
+je číslo \fIx\fP / \fIy\fP, zaokrouhlené na nejbližší celé číslo.
+Je-li toto číslo 1/2, je zaokrouhleno na sudé číslo.
+.SH NÁVRATOVÁ HODNOTA
+Funkce \fBdrem()\fP vrací zbytek, kromě případu, kdy je 
+\fIy\fP rovno 0, kdy funkce selže a je nastavena proměnná \fIerrno\fP .
+.SH CHYBY
+.TP
+.B EDOM
+Dělitel \fIy\fP je nula.
+.SH SPLŇUJE STANDARDY
+BSD 4.3
+.SH DALŠÍ INFORMACE
+.BR fmod (3)
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

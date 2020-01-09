@@ -1,0 +1,98 @@
+.TH BIND 2 "28. března 1997" "Linux 0.99.11" "Linux - příručka programátora"
+.do hla cs
+.do hpf hyphen.cs
+.SH JMÉNO
+bind \- přiřazení adresy (jména) soketu
+.SH SYNTAXE
+.B #include <sys/types.h>
+.br
+.B #include <sys/socket.h>
+.sp
+.BI "int bind(int " sockfd ", struct sockaddr *" my_addr ", int " addrlen );
+.SH POPIS
+.B bind
+přiřadí soketu
+.IR sockfd ,
+lokální adresu
+.IR my_addr .
+.I my_addr
+je
+.I addrlen
+bajtů dlouhá. Tradičně je tato operace nazývána "přiřazení jména soketu"
+(když je soket vytvořen voláním
+.BR socket (2),
+tak existuje v jmenném prostoru (rodině adres), ale není mu přiřazeno
+jméno.)
+.SH POZNÁMKY
+Přiřazení jména v doméně UNIX vytvoří soket na souborovém systému, který
+musí být smazán, jestliže již nebude dále využíván (voláním
+.BR unlink (2)).
+
+Pravidla používaná při přiřazování jména soketu závisí na komunikační
+doméně (jmenném prostoru). Bližší informace naleznete v sekci 4 manuálových
+stránek.
+.SH NÁVRATOVÁ HODNOTA
+Je-li volání úspěšné, je vrácena 0. Při chybě je vrácena \-1 a proměnná
+.I errno
+je nastavena.
+.SH CHYBY
+.TP 0.8i
+.B EBADF
+.I sockfd
+není platným deskriptorem.
+.TP
+.B EINVAL
+Soket už má přidělenu adresu.
+.TP
+.B EACCES
+Adresa je chráněna a uživatel není super uživatelem.
+.TP
+.B ENOTSOCK
+Argument je souborovým deskriptorem, není to soket.
+.PP
+Následující chyby jsou specifické pro UNIXovou doménu
+(AF_UNIX):
+.TP 0.8i
+.B EINVAL
+Adresa
+.I addr_len
+je špatná nebo soket nebyl ve formátu
+.B AF_UNIX .
+.TP
+.B EROFS
+I-uzel soketu se má nacházet na souborovém systému určeném pouze pro čtení.
+.TP
+.B EFAULT
+.I my_addr
+ukazuje mimo přístupný adresový prostor.
+.TP
+.B ENAMETOOLONG
+.I my_addr
+je příliš dlouhá.
+.TP
+.B ENOENT
+Soubor neexistuje.
+.TP
+.B ENOMEM
+Nedostatek paměti v jádře.
+.TP
+.B ENOTDIR
+Část cesty není adresář.
+.TP
+.B EACCES
+Nemáte právo k přístupu do části cesty.
+.TP
+.B ELOOP
+.I my_addr
+obsahuje kruhový odkaz (např. přes symbolický odkaz)
+.SH SPLŇUJE STANDARDY
+SVr4, 4.4BSD (funkce
+.B bind
+se poprvé objevila v BSD 4.2).  SVr4 dokumentuje další chyby:
+EADDRNOTAVAIL, EADDRINUSE, ENOSR, a chyby specifické pro UNIXovou doménu 
+EIO, EISDIR a EROFS.
+.SH DALŠÍ INFORMACE
+.BR accept "(2), " connect "(2), " listen "(2), "
+.BR socket "(2), " getsockname (2)
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

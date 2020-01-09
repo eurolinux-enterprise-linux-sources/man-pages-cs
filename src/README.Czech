@@ -1,0 +1,13 @@
+Tento balíček obsahuje české manuálové stránky pro Linux.
+
+Mnoho manuálových stránek ještě není přeloženo, proto uvítáme, budete-li
+zasílat další přeložené stránky na adresu tropikhajma@gmail.com.
+Archív nejnovějších českých manuálových stránek je dostupný na:
+http://sweb.cz/tropikhajma/man-pages-cs/index.html
+
+Všechny stránky jsou nyní ve formátu utf-8 a rozděleny podle původu.
+V některých distribucích bude asi nutné překódovat je do ISO-8859-2.
+Manuálové stránky z balíčku man-pages-cs-0.16 jsou přiloženy.
+
+Copyrights: These man pages come under various copyrights. All are freely
+distributable when the nroff source is included.

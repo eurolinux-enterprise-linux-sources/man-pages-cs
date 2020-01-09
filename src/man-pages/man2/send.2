@@ -1,0 +1,118 @@
+.TH SEND 2 "2. července 1997" "BSD Man Page" "Linux - příručka programátora"
+.do hla cs
+.do hpf hyphen.cs
+.SH JMÉNO
+send, sendto, sendmsg \- pošli zprávu do soketu
+.SH SYNTAXE
+.B #include <sys/types.h>
+.br
+.B #include <sys/socket.h>
+.sp 2
+.BI "int send(int " s ", const void *" msg ", int " len ","
+.BI "unsigned int " flags );
+.sp
+.BI "int sendto(int " s ", const void *" msg ", int " len ","
+.BI "unsigned int " flags ", const struct sockaddr *" to ", int " tolen );
+.sp
+.BI "int sendmsg(int " s ", const struct msghdr *" msg ","
+.BI "unsigned int " flags );
+.SH POPIS
+.BR Send ,
+.BR sendto ,
+a
+.B sendmsg
+se používají k zasílání zpráv do jiných soketů.
+.B Send
+může být použito pouze, je-li soket
+.I spojený
+zatímco
+.B sendto
+a
+.B sendmsg
+mohou být použity kdykoliv.
+
+Adresa cílového soketu je zadána parametrem
+.I to
+a
+.I tolen
+specifikuje jeho velikost. Adresa zprávy je zadána v argumentu
+.IR len .
+Je-li zpráva příliš dlouhá, aby mola být poslána atomicky, je vrácena chyba
+.B EMSGSIZE
+a zpráva není poslána.
+
+Funkce send neposkytuje žádnou možnost indikace správného doručení.
+Lokálně detekované chyby jsou indikovány návratovou hodnotou \-1.
+
+Pokud není k dispozici žádné volné místo pro zprávu před jejím přenosem,
+.B send
+se normálně zablokuje, pokud soket není v neblokujícím módu.
+Volání
+.BR select (2)
+může být použito k zjištění, je-li možno poslat další data.
+
+Parametr
+.I flags
+může obsahovat jednu nebo více z následujících hodnot:
+
+.RS
+.nf
+#define	MSG_OOB        0x1  /* zpracuj out-of-band data */
+#define	MSG_DONTROUTE  0x4  /* obejdi routing, použij přímé rozhraní*/
+.fi
+.RE
+
+Flag
+.B MSG_OOB
+je použit pro posílání 
+.I out-of-band
+dat do soketu, který to podporuje (např.
+.BR SOCK_STREAM );
+použitý protokol musí také podporovat
+.I out-of-band
+data.
+.B MSG_DONTROUTE
+je normálně používáno pouze diagnostickými a routovacími programy.
+
+V
+.BR recv (2)
+je obsažen popis struktury
+.I msghdr
+.SH NÁVRATOVÁ HODNOTA
+Volání vrací počet poslaných znaků, nebo \-1 pokud se objevila chyba.
+.SH CHYBY
+.TP 0.8i
+.B EBADF
+Byl specifikován neplatný deskriptor.
+.TP
+.B ENOTSOCK
+Argument
+.I s
+není soket
+.TP
+.B EFAULT
+Parametr je v neplatné části adresového prostoru procesu.
+.TP
+.B EMSGSIZE
+Soket požaduje, aby tato zpráva byla poslána atomicky, ale velikost této
+zprávy toto znemožňuje.
+.TP
+.B EWOULDBLOCK
+Soket je označen jako neblokující a požadovaná operace by blokovala.
+.TP
+.B ENOBUFS
+Systém není schopen alokovat interní buffery. Operace může být úspěšná až
+budou buffery k dispozici.
+.TP
+.B ENOBUFS
+Výstupní fronta pro síťové rozhraní je zaplněna. To obvykle znamená, že
+rozhraní přestalo posílat, ale může to být také způsobeno občasným
+přetížením rozhraní.
+.SH SPLŇUJE STANDARDY
+4.4BSD, SVr4 (tato volání se poprvé objevila ve 4.2BSD).  SVr4
+dokumentuje další chyby EINVAL, EINTR, EMSGSIZE, ENOSR, ENOMEM.
+.SH DALŠÍ INFORMACE
+.BR fcntl "(2), " recv "(2), " select "(2), " getsockopt "(2), "
+.BR socket "(2), " write (2)
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

@@ -1,0 +1,23 @@
+.TH LABS 3  "5.ledna 1997" "GNU" "Linux - příručka programátora"
+.do hla cs
+.do hpf hyphen.cs
+.SH JMÉNO
+labs \- absolutní hodnota čísla typu long integer.
+.SH SYNTAXE
+.nf
+.B #include <stdlib.h>
+.sp
+.BI "long int labs(long int " j );
+.fi
+.SH POPIS
+Funkce \fBlabs()\fP počítá absolutní hodnotu čísla \fIj\fP typu long int.
+.SH NÁVRATOVÁ HODNOTA
+Vrací absolutní hodnotu argumentu.
+.SH SPLŇUJE STANDARDY
+SVID 3, BSD 4.3, ISO 9899
+.SH POZNÁMKY
+Absolutní hodnota nejmenšího čísla long int není definována.
+.SH DALŠÍ INFORMACE
+.BR abs "(3), " ceil "(3), " floor "(3), " fabs "(3), " rint (3) 
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

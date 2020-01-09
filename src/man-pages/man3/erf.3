@@ -1,0 +1,27 @@
+.TH ERF 3  "5.ledna 1997" "BSD" "Linux - příručka programátora"
+.do hla cs
+.do hpf hyphen.cs
+.SH JMÉNO
+erf, erfc \- chybová funkce a doplňková chybová funkce
+.SH SYNTAXE
+.nf
+.B #include <math.h>
+.sp
+.BI "double erf(double " x );
+.sp
+.BI "double erfc (double " x );
+.fi
+.SH POPIS
+Funkce \fBerf()\fP vrací hodnotu chybové funkce pro \fIx\fP; která je
+definovaná jako
+.TP
+erf(x) = 2/sqrt(pi)* integrál od 0 do x funkce exp(-t*t) dt
+.PP
+Funkce \fBerfc()\fP vrací hodnotu doplňkové chybové funkce čísla 
+\fIx\fP, která je definována jako 1.0 - erf(x).
+.SH SPLŇUJE STANDARDY
+SVID 3, BSD 4.3
+.SH DALŠÍ INFORMACE
+.BR exp (3)
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

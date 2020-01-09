@@ -1,0 +1,182 @@
+.\" Copyright Andries Brouwer, Ragnar Hojland Espinosa and A. Wik, 1998.
+.\"
+.\" This file may be copied under the conditions described
+.\" in the LDP GENERAL PUBLIC LICENSE, Version 1, September 1998
+.\" that should have been distributed together with this file.
+.\"
+.TH DU 1 1998-11 "GNU fileutils 4.0"
+.do hla cs
+.do hpf hyphen.cs
+.SH JMÉNO
+du \- odhaduje využití diskového prostoru
+.SH SYNTAXE
+.BI "du [" volby "] [" soubor... ]
+.sp
+Volby POSIX:
+.B "[\-askx] [\-\-]"
+.sp
+Volby GNU (nejkratší verze):
+.B [\-abcDhHklLmsSxX]
+.BI "[\-\-block\-size=" velikost ]
+.BI "[\-\-exclude=" vzor ]
+.BI "[\-\-max\-depth=" n ]
+.B "[\-\-help] [\-\-version] [\-\-]"
+.SH POPIS
+Příkaz
+.B du
+vypisuje množství diskového prostoru zabraného každým z parametrů
+.I soubor
+a každým jeho podadresářem.
+Zabraný diskový prostor zde znamená místo využité hierarchií souborů
+ležící pod zadaným umístěním.
+.PP
+Není-li zadán žádný argument, vypíše
+.B du
+zabraný prostor v aktuálním adresáři.
+.SH "PODROBNOSTI PRO POSIX"
+Výstup je implicitně v 512 bajtových jednotkách, pokud není použita
+volba \-k.
+.SH "PODROBNOSTI PRO GNU"
+Výstup je implicitně v 1024 bajtových jednotkách (pokud nejsou jednotky
+zvoleny), pokud není nastavena proměnná prostředí
+.BR POSIXLY_CORRECT ;
+v tom případě platí standard POSIX.
+.SH "VOLBY POSIX"
+.TP
+.B "\-a"
+Vypisuje i údaje o jednotlivých souborech, nejen o celých adresářích.
+.TP
+.B "\-k"
+Používá jednotky o velikosti 1024 bajtů místo implicitních 512 bajtů.
+.TP
+.B "\-s"
+Vypíše využití místa jen pro zadané argumenty, nikoliv pro jejich
+podadresáře.
+.TP
+.B "\-x"
+Počítá pouze místo zabrané na stejném zařízení jako je zadaný argument.
+.TP
+.B "\-\-"
+Konec seznamu voleb.
+.SH "Volby GNU"
+.TP
+.B "\-a, \-\-all"
+Vypisuje i údaje o jednotlivých souborech, nejen o adresářích.
+.TP
+.B "\-b, \-\-bytes"
+Vypisuje velikosti v bajtech.
+.TP
+.BI "\-\-block\-size=" velikost
+Vypisuje údaje v jednotkách o velikosti
+.IR velikost .
+(Nové ve file\%utils-4.0.)
+.TP
+.B "\-c, \-\-total"
+Na konci výpisu vypíše celkový součet prostoru zabraného všemi
+argumenty. Je možné použít pro zjištění celkového místa zabraného
+určenými soubory nebo adresáři.
+.TP
+.B "\-D, \-\-dereference\-args"
+Sleduje symbolické odkazy, které jsou zadány jako parametry příkazu. 
+Neovlivňuje zpracování ostatních symbolických odkazů. Užitečné pro
+zjištění místa zabraného adresáři jako je např.
+.IR /usr/tmp ,
+které jsou často symbolickými odkazy.
+.TP
+.BI "\-\-exclude=" vzor
+Při procházení vynechá podadresáře nebo soubory, které odpovídají
+.IR vzoru .
+.I vzor
+může být jakýkoliv standardní glob vzor z Bourne shellu.
+(Nové ve file\%utils-4.0.)
+.TP
+.B "\-h, \-\-human\-readable"
+Přidá ke každému údaji o velikosti písmeno, jako např.
+.B M
+pro binární megabajty.
+.TP
+.B "\-H, \-\-si"
+Stejné jako
+.BR \-h ,
+ale použijí se oficiální jednotky SI units (s násobky 1000 namísto
+1024, takže M znamená 1000000 namísto 1048576).
+(Nové ve fileutils-4.0.)
+.TP
+.B "\-k, \-\-kilobytes"
+Vypisuje údaje v KiB (binární kilobajt, 1024 bajtů)
+.TP
+.B "\-l, \-\-count-links"
+Počítá velikosti všech souborů, i když se jedná o znovu počítané
+pevné odkazy.
+.TP
+.B "\-L, \-\-dereference"
+Sleduje symbolické odkazy (započítává prostor obsazený soubory nebo
+adresáři, na které ukazují symbolické odkazy, místo prostoru obsazeného
+pouhým odkazem).
+.TP
+.B "\-m, \-\-megabytes"
+Vypíše velikosti v MiB (binární megabajt, 1048576 bajtů).
+.TP
+.BI "\-\-max\-depth=" n
+Vypíše údaje jen pro adresáře (nebo soubory, je-li zadána volba
+.B \-a
+), které jsou na
+.I n
+nebo vyšší úrovni pod zadaným parametrem;
+.BI "\-\-max\-depth=" 0
+má stejný význam jako volba
+.BR \-s .
+(Nové ve file\%utils-4.0.)
+.TP
+.B "\-s, \-\-summarize"
+Vypisuje pouze celkové součty pro každý parametr.
+.TP
+.B "\-S, \-\-separate-dirs"
+Počítá velikost každého adresáře zvlášť, bez prostoru obsazeného
+podadresáři.
+.TP
+.B "\-x, \-\-one-file-system"
+Vynechá adresáře, které jsou na jiném svazku, než na tom, na
+kterém se hledání pro příslušný parametr začalo.
+.TP
+.BI "\-X " "file, " "\-\-exclude\-from=" "soubor"
+Podobné
+.BR \-\-exclude ,
+ale vzory pro vyloučení jsou načteny ze zadaného
+.IR souboru .
+Na každé řádce je vždy jen jeden vzor. Pokud je
+.I soubor
+určen jako `\-', jsou vzory čteny ze standardního vstupu.
+(Nové vefile\%utils-4.0.)
+.SH "STANDARDNÍ VOLBY GNU"
+.TP
+.B "\-\-help"
+Vypíše návod k použití na standardní výstup a bezchybně skončí.
+.TP
+.B "\-\-version"
+Vypíše číslo verze na standardní výstup a bezchybně skončí.
+.TP
+.B "\-\-"
+Konec seznamu voleb.
+.SH CHYBY
+V důsledku chyby v HP-UX, se na BSD systémech vypisuje pro soubory
+připojené pomocí NFS ze systémů HP-UX polovina správné hodnoty.
+Naopak, příkaz
+.B du
+na HP-UX systémech vypisuje dvojnásobek správných hodnot pro soubory
+připojené pomocí NFS z BSD systémů.
+.SH PROSTŘEDÍ
+Proměnná POSIXLY_CORRECT určuje použitou jednotku.
+Pokud není nastavena a proměnná BLOCKSIZE má hodnotu začínající na
+`HUMAN', chová se stejně jako při volbě \-h, pokud ovšem není
+zadána volba \-k nebo \-m.
+Proměnné LANG, LC_ALL, LC_CTYPE a LC_MESSAGES mají obvyklý význam.
+.SH "SPLŇUJE STANDARDY"
+POSIX 1003.2
+.SH POZNÁMKY
+Tato stránka popisuje
+.B du
+z balíčku fileutils-4.0;
+jiné verze se mohou lehce lišit.
+.\" Přeloženo z:man-pages-2.01
+.\" MD5 originálu:6c17a65bc70a3332d54205ff4ebf92b4

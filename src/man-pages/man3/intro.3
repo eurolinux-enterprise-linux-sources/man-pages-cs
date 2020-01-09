@@ -1,0 +1,36 @@
+.TH ÚVOD 3 "26.prosince 1996" "Linux" "Linux - příručka programátora"
+.do hla cs
+.do hpf hyphen.cs
+.SH JMÉNO
+intro \- Úvod do knihovních funkcí
+.SH POPIS
+Tato kapitolka popisuje všechny knihovní funkce kromě těch, které byly
+popsány v kapitole 2 (volání jádra).
+V této kapitolce jsou různé skupiny funkcí, které jsou odlišeny písmenem,
+které je přidáno za číslo kapitolky:
+.IP (3C)
+Tyto funkce, funkce z kapitolky 2 a z kapitolky 3S, jsou obsaženy v
+standardní knihovně jazyka C, která je standardně používána kompilátorem
+.BR cc (1)
+.IP (3S)
+Tyto funkce jsou součástí knihovny 
+.BR stdio (3S).
+Jsou obsaženy ve standardní knihovně jazyka C - libc.
+.IP (3M)
+Tyto funkce jsou obsaženy v matematické knihovně libm. Tato knihovna je
+standardně používána překladačem
+.BR f77 (1).
+Kompilátor jazyka C
+.BR cc (1)
+potřebuje pro její použití volbu \fI\-lm\fP.
+.IP (3F)
+Tyto funkce jsou součástí knihovny jazyka FORTRAN - libF77. Chcete-li ji
+použít, nemusíte použít žádný speciální přepínač.
+.IP (3X)
+Různé jiné knihovní funkce. Manuálové stránky obsahují i jména knihoven v
+nichž jsou obsaženy.
+.SH AUTOŘI
+Autory a podmínky pro šíření a kopírování najdete v záhlaví každé manuálové
+stránky. Všimněte si, že se mohou stránku od stránky lišit.
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

@@ -1,0 +1,153 @@
+.\" t
+.\" (The preceding line is a note to broken versions of man to tell
+.\" them to pre-process this man page with tbl)
+.\" Man page for kill.
+.\" Licensed under version 2 of the GNU General Public License.
+.\" Written by Albert Cahalan; converted to a man page by
+.\" Michael K. Johnson
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH KILL 1 "21.listopad 1999" Linux "Linux \- Příručka uživatele"
+.SH JMÉNO
+kill \- posílá procesu signál
+
+.SH POUŽITÍ
+.TS
+l l.
+kill PID ...	Pošle SIGTERM všem zadaným procesům (\fIPID\fP = Process ID; číslo procesu).
+
+kill \-signál PID ...	Pošle \fIsignál\fP všem zadaným procesům. 
+
+kill \-signál PID ...	Pošle \fIsignál\fP všem zadaným procesům. 
+
+kill \-l	Vypíše jména všech signálů. 
+
+kill \-L	Vypíše jména všech signálů v přehledné tabulce. 
+
+kill \-l signál	Vypíše jméno \fIsignálu\fP. 
+
+kill \-V,\-\-version	Vypíše verzi programu.
+
+.TE
+
+.SH POPIS
+Implicitní signál pro kill je TERM. K vypsání možných signálů lze
+použít \-l nebo \-L. Asi nejužitečnější signály jsou HUP, INT, KILL,
+STOP, CONT a 0.  Signály mohou být specifikovány třemi různými
+způsoby: \-9 \-SIGKILL \-KILL.  Záporné hodnoty PID mohou být použity k
+vybrání celé skupiny procesů; viz sloupec PGID ve výstupu programu
+ps(1). PID \-1 má speciální význam; znamená všechny procesy kromě
+samotného kill a init(8).
+
+.SH SIGNÁLY
+Pro práci s programem kill lze použít níže uvedené signály.  Pokud
+jsou konstantní, je uvedeno číslo a reakce na signál
+
+.TS
+lB rB lB lB
+lfCW r l l.
+Jméno	Číslo	Reakce	Popis
+.TH
+0	0	n/a	návratový kód signalizuje, zda byl vyslán sigál
+
+ALRM	14	exit
+
+HUP	1	exit
+
+INT	2	exit
+
+KILL	9	exit	tento signál nemůže být blokován
+
+PIPE	13	exit
+
+POLL		exit
+PROF		exit
+TERM	15	exit
+USR1		exit
+USR2		exit
+VTALRM		exit
+STKFLT		exit	nemusí být implementováno
+
+PWR		ignore	na některých systémech může ukončovat
+
+WINCH		ignore
+CHLD		ignore
+URG		ignore
+TSTP		stop	může interagovat s shellem
+
+TTIN		stop	může interagovat s shellem
+
+TTOU		stop	může interagovat s shellem
+
+STOP		stop	tento signál nemůže být blokován
+
+CONT		restart	pokud je proces zastaven, pokračuje, jinak je ignorován
+
+ABRT	6	core
+
+FPE	8	core
+
+ILL	4	core
+
+QUIT	3	core
+SEGV	11	core
+TRAP	5	core
+SYS		core	nemusí být implementováno
+
+EMT		core	nemusí být implementováno
+
+BUS		core	výpis paměti může selhat
+
+XCPU		core	výpis paměti může selhat
+
+XFSZ		core	výpis paměti může selhat
+
+.TE
+
+.SH POZNÁMKY
+Používaný shell může mít vlastní zabudovaný příkaz kill. Aby se
+vyřešil konflikt, je třeba zde popsaný program spouštět jako
+/bin/kill.
+
+.SH PŘÍKLADY
+
+.SS "kill \-9 \-1"
+.nf
+Zabije všechny procesy, které může uživatel zabít.
+
+.fi
+.PP
+.SS "kill \-l 11"
+.nf
+Přeloží číslo 11 na odpovídající jméno signálu.
+
+.fi
+.PP
+.SS "kill \-L"
+.nf
+Vypíše dostupné signály ve formě tabulky.
+
+.fi
+.PP
+.SS "kill 123 543 2341 3453"
+.nf
+Pošle implicitní signál, SIGTERM, všem zadaným procesům.
+.fi
+.PP
+.SH "DALŠÍ INFORMACE"
+pkill(1) skill(1) kill(2) renice(1) nice(1) signal(7) killall(1)
+
+.SH STANDARDY
+Tento příkaz vyhovuje příslušným standardům. Přepínač \-L je
+dostupný pouze v Linuxu.
+
+.SH AUTOR
+Albert Cahalan <albert@users.sf.net> napsal kill v roce 1999, aby
+nahradil kill z bsdutils, který nevyhovoval standardům. Kill z util\-linux
+by měl také pracovat správně.
+
+Chyby týkající se programu prosím zasílejte na
+<procps\-feedback@lists.sf.net>

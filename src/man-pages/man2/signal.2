@@ -1,0 +1,84 @@
+.TH SIGNAL 2 "18. února 1997" "Linux 2.0" "Linux \- příručka Programátora"
+.do hla cs
+.do hpf hyphen.cs
+
+.SH JMÉNO
+signal \- práce se signály v ANSI C
+
+.SH SYNTAXE
+.B #include <signal.h>
+.sp 2
+.BI "void (*signal(int " signum ", void (*" handler ")(int)))(int);"
+
+.SH POPIS
+Systémové volání
+.B signal
+instaluje novou obslužnou funkci pro signál s číslem
+.I signum.
+Obsluha signálu je nastavena na
+.I handler,
+což může být uživatelsky definovaná funkce, nebo jedna z následujících konstant:
+.RS
+.TP
+.B SIG_IGN
+Signál bude ignorován.
+.TP
+.B SIG_DFL
+Nastaví se standardní obsluha signálu.
+.RE
+.PP
+Obslužná funkce dostane při zavolání jako parametr číslo signálu. To umožňuje
+použít jednu obslužnou funkci pro více signálů.
+
+.SH "NÁVRATOVÁ HODNOTA"
+Funkce
+.B signal
+vrací předchozí hodnotu obsluhy signálu, nebo 
+.B SIG_ERR ","
+nastane-li chyba.
+.SH POZNÁMKY
+Nelze nastavit obsluhu signálů
+.B SIGKILL
+a
+.BR SIGSTOP .
+.PP
+V Linuxu se na rozdíl od systémů BSD obsluha signálu vrací
+při příchodu signálu na standardní hodnotu.
+Když ale použijete
+.B "#include <bsd/signal.h>"
+místo
+.B "<signal.h>" ","
+je funkce
+.B signal
+předefinována na
+.B __bsd_signal
+a chová se jako v BSD.
+Obě verze funkce
+.B signal
+jsou knihovní funkce, které používají systémové volání
+.BR sigaction (2).
+.PP
+Není\-li Vám jasná syntaxe uvedená na začátku této manuálové stránky,
+možná Vám pomůže tento ekvivalentní zápis:
+.PP
+typedef void (*sighandler_t)(int);
+.br
+.BI "sighandler_t signal(int " signum ", sighandler_t " handler );
+.PP
+Podle normy POSIX není definováno chování procesu poté, co
+ignoruje signál SIGFPE, SIGILL, nebo SIGSEGV, který nebyl generován
+funkcemi \fIkill()\fP nebo \fIraise()\fP.
+Celočíselné dělení nulou dává nedefinovaný výsledek a
+na některých architekturách generuje signál SIGFPE.
+Ignorování tohoto signálu může způsobit zacyklení procesu.
+
+.SH "SPLŇUJE STANDARDY"
+ANSI C
+
+.SH "DALŠÍ INFORMACE"
+.BR kill "(1), " kill "(2), " killpg "(2), " pause "(2), " raise "(3), "
+.BR sigaction "(2), " signal "(7), " sigsetops "(3), " sigvec (2),
+.BR alarm (2).
+
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

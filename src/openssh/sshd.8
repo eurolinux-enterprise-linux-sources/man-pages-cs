@@ -1,0 +1,1182 @@
+.\"  -*- nroff -*-
+.\"
+.\" sshd.8.in
+.\"
+.\" Author: Tatu Ylonen <ylo@cs.hut.fi>
+.\"
+.\" Copyright (c) 1995 Tatu Ylonen <ylo@cs.hut.fi>, Espoo, Finland
+.\"                    All rights reserved
+.\"
+.\" Created: Sat Apr 22 21:55:14 1995 ylo
+.\"
+.\" $Id: sshd.8.in,v 1.21 1998/09/25 05:06:20 kolar Exp $
+.\" $Log: sshd.8.in,v $
+.\" Translation into Czech 1998/09/25 05:06:20  kolar
+.\" <Petr.Kolar@vslib.cz>
+.\"
+.\" Revision 1.21  1998/07/08 00:41:22  kivinen
+.\" 	Changed to do similar commercial #ifdef processing than other
+.\" 	files.
+.\"
+.\" Revision 1.20  1998/06/11 00:11:47  kivinen
+.\" 	Documented Allow/DenyUsers user@host format.
+.\"
+.\" Revision 1.19  1998/05/23  20:38:47  kivinen
+.\" 	Documented AccountExpireWarningDays, AllowSHosts, DenySHosts,
+.\" 	ForcedEmptyPasswdChange, ForcedPasswdChange, and
+.\" 	PasswordExpireWarningDays options.
+.\"
+.\" Revision 1.18  1998/05/04  13:37:32  kivinen
+.\" 	Fixed layout of authorized key options.
+.\"
+.\" Revision 1.17  1998/04/30 03:58:29  kivinen
+.\" 	Documented -V option.
+.\"
+.\" Revision 1.16  1998/03/27 17:05:18  kivinen
+.\" 	Documented IgnoreRootRhosts option.
+.\"
+.\" Revision 1.15  1998/01/03 06:42:24  kivinen
+.\" 	Added allow/deny groups option documentation..
+.\"
+.\" Revision 1.14  1998/01/02 06:37:48  kivinen
+.\" 	Sorted options. Added CheckMail and XAuthLocation options.
+.\" 	Added {Allow,Deny}Forwarding{Port,To} options to
+.\" 	authorized_keys file. Added SSH WITH TCP WRAPPERS section.
+.\"
+.\" Revision 1.13  1997/06/04 13:53:07  kivinen
+.\" 	Added .TP before DenyUsers.
+.\"
+.\" Revision 1.12  1997/05/13 22:30:47  kivinen
+.\" 	Fixed default value of AllowTcpForwarding.
+.\"
+.\" Revision 1.11  1997/05/08 03:06:01  kivinen
+.\" 	Added \ before all '-characters (it is troff command if it is
+.\" 	in the beginning of line).
+.\"
+.\" Revision 1.10  1997/04/27 21:50:16  kivinen
+.\" 	Added F-SECURE stuff. Added {Allow,Deny}Forwarding{To,Port}
+.\" 	documentation, added {Allow,Deny}Users documentation from
+.\" 	Steve Kann <stevek@SteveK.COM>.
+.\"
+.\" Revision 1.9  1997/03/27 03:16:41  kivinen
+.\" 	Added kerberos patches from Glenn Machin.
+.\" 	Added USELOGIN patches from Brian Cully.
+.\"
+.\" Revision 1.8  1997/03/26 05:29:08  kivinen
+.\" 	Documented IdleTimeout option and idle-timeout setting in
+.\" 	authorized_keys.
+.\"
+.\" Revision 1.7  1997/03/25 05:43:18  kivinen
+.\" 	Updated. Changed ylo's email to @ssh.fi.
+.\"
+.\" Revision 1.6  1997/03/19 17:45:53  kivinen
+.\" 	Added TIS authentication code from Andre April
+.\" 	<Andre.April@cediti.be>.
+.\"
+.\" Revision 1.5  1996/11/27 15:45:38  ttsalo
+.\"     Added X11DisplayOffset-option
+.\"
+.\" Revision 1.4  1996/11/12 15:56:19  ttsalo
+.\"       Fixed a typo
+.\"
+.\" Revision 1.3  1996/10/29 22:47:36  kivinen
+.\" 	Documented ListenAddress.
+.\"
+.\" Revision 1.2  1996/08/13 00:25:15  ylo
+.\" 	Documented that $HOME/.ssh/rc is run with user's shell,
+.\" 	/etc/sshrc with /bin/sh.
+.\"
+.\" Revision 1.1.1.1  1996/02/18 21:38:13  ylo
+.\" 	Imported ssh-1.2.13.
+.\"
+.\" Revision 1.10  1995/10/02  01:31:37  ylo
+.\" 	Make substitutions in configure.
+.\"
+.\" Revision 1.9  1995/09/27  02:17:12  ylo
+.\" 	Added a section on what happens at login.
+.\" 	Other additions.
+.\"
+.\" Revision 1.8  1995/09/22  22:21:36  ylo
+.\" 	Added username and netgroups for hosts.equiv and rhosts.
+.\"
+.\" Revision 1.7  1995/09/21  17:14:38  ylo
+.\" 	Added /etc/environment and IgnoreRhosts.  Other minor fixes.
+.\"
+.\" Revision 1.6  1995/08/31  09:24:31  ylo
+.\" 	Minor cleanup.
+.\"
+.\" Revision 1.5  1995/08/29  22:31:25  ylo
+.\" 	Improved manual pages from Andrew Macpherson.
+.\"
+.\" Revision 1.4  1995/08/21  23:29:52  ylo
+.\" 	Added documentation for the configuration file.
+.\"
+.\" Revision 1.3  1995/08/18  22:57:27  ylo
+.\" 	Removed obsolete XXX stuff.
+.\"
+.\" Revision 1.2  1995/07/13  01:36:06  ylo
+.\" 	Removed "Last modified" header.
+.\" 	Added cvs log.
+.\"
+.\" $Endlog$
+.\"
+.\"
+.\"
+.\"
+.\" #ifndef F_SECURE_COMMERCIAL
+.TH SSHD 8 "8. listopadu 1995" "SSH" "SSH"
+.do hla cs
+.do hpf hyphen.cs
+.\" #endif F_SECURE_COMMERCIAL
+
+.SH JMÉNO
+sshd \- secure shell démon
+
+.SH POUŽITÍ
+.na
+.B sshd
+[\c
+.BI \-b \ bitů\fR\c
+]
+[\c
+.B \-d \c
+]
+[\c
+.BI \-f \ konfig_soubor\fR\c
+]
+[\c
+.BI \-g \ login_grace_time\fR\c
+]
+[\c
+.BI \-h \ host_key_file\fR\c
+]
+[\c
+.B \-i \c
+]
+[\c
+.BI \-k \ key_gen_time\fR\c
+]
+[\c
+.BI \-p \ port\fR\c
+]
+[\c
+.B \-q \c
+]
+[\c
+.BI \-V \ version\fR\c
+]
+.ad
+
+.SH POPIS
+.LP
+Program
+.B sshd 
+(secure shell démon) je server pro 
+.BR ssh ".
+Program
+.B ssh
+nahrazuje programy rlogin a rsh a zajišťuje bezpečnou
+šifrovanou komunikaci mezi dvěma nedůvěryhodnými počítači přes
+nezabezpečenou síť. Programy ssh a sshd jsou navrženy tak, aby
+jejich instalace a používání bylo co nejjednodušší.
+.LP
+.B Sshd
+je démon, který vyřizuje spojení klientů. Normálně je
+startován při bootu ze souboru
+.I /etc/rc.local
+nebo jeho ekvivalentu. Pro každé přicházející spojení vytváří
+nový podproces. Tyto procesy-potomci zajišťují výměnu klíčů,
+šifrování, autentizaci, provedení příkazů, a výměnu dat.
+.LP
+Sshd pracuje takto: Každý počítač má svůj vlastní RSA klíč
+(normálně 1024 bitový), který je používán pro identifikaci
+počítače. Navíc když démon startuje, vygeneruje RSA klíč
+serveru (normálně 768 bitový). Tento klíč není nikdy ukládán
+na disk, a jestliže je používán, je znovu generován každou
+hodinu.
+.LP
+Kdykoli se klient připojí na démona, démon pošle klientovi
+svůj veřejný klíč počítače. Klient jej porovná se svou
+databází, aby ověřil, že nebyl změněn. Potom vygeneruje 256
+bitové náhodné číslo, které zašifruje použitím obou výše
+zmíněných klíčů a výsledek pošle na server. Obě strany
+potom začnou používat toto náhodné číslo jako session klíč
+pro šifrování veškeré další komunikace konvenční šifrou
+v rámci celé session. V současnosti jsou podporovány šifry
+.BR \s-1IDEA\s0 ",
+.BR \s-1DES\s0 ",
+.BR \s-1\&3DES\s0 ",
+.BR \s-1ARCFOUR\s0 ", a
+.B \s-1TSS\s0
+(rychlý doma navržený algoritmus). Implicitně je použita šifra
+.BR \s-1IDEA\s0 .
+Klient vybere jeden z algoritmů podporovaných serverem.
+.LP
+Potom server a klient zahájí autentizační dialog. Klient
+se pokusí autentizovat pomocí \|\s+2.\s0rhosts autentizace,
+\|\s+2.\s0rhosts autentizace kombinované s RSA autentizací
+počítače, RSA autentizace výzva-odpověď, TIS autentizace,
+nebo autentizace založené na přihlašovacím heslu.
+.LP
+Rhosts autentizace je normálně zakázána, protože je
+v principu nebezpečná, ale pokud je požadována, lze ji
+v konfiguračním souboru serveru povolit. Pokud nejsou
+zakázány služby
+.BR rshd "(8),
+.BR rlogind "(8),
+.BR rexecd "(8), a
+.B rexd "(8)
+není bezpečnost systému použitím ssh zlepšena. Zákaz
+zmíněných služeb ovšem zcela znemožní přihlášení na tento
+stroj pomocí
+.BR rlogin (1)
+a
+.BR rsh (1)).
+.LP
+Jestliže se klient úspěšně autentizuje, je zahájen dialog
+pro přípravu session. V tomto okamžiku může klient požadovat
+služby jako alokování pseudoterminálu, forwardování X11 spojení,
+forwardování TCP/IP spojení, nebo forwardování spojení pro
+autentizačního agenta bezpečným kanálem.
+.LP
+Na závěr klient buď požaduje spuštění shellu nebo provedení příkazu.
+Obě strany potom vstoupí do režimu spojení. V tomto režimu může
+každá strana posílat kdykoli data, a tato data jsou forwardována
+mezi shellem nebo příkazem na straně serveru, a uživatelovým
+terminálem na straně klienta.
+.LP
+Když uživatelský program skončí a všechna forwardovaná X11 a jiná
+spojení jsou uzavřena, server vrátí klientovi ukončovací kód
+příkazu a obě strany skončí.
+.LP
+Program
+.B sshd 
+může být zkonfigurován pomocí voleb v příkazovém řádku nebo
+pomocí konfiguračního souboru. Volby v příkazovém řádku mají
+přednost před hodnotami zadanými v konfiguračním souboru.
+.LP
+Pokud je démonu
+.B sshd
+zaslán signál hangup (SIGHUP), načte znovu svůj konfigurační
+soubor.
+
+.SH VOLBY
+.TP
+.BI \-b \ bitů
+Určuje počet bitů v klíči serveru (implicitně 768).
+.TP
+.B \-d
+Ladící režim. Server zapisuje podrobný ladící výstup do systémového
+logu a neběží v pozadí. Server také nebude vytvářet podprocesy
+a bude zpracovávat pouze jedno spojení. Tato volba je určena pouze
+pro ladění serveru.
+.TP
+.BI \-f \ konfig_soubor
+Určuje jméno konfiguračního souboru. Implicitně
+.IR /etc/ssh/sshd_config ".
+.TP
+.BI \-g \ login_grace_time
+Udává časový limit, v němž se klienti musí autentizovat (implicitně
+600 sekund). Jestliže klient neautentizuje uživatele během zadané
+doby, server odpojí klienta a skončí. Hodnota nula znamená žádný limit.
+.TP
+.BI \-h \ host_key_file
+Určuje soubor, z něhož se čte klíč počítače (implicitně
+.IR /etc/ssh/ssh_host_key ).  
+Tato volba musí být zadána, jestliže sshd není spuštěn jako root
+(normálně tento soubor není čitelný kýmkoli kromě roota).
+.TP
+.B \-i
+Definuje, že sshd je spuštěn z inetd. Sshd normálně z inetd spouštěn
+není, protože než může odpovědět klientovi, musí vygenerovat klíč
+serveru, což může trvat desítky sekund. Pokud by klíč byl pokaždé
+znovu generován, klienti by museli čekat příliš dlouho. Pro klíče
+malé délky (například  512 bitů) však může být spuštění sshd
+z inetd možné.
+.TP
+.BI \-k \ key_gen_time
+Určuje, jak často má být znovu generován klíč serveru (implicitně
+3600 sekund neboli 1 hodina). Důvodem pro poměrně časté generování
+klíče je, že i v případě, že by se počítače zmocnil cracker nebo
+by byl ukraden, nebude přibližně po hodině možné získat klíč pro
+dešifrování zachycené komunikace (klíč není nikde uložen). Hodnota
+nula znamená, že klíč nebude nikdy znovu generován.
+.TP
+.BI \-p \ port
+Určuje číslo portu, na kterém server očekává spojení
+(implicitně 22).
+.TP
+.B \-q
+Tichý režim. Do systémového logu se nic nepíše. Normálně se tam
+zapisuje začátek, autentizace a ukončení každého spojení.
+.B \-V
+Režim kompatibility s SSH verze 2. Server při zadání této volby
+předpokládá, že řetězec s číslem verze už od klienta přečetl SSH
+démon verze 2 a proto nebude trvat na zaslání tohoto řetězce.
+
+.SH KONFIGURAČNÍ SOUBOR
+
+Program
+.B sshd
+znovu načítá konfiguraci ze souboru
+.I /etc/ssh/sshd_config
+(nebo souboru zadaného volbou -f na příkazovém řádku). Soubor
+obsahuje řádky s dvojicemi klíčové_slovo-hodnota. Řádky začínající
+'#' a prázdné řádky jsou interpretovány jako komentáře.
+
+Jsou povolena následující klíčová slova. V klíčových slovech se
+nerozlišují malá a velká písmena.
+
+.\"
+.\"
+.\"
+.\"
+.\"
+.\"
+.\"
+.\"
+.\"
+
+.\"
+.\"
+.\"
+.\"
+.\"
+.\"
+.\"
+.\"
+.\"
+.\"
+.\"
+.\"
+.\"
+.\"
+
+.TP
+.B AllowGroups
+Toto klíčové slovo může být následováno libovolným počtem vzorků
+jmen skupin oddělených mezerami. Pokud je zadáno, je přihlášení
+povoleno pouze jestliže jméno primární skupiny uživatele vyhovuje
+některému ze vzorků. Ve vzorcích mohou být použity znaky '*' a '?'
+jako žolíky. Implicitně je povoleno přihlášení všech uživatelů.
+
+Pamatujte, že i v tomto případě musí být při přihlašování úspěšně
+provedeny všechny ostatní autentizační kroky. AllowGroups a DenyGroups
+jsou dodatečná omezení.
+
+.TP
+.B AllowHosts
+Toto klíčové slovo může být následováno libovolným počtem vzorků
+jmen počítačů oddělených mezerou. Pokud je zadáno, přihlášení je
+povoleno pouze z počítačů, jejichž jméno vyhovuje některému ze vzorků.
+Ve vzorcích mohou být použity znaky '*' a '?' jako žolíky.
+Normálně je pro získání kanonického jména počítače použito DNS.
+Jestliže jméno není nalezeno, bude jako jméno počítače použita IP
+adresa. Implicitně je povoleno připojení ze všech počítačů.
+
+Pamatujte, že
+.B sshd
+může být také zkonfigurováno pro použití tcp_wrapperu použitím
+konfigurační volby --with-libwrap při překladu.
+
+.TP
+.B AccountExpireWarningDays
+Určuje, kolik dní před vypršením účtu se budou vypisovat varování
+o tom, že účet vyprší. Implicitní hodnota je 14 dní. Nastavení na
+0 zakáže vypisování varování.
+
+.TP
+.B AllowSHosts
+Klíčové slovo může být následováno libovolným počtem vzorků jmen
+počítačů oddělených mezerami. Je-li zadáno, bude přihlíženo
+k položkám v souborech .shosts (a .rhosts a /etc/hosts.equiv)
+pouze u těch počítačů, jejichž jméno vyhovuje některému ze vzorků.
+Ve vzorcích mohou být použity znaky '*' a '?' jako žolíky. Pro
+získání kanonického jména strojů bude použito DNS. Pokud nelze
+kanonické jméno získat, bude jako jméno stroje použita jeho IP
+adresa. Implicitně je dovoleno připojení všem počítačům.
+
+.TP
+.B AllowTcpForwarding
+Určuje, zda je povolen TCP forwarding.  Implicitní hodnota je "yes".
+Pamatujte, že zákaz TCP forwardingu nijak nezlepší bezpečnost, protože
+uživatelé si mohou vždy nainstalovat vlastní forwardery.
+
+.TP
+.B AllowUsers
+Toto klíčové slovo může být následováno libovolným počtem vzorků
+jmen uživatelů nebo vzorků tvaru uživatel@stroj oddělených mezerami.
+Stroj může být zadán buď doménovým jménem nebo IP adresou. Pokud je
+zadáno, bude přihlášení povoleno pouze pro uživatele, jejichž jména
+vyhovují některému ze vzorků. Ve vzorcích mohou být použity znaky
+'*' a '?' jako žolíky. Implicitně je povoleno přihlášení všech
+uživatelů.  
+
+Pamatujte, že všechny ostatní autentizační kroky musí být stále
+úspěšně provedeny. Volby AllowUsers a DenyUsers jsou dodatečná
+omezení.
+
+.TP
+.B CheckMail
+Určuje, zda má
+.B sshd
+vypisovat informace, jestli uživatel má novou poštu, při
+interaktivním přihlášení. (Na některých systémech je tato informace
+vypisována shellem, nebo ze souboru /etc/profile nebo jeho ekvivalentu.)
+Implicitní hodnota je "yes".
+
+.\"
+.\"
+.\"
+.\"
+.\"
+.\"
+.\"
+.\"
+
+.\"
+.\"
+.\"
+.\"
+.\"
+.\"
+.\"
+.\"
+.\"
+.\"
+.\"
+.\"
+.\"
+.\"
+
+.TP
+.B DenyGroups
+Toto klíčové slovo může být následováno libovolným počtem vzorků jmen
+skupin oddělených mezerami. Pokud je zadáno, je všem uživatelům,
+jejichž primární jméno skupiny vyhovuje některému ze vzorků, zakázáno
+přihlášení.
+
+.TP
+.B DenyHosts
+Toto klíčové slovo může být následováno libovolným počtem vzorků
+jmen počítačů oddělených mezerami. Pokud je zadáno, je zakázáno
+přihlášení ze všech počítačů, jejichž jméno vyhovuje některému
+ze vzorků.
+
+.TP
+.B DenySHosts
+Toto klíčové slovo může být následováno libovolným počtem vzorků
+jmen počítačů oddělených mezerami. Je-li zadáno budou ignorovány
+položky v souborech .shosts (a .rhosts a /etc/hosts.equiv) u strojů,
+jejichž jména vyhovují některému ze vzorků.
+
+.TP
+.B DenyUsers
+Toto klíčové slovo může být následováno libovolným počtem vzorků
+jmen uživatelů nebo vzorků tvaru uživatel@stroj oddělených mezerami.
+Stroj může být zadán buď doménovým jménem nebo IP adresou. Pokud je
+zadáno, je všem uživatelům, jejichž jméno vyhovuje některému ze
+vzorků, zakázáno přihlášení.
+
+.TP
+.B FascistLogging
+Určuje, zda použít podrobné logování. Porušuje soukromí uživatelů
+a není doporučeno. Argument musí být "yes" nebo "none" (bez uvozovek).
+Implicitní hodnota je "none".
+
+.TP
+.B ForcedEmptyPasswdChange
+Určuje, zda donutit uživatele ke změně hesla pokud je heslo prázdné
+(při prvním přihlášení). Argument musí být "yes" nebo "no" (bez
+uvozovek).  Implicitní hodnota je "no".
+
+.TP
+.B ForcedPasswdChange
+Určuje, zda nutit uživatele ke změně hesla pokud je heslo prošlé.
+Argument musí být "yes" nebo "no" (bez uvozovek). Implicitní
+hodnota je "yes".
+
+.TP
+.B HostKey
+Určuje jméno souboru, který obsahuje soukromý klíč počítače (implicitně
+.IR /etc/ssh/ssh_host_key ").
+
+.TP
+.B IdleTimeout čas
+Specifikuje dobu udržování nečinného spojení. Pokud v žádném kanálu
+používajícím určité ssh spojení neprobíhá po zadaný časový interval
+žádná komunikace, bude odpovídající podproces sshd zabit signálem
+SIGHUP a spojení bude uzavřeno. Časový limit je možné zadat v sekundách
+(písmeno s za číslem nebo pouze číslo), minutách (m), hodinách (h),
+dnech (d), nebo týdnech (w).
+
+.TP
+.B IgnoreRhosts
+Určuje, že při autentizaci nabudou používány soubory rhosts a shosts.
+Soubory
+.I /etc/hosts.equiv
+a
+.I /etc/ssh/shosts.equiv 
+budou stále používány. Implicitní hodnota je "none".
+
+.TP
+.B IgnoreRootRhosts
+Určuje, že při autentizaci uživatele root nabudou používány soubory
+rhosts a shosts. Implicitní hodnotou je hodnota
+.BR IgnoreRhosts .
+
+.TP
+.B KeepAlive
+Specifikuje, zda má systém posílat protistraně udržovací zprávy
+(keepalive messages). Budou-li posílány, server bude schopen
+odhalit ukončení spojení nebo havárii klienta. Nevýhodou je, že
+k ukončení spojení může dojít i při dočasném přerušení komunikace
+(způsobeném například krátkým výpadkem sítě), což je pro některé
+uživatele nepřijatelné. Na druhou stranu, pokud udržovací zprávy
+nejsou zasílány, mohou na serveru zůstat viset neukončená spojení,
+která zatěžují server.
+
+Implicitní hodnota je "yes" (posílat udržovací zprávy), při níž
+server bude informován o neočekávaných ukončeních spojení a
+bude uzavírat neaktivní session.
+
+Pro zákaz posílání udržovacích zpráv, musí být hodnota nastavena
+na "none" v konfiguračním souboru serveru i klienta.
+
+.TP
+.B KerberosAuthentication
+Určuje, zda je povolena autentizace protokolem Kerberos V5. Může
+být ve formě Kerberos tiketů, nebo pokud je povolena
+PasswordAuthentication, bude přihlašovací heslo zadané uživatelem
+ověřováno pomocí Kerberos KDC nebo DCE Security Server. Implicitní
+hodnota je yes.
+
+.TP
+.B KerberosOrLocalPasswd
+Jestliže je nastaveno a selže autentizace přihlašovacího hesla
+protokolem Kerberos, pak bude přihlašovací heslo ověřováno pomocí
+lokálního mechanismu, jakým je soubor /etc/passwd nebo SecurID.
+Implicitní hodnota je "no".
+
+.TP
+.B KerberosTgtPassing
+Určuje, zda může být Kerberos V5 TGT forwardován na server.
+Implicitní hodnota je yes.
+
+.TP
+.B KeyRegenerationInterval
+Klíč serveru je opakovaně automaticky generován po uplynutí zadaného
+času (v sekundách). Účelem změn klíče je znemožnit dešifrování
+zachyceného spojení  když by došlo k pozdějšímu proniknutí na počítač
+a  krádeži klíčů. Klíč nikdy není nikde uložený. Je-li hodnota 0,
+klíč nebude nikdy znovu generován. Implicitní hodnota je 3600
+(sekund).
+
+.TP
+.B ListenAddress
+Určuje IP adresu rozhraní, na kterém je připojen server.
+
+.TP
+.B LoginGraceTime
+Server se odpojí po uplynutí zadaného času, jestliže se uživatel
+nepřihlásí. Je-li hodnota 0, není žádný časový limit.
+Implicitní hodnota je 600 (sekund).
+
+.TP
+.B PasswordAuthentication
+Určuje, zda je povolena autentizace přihlašovacím heslem.
+Implicitní hodnota je "yes".
+
+.TP
+.B PasswordExpireWarningDays
+Určuje, kolik dní před vypršením hesla vypisovat varování. Implicitní
+hodnota je 14 dní. Nastavení na 0 způsobí, že varování nebudou vypisována.
+
+.TP
+.B PermitEmptyPasswords
+Jestliže je povolena autentizace přihlašovacím heslem, určuje
+tato položka, zda server dovolí přihlášení na účet, který má
+prázdné přihlašovací heslo. Implicitní hodnota je "yes".
+
+.TP
+.B PermitRootLogin
+Určuje, zda může být pomocí
+.B ssh
+přihlášen root.
+Může být nastaveno na "yes", "nopwd", nebo "none". Implicitní
+hodnota je "yes", která umožňuje, aby se uživatel root mohl
+přihlásit s použitím jakéhokoli autentizačního mechanismu
+povoleného pro jiné uživatele. Hodnota "nopwd" zakazuje
+autentizaci  přihlašovacím heslem. Hodnota "none" zakazuje
+přihlašování uživatele root s  použitím jakékoli autentizační
+metody. (Hodnoty "nopwd" a "none" jsou ekvivalentní, pokud nejsou
+v domovském adresáři uživatele root soubory .rhosts, .shosts,
+nebo .ssh/authorized_keys.)
+
+Bez ohledu na hodnotu tohoto nastavení bude povoleno vzdálené
+provedení příkazu uživatelem root s RSA autentizací (tj. příkaz
+ssh musí obsahovat parametr "příkaz"). Užitečné například pro
+vzdálené zálohování.
+
+.TP
+.B PidFile
+Určuje umístění souboru, který obsahuje process ID hlavního sshd
+démona (implicitně /etc/sshd.pid nebo /var/run/sshd.pid,
+podle systému).
+
+.TP
+.B Port
+Určuje číslo portu, na němž
+.B sshd
+očekává spojení. Implicitní hodnota je 22.
+
+.TP
+.B PrintMotd
+Určuje, zda
+.B sshd
+bude vypisovat 
+.I /etc/motd
+když se uživatel přihlásí interaktivně. (Na některých systémech se
+tento soubor vypisuje zvláštním příkazem umístěným v /etc/profile
+nebo obdobném souboru.) Implicitní hodnota je "yes".
+
+.TP
+.B QuietMode
+Určuje, zda sshd běží v tichém režimu. V tomto režimu se do log
+souboru vypisují pouze fatální chyby (fatal errors). Implicitní hodnota
+je "none".
+
+.TP
+.B RandomSeed
+Definuje jméno souboru obsahující hnízdo náhodných čísel pro server;
+tento soubor je vytvořen automaticky a pravidelně je aktualizován.
+Implicitní hodnota je
+.IR /etc/ssh/ssh_random_seed ".
+
+.TP
+.B RhostsAuthentication
+Určuje, zda je dostačující autentizace pomocí souborů rhosts
+nebo /etc/hosts.equiv. Normálně tato metoda nesmí být povolena,
+protože je nebezpečná. Místo ní by měla být použita
+RhostsRSAAuthentication, protože kromě normální autentizace používající
+soubory rhosts nebo /etc/hosts.equiv provádí RSA autentizaci počítače.
+Implicitní hodnota je "none".
+
+.TP
+.B RhostsRSAAuthentication
+Určuje, zda je dovolena rhosts nebo /etc/hosts.equiv autentizace
+spolu s úspěšnou RSA autentizací počítače. Implicitní hodnota je
+"yes".
+
+.TP
+.B RSAAuthentication
+Určuje, zda je povolena samotná RSA autentizace. Implicitní hodnota
+je "yes".
+
+.TP
+.B ServerKeyBits
+Udává délku klíče serveru v bitech. Minimální hodnota je 512,
+implicitní 768.
+
+.TP
+.B SilentDeny
+Určuje, zda odmítnutá spojení jsou odmítnuta tiše (pouze se uzavře
+spojení bez zanesení informací do logu), nebo zda bude zasláno
+klientovi chybové hlášení a pokus o spojení bude zanesen do logu.
+
+.TP
+.B StrictModes
+Určuje, zda ssh bude kontrolovat práva a vlastníka uživatelova
+domovského adresáře a souboru rhosts před přihlášením. Obvykle
+žádoucí, protože začátečníci někdy omylem nechají svůj adresář
+nebo své soubory zapisovatelné pro všechny. Implicitní hodnota
+je "yes".
+
+.TP
+.B SyslogFacility
+Udává jméno facility použité programem
+.B sshd
+pro zanášení chybových hlášení do logu.
+Možné hodnoty jsou: DAEMON, USER, AUTH, LOCAL0, LOCAL1, LOCAL2,
+LOCAL3, LOCAL4, LOCAL5, LOCAL6, LOCAL7. Implicitní hodnota je DAEMON.
+
+.TP
+.B TISAuthentication
+Určuje, zdali je povolena autentizace pomocí TIS
+.BR authsrv (8).
+Implicitní hodnota je "none".
+
+.TP
+.B Umask
+Nastaví implicitní hodnotu umask pro sshd a jeho podprocesy.
+Hodnota musí začínat číslicí 0, aby byla brána jako osmičkové
+číslo! Implicitně není umask nastavena.
+
+.TP
+.B X11Forwarding
+Určuje, zda X11 je povoleno forwardování. Implicitní hodnota je "yes".
+Pamatujte, že zákaz X11 forwardování nezlepší bezpečnost, protože
+uživatelé si mohou vždy nainstalovat svoje vlastní forwardery.
+
+.TP
+.B X11DisplayOffset
+Určuje první číslo displeje použitelné pro X11 forwarding.
+Slouží k tomu, aby se čísla displejů používaných sshd nepřekrývala
+s čísly používanými skutečnými X11 servery.
+
+.TP
+.B XAuthLocation
+Určuje cestu k programu xauth.
+
+.SH PROCES PŘIHLAŠOVÁNÍ
+
+Když se uživatel úspěšně přihlásí,
+.B sshd
+provede následující akce:
+.IP 1.
+Jestliže je přihlášen na tty, a nebyl zadán žádný příkaz,
+vypíše čas posledního přihlášení a obsah souboru
+.B /etc/motd
+(pokud není zakázáno v konfiguračním souboru nebo souborem
+.IR $HOME/\s+2.\s0hushlogin ;
+viz sekce SOUBORY).
+.IP 2.
+Jestliže je přihlášen na tty, zaznamená čas přihlášení.
+.IP 3.
+Zkontroluje /etc/nologin; pokud existuje, vypíše jeho obsah
+a skončí (není-li uživatel root).
+.IP 4.
+Přepne na normální uživatelova práva.
+.IP 5.
+Nastaví základní prostředí.
+.IP 6.
+Načte soubor /etc/environment, pokud existuje.
+.IP 7.
+Načte $HOME/.ssh/environment, pokud existuje.
+.IP 8.
+Přepne se do uživatelova domovského adresáře.
+.IP 9.
+Jestliže existuje soubor $HOME/.ssh/rc, interpretuje jej
+(uživatelovým shellem); jinak jestliže existuje /etc/ssh/sshrc,
+interpretuje jej (shellem /bin/sh); jinak spustí xauth.
+Soubory "rc" jsou dány X11 autentizačním protokolem
+a cookie na standardní vstupu.
+.IP 10.
+Spustí uživatelův shell nebo příkaz.
+.RT
+
+
+.SH FORMÁT SOUBORU AUTHORIZED_KEYS
+.LP
+Soubor 
+.I \&$HOME/\s+2.\s0ssh/authorized_keys
+obsahuje seznam RSA klíčů pro RSA autentizaci. Každý řádek
+souboru obsahuje jeden klíč (prázdné řádky a řádky začínající
+znakem '#' jsou ignorovány jako komentáře). Každý řádek
+sestává z následujících položek, oddělených mezerami: volby,
+počet bitů, exponent, modulo, komentář. Položka volby je nepovinná;
+pokud řádek začíná číslem, položka není přítomna (položka volba
+nikdy nezačíná číslem). Položky počet bitů, exponent, modulo a
+komentář definují RSA klíč; položka komentář není povinná, ale
+může být užitečná pro uživatele pro identifikaci klíče.
+.LP
+Pamatujte, že řádky v tomto souboru jsou obvykle několik stovek
+bytů dlouhé (díky velikosti položky modulo RSA klíče). Uživatel
+je ale nemusí opisovat, stačí pouze zkopírovat soubor
+.I identity.pub
+a editovat jej.
+.LP
+Položka volby (pokud jsou přítomné) sestávají ze seznamu voleb
+oddělených čárkami. Nesmí obsahovat žádné mezery, kromě mezer
+uvnitř uvozovek. Ve jménech voleb se nerozlišují malá a velká
+písmena. Jsou podporovány následující volby:
+jsou supported: 
+.IP
+.ti -.5i
+\fBfrom="seznam-vzorků" \fR
+.br
+Určuje, že kromě RSA autentizace, musí být kanonické jméno
+vzdáleného počítače uvedeno v seznamu-vzorků. Seznam může obsahovat
+několik položek oddělených čárkou. Každá položka může obsahovat znaky
+'*' a '?' jako žolíky. Znak vykřičník na začátku vzorku znamená negaci;
+jestliže kanonické jméno počítače vyhovuje takovému vzorku, klíč nebude
+akceptován. Účelem této volby je další zvýšení bezpečnosti: RSA
+autentizace nedůvěřuje adrese nebo jménu serveru ani ničemu jinému
+kromě klíče; nicméně pokud někdo ukradne klíč, bude se jeho
+použitím moci přihlásit odkudkoli. Tato dodatečná volba dále ztěžuje
+použití ukradeného klíče (kromě získání klíče musí být zfalšováno
+ještě jméno serveru nebo routeru).
+.IP
+.ti -.5i
+\fBcommand="příkaz"\fR
+.br
+Požaduje provedení zadaného příkazu kdykoli je tento klíč použit pro
+autentizaci. Uživatelem zadaný příkaz bude ignorován. Tento příkaz
+bude spuštěn na pseudoterminálu jestliže spojení pseudoterminál
+požaduje; jinak bude spuštěn bez tty. Uvozovky v příkazu musí být
+uvedeny znakem obrácené lomítko. Tato volba může být vhodná pro
+omezení, aby s jistým RSA klíčem bylo možné provést pouze určitou
+konkrétní operaci. Příklade by mohl být klíč, který umožní vzdálené
+zálohování, ale nic jiného. Klient může specifikovat TCP/IP nebo X11
+forwardování, pokud není explicitně zakázáno.
+.IP
+.ti -.5i
+\fBenvironment="NAME=hodnota"\fR
+.br
+Určuje výraz, který má být přidán do prostředí při přihlašování
+s tímto klíčem. Hodnoty proměnných prostředí nastavené tímto způsobem
+mají přednost před implicitními hodnotami. Je povoleno více voleb
+tohoto typu.
+.IP
+.ti -.5i
+\fBidle-timeout=čas\fR
+.br
+Specifikuje dobu udržování nečinného spojení. Pokud v žádném kanálu
+používajícím určité ssh spojení neprobíhá po zadaný časový interval
+žádná komunikace, bude odpovídající podproces sshd zabit signálem
+SIGHUP a spojení bude uzavřeno. Časový limit je možné zadat v sekundách
+(písmeno s za číslem nebo pouze číslo), minutách (m), hodinách (h),
+dnech (d), nebo týdnech (w).
+.IP
+.ti -.5i
+\fBno-port-forwarding\fR
+.br
+Zakáže TCP/IP forwardování když je tento klíč použit pro autentizaci.
+Jakékoli požadavky na forwardování portu z klient vrátí chybu. Může
+být použito například ve spojení s volbou
+.BR příkaz .
+.IP
+.ti -.5i
+\fBno-X11-forwarding\fR
+.br
+Zakáže X11 forwardování když je tento klíč použit pro autentizaci.
+Jakékoli požadavky na forwardování X11 spojení z klienta vrátí chybu.
+.IP
+\fBno-agent-forwarding\fR
+.br
+Zakáže forwardování pro autentizačního agenta když je tento klíč
+použit pro autentizaci.
+.IP
+\fBno-pty\fR
+.br
+Zabrání přidělení pseudoterminálu (požadavek na přidělení pty skončí
+chybou).
+
+.\"
+.\"
+.\"
+.\"
+.\"
+.\"
+.\"
+.\"
+.\"
+.\"
+.\"
+.\"
+.\"
+.\"
+.\"
+.\"
+.\"
+.\"
+.\"
+.\"
+.\"
+.\"
+.SS Příklady
+.LP
+1024 33 12121.\|.\|.\|312314325 ylo@foo.bar
+.LP
+z="*.niksula.hut.fi,!pc.niksula.hut.fi" 1024 35 23.\|.\|.\|2334 ylo@niksula
+.LP
+command="dump /home",no-pty,no-port-forwarding 1024 33 23.\|.\|.\|2323 backup.hut.fi
+.\"
+.\"
+.\"
+.\"
+
+.SH SSH S TCP WRAPPERY
+
+Pokud je sshd zkompilováno s knihovnami tcp wrapperu, soubory
+host.allow/deny ovlivňují, kdo se může připojit na porty forwardované
+programem sshd.
+
+Jména programů v souborech hosts.allow/deny jsou
+.B sshdfwd-\c
+.I <služba>\c
+,
+.B sshdfwd-\c
+.I <číslo-portu>
+a
+.B sshdfwd-X11
+pro forwardování portů, které ssh klient nebo server očekává.
+.LP
+Pokud má nějaký port přiřazeno jméno služby, musí být použito
+toto jméno.
+
+.SH SSH_KNOWN_HOSTS FILE FORMAT
+.LP
+Soubory 
+.I /etc/ssh/ssh_known_hosts
+a 
+.I \&$HOME/\s+2.\s0ssh/known_hosts
+obsahují veřejné klíče všech známých počítačů. První ze souborů
+(platí pro všechny uživatele) připravuje správce, zatímco soubory
+pro jednotlivé uživatele jsou spravovány automaticky: kdykoli se
+uživatel připojí na neznámý počítač, bude klíč tohoto počítače
+přidán do uživatelského souboru. Doporučeným způsobem vytvoření
+souboru
+.I /etc/ssh/ssh_known_hosts
+je použití příkazu
+.BR make-ssh-known-hosts .
+.LP
+Každý řádek v těchto souborech obsahuje následující položky: jména
+počítačů, délka klíče v bitech, exponent, modulo a komentář. Pole
+jsou oddělena mezerami.
+.LP
+Jména počítačů je seznam vzorků oddělených čárkami (znaky '*' a '?'
+fungují jako žolíky); každý vzorek se porovnává s kanonickým jménem
+počítače (když se autentizuje klient) nebo se jménem zadaným uživatelem
+(když se autentizuje server). Znak vykřičník '!' před vzorkem
+znamená negaci: jestliže jméno počítače vyhovuje negovanému vzorku,
+nebude přijato (tímto řádkem) i když vyhovuje jinému vzorku na řádku.
+.LP
+Délka klíče v bitech, exponent a modulo jsou hodnoty charakterizující
+přímo klíč počítače; mohou být získány například ze souboru
+.IR /etc/ssh/ssh_host_key.pub ".
+Nepovinné pole komentáře může zabírat zbytek řádku, a nemá žádný význam.
+.LP
+Řádky začínající znakem '#' a prázdné řádky jsou ignorovány jako
+komentáře.
+.LP
+Autentizace počítače je úspěšná jestliže jakýkoli z řádků, který
+obsahuje vzorek vyhovující jménu počítače, má správný klíč. Proto
+je přípustné (ale nedoporučené) mít několik řádků nebo různé klíče
+počítačů pro stejná jména. K tomu nevyhnutelně dojde, když budou
+v souboru použita zkrácená jména počítačů z jiné domény. Je možné,
+že soubory budou obsahovat konfliktní informace; autentizace bude
+úspěšná, jestliže v některém ze souborů bude nalezena platná informace.
+.LP
+Pamatujte, že řádky v těchto souborech mají typicky stovky znaků
+dlouhé, a určitě je nikdo nebude zadávat ručně. Místo toho je možné
+je generovat skriptem (viz
+.BR make-ssh-known-hosts (1)),
+nebo je možné zkopírovat soubory
+.I /etc/ssh/ssh_host_key.pub
+a na začátek řádku přidat jméno počítače.
+
+.SS Příklady
+
+closenet,closenet.hut.fi,.\|.\|.\|,130.233.208.41 1024 37 159.\|.\|.93 closenet.hut.fi
+
+.SH SOUBORY
+.TP
+.I /etc/ssh/sshd_config
+Obsahuje konfigurační data pro
+.BR sshd .  
+Tento soubor musí být zapisovatelný pouze uživatelem root, ale je
+doporučeno (i když nikoli nezbytné), aby byl čitelný pro všechny.
+.TP
+.I /etc/ssh/ssh_host_key
+Obsahuje soukromý klíč počítače. Normálně je vytvořen automaticky
+příkazem "make install", ale může být vytvořen i ručně použitím příkazu
+.BR ssh-keygen (1).
+Soubor musí být vlastněný uživatelem root, čitelný pouze pro
+uživatele root, a nedostupný pro ostatní.
+.TP
+.I /etc/ssh/ssh_host_key.pub
+Obsahuje veřejný klíč počítače. Normálně je vytvořen automaticky
+příkazem "make install", ale může být vytvořen i ručně. Musí být
+čitelný pro všechny, ale zapisovatelný pouze uživatelem root.
+Jeho obsah musí odpovídat soukromému klíči. Tento soubor není
+je skutečnosti vůbec používán; slouží pouze k tomu, aby jeho
+obsah mohli uživatelé přidat do souborů se známými počítači na
+jiných počítačích.
+.TP
+.I /etc/ssh/ssh_random_seed
+Soubor obsahuje hnízdo pro generátor náhodných čísel. Musí být
+přístupný pouze uživateli root.
+.TP
+.I /var/run/sshd.pid
+Obsahuje číslo hlavního procesu
+.B sshd
+(jestliže existuje několik démonů běžících na různých portech, bude
+obsahovat pid posledního odstartovaného
+.B sshd
+procesu). Obsah tohoto souboru není senzitivní; může být čitelný pro
+všechny.
+.TP
+.I \&$HOME/\s+2.\s0ssh/authorized_keys
+Obsahuje seznam RSA klíčů, které mohou být použity pro přihlášení
+na uživatelův účet. Soubor musí být čitelný uživatelem root (což může
+na některých strojích znamenat, že bude čitelný pro všechny, jestliže
+uživatelův domovský adresář je na disku NFS). Je však doporučeno, aby
+soubor nebyl čitelný pro nikoho kromě uživatele root. Formát tohoto
+souboru je popsaný výše.
+.TP
+.I "/etc/ssh/ssh_known_hosts\fR a \fI$HOME/\s+2.\s0ssh/known_hosts\fR
+Tyto soubory jsou použity při kontrole veřejného klíče počítače při
+použití autentizace pomocí souborů rhosts spojené s ověřením RSA
+klíče počítače. Klíč musí být uveden v jednom z těchto souborů.
+(Klient používá stejné soubory pro verifikaci, že vzdálený počítač
+je ten, ke kterému se chtěl připojit.) Soubory musí být zapisovatelné
+pouze uživatelem root, respektive vlastníkem.
+.I /etc/ssh/ssh_known_hosts
+musí být čitelný pro všechny, a \fI$HOME/\s+2.\s0ssh/known_hosts\fR
+může ale nemusí být čitelný pro všechny.
+.TP
+.I /etc/nologin
+Jestliže tento soubor existuje, 
+.B sshd
+bude se moci přihlásit pouze uživatel root. Obsah souboru bude vypsán
+komukoli, kdo se pokusí přihlásit, a ne-root spojení budou odmítnuta.
+Soubor musí být čitelný pro všechny.
+.TP
+.I \&$HOME/\s+2.\s0rhosts
+Tento soubor obsahuje dvojice počítač-jméno uživatele, oddělené
+mezerou, na každém řádku jeden. Daným uživatelům na odpovídajících
+počítačích je povoleno přihlášení bez přihlašovacího hesla. Stejný
+soubor je použit programem rlogind a rshd.
+Rozdíl mezi
+.B ssh 
+a rlogind a rshd je v tom, že kromě ověření jména počítače pomocí
+domain name serveru požadují RSA autentizaci počítače (pokud
+nejsou přeloženy s konfigurační volbou \-\-s\-rhosts). Soubor musí
+být zapisovatelný pouze uživatelem; doporučuje se, aby nebyl čitelný
+pro nikoho jiného.
+
+V souboru je také možné použít netgroups. Jak jméno počítače tak
+uživatele může být ve formě +@groupname pro uvedení všech počítačů
+nebo všech uživatelů ve skupině.
+.TP
+.I \&$HOME/\s+2.\s0shosts
+Pro
+.BR ssh
+se používá tento soubor přesně stejným způsobem jako \s+2.\s0rhosts.
+Protože však není používán programy rlogind a rshd, bude umožňovat pouze
+přístup pomocí
+.BR ssh .
+.TP
+.I /etc/hosts.equiv
+Tento soubor je použitý při autentizaci pomocí souboru \s+2.\s0rhosts.
+V nejjednodušší formě obsahuje jména počítačů, na každém řádku jedno.
+Uživatelům z těchto počítačů je povoleno přihlášení bez uvedení hesla
+za podmínky, že mají stejné uživatelské jméno na obou strojích. Pokud
+je jméno počítače následováno jménem uživatele, bude se moci příslušný
+uživatel přihlásit pod
+.B jakýmkoli
+jménem na tomto stroji (kromě uživatele root). navíc může být použito
++@group pro zadání netgroups. Negované položky začínají znakem '-'.
+
+Jestliže dvojice klientský počítač/uživatel je úspěšně nalezena
+v tomto souboru, bude automaticky povoleno přihlášení, pokud uživatelská
+jména na klientu a serveru jsou stejná. Navíc je normálně požadována
+úspěšná RSA autentizace počítače. Tento soubor musí být zapisovatelný
+pouze uživatelem root; doporučuje se, aby byl čitelný pro všechny.
+
+\fBVarování: Téměř nikdy není dobré uvádět v souboru hosts.equiv
+jména uživatelů.\fR
+Znamená to, že uvedení uživatelé se mohou přihlásit jako
+\fBkdokoli\fR
+(včetně uživatelů bin, daemon, adm, a jiných uživatelů, kteří vlastní
+kritické programy a adresáře. Použití jména uživatele prakticky
+zajišťuje uživateli přístup roota. Jediné rozumné použití uživatelských
+jmen je proto v negovaných položkách.
+\fBPamatujte, že toto varování se také vztahuje na rsh/rlogin.\fR
+.TP
+.I /etc/ssh/shosts.equiv
+Tento soubor je zpracováván přesně stejně jako
+.I /etc/hosts.equiv.
+Může být užitečný v prostředích, kde se používá jak rsh/rlogin tak
+.BR ssh .
+.TP
+.I /etc/environment
+Tento soubor (jestliže existuje) je načten do prostředí (environmentu)
+při přihlášení. Může obsahovat pouze prázdné řádky, komentářové řádky
+(začínající znaky '#'), a řádky ve tvaru jméno=hodnota. Tento soubor
+je zpracováván ve všech systémech (normální rsh/rlogin jej zpracovávají
+pouze na AIX). Soubor musí být zapisovatelný pouze uživatelem root,
+a musí být čitelný pro všechny.
+.TP
+.I \&$HOME/\s+2.\s0ssh/environment
+Tento soubor je načten do prostředí po /etc/environment. Má stejný
+formát. Soubor musí být zapisovatelný pouze uživatelem; nemusí být
+čitelný nikým jiným.
+.TP
+.I \&$HOME/\s+2.\s0ssh/rc
+Jestliže tento soubor existuje, bude interpretován uživatelovým
+shellem po načtení souborů environment, ale před spuštěním
+uživatelova shellu nebo příkazu. Jestliže se používá X11 spoofing,
+přijme pár "proto cookie" ze standardního vstupu (a proměnnou prostředí
+DISPLAY). Proto musí v tomto případě vyvolat xauth. 
+
+Primárním účelem tohoto souboru je spustit jakékoli inicializační
+rutiny, které mohou být potřebné než je dostupný uživatelův
+domovský adresář. Příkladem může být použití AFS.
+
+Soubor pravděpodobně bude obsahovat nějaký inicializační kód
+následovaný něčím jako "if read proto cookie; then echo add $DISPLAY
+$proto $cookie | xauth -q -; fi".
+
+Jestliže tento soubor neexistuje, bude spuštěn /etc/ssh/sshrc, a jestliže
+neexistuje ani ten, bude použito xauth pro uložení cookie.
+
+Soubor musí být zapisovatelný pouze uživatelem, a nemusí být
+čitelný nikým jiným.
+.TP
+.I /etc/ssh/sshrc
+Má stejný význam jako $HOME/\s+2.\s0ssh/rc, ale spouští se pomocí
+/bin/sh. Tento soubor může být použit pro specifikaci inicializací
+prováděných při přihlášení libovolného uživatele k danému stroji.
+Soubor musí být zapisovatelný pouze uživatelem root, a musí být
+čitelný pro všechny.
+.TP
+.I /etc/ssh/sshd_tis.map
+Vytvoří mapování mezi a lokálním uživatelským jménem a odpovídajícím
+jménem v TIS databáze. Každý řádek obsahuje lokální jméno následované
+znakem ":" následovaným odpovídajícím jménem. Jestliže soubor
+neexistuje nebo uživatel není nalezen, předpokládá se že odpovídající
+jméno v TIS databáze je stejný.
+
+.SH INSTALACE
+.LP
+Program
+.B sshd 
+se normálně spouští jako root. Jestliže není spuštěn jako root, může
+být použit pouze pro přihlašování uživatele, kterým je spuštěn, a
+pokud systém používá /etc/shadows, nebude fungovat autentizace
+přihlašovacím heslem. Také musí být použit alternativní soubor
+s klíčem počítače.
+.LP
+Program
+.B sshd 
+se normálně startuje ze souboru
+.I /etc/rc.local
+nebo ekvivalentního při bootu systému.
+.LP
+Byla vynaložena značná práce, aby byl program
+.B sshd
+bezpečný. Pokud přesto objevíte bezpečnostní problém, oznamte to
+prosím ihned na <ssh-bugs@cs.hut.fi>.
+
+.SH AUTOR
+.LP
+Tatu Ylonen <ylo@ssh.fi>
+.LP
+Informace o nových verzích, mailing listech, a podobně
+můžete nalézt na domovské WWW stránce programu ssh
+na http://www.cs.hut.fi/ssh.
+
+.SH VIZ TAKÉ
+.LP
+.BR ssh (1),
+.BR make-ssh-known-hosts (1),
+.BR ssh-keygen (1),
+.BR ssh-agent (1),
+.BR ssh-add (1),
+.BR scp (1),
+.BR rlogin (1),
+.BR rsh (1)
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

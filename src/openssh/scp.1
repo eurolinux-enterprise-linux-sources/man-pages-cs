@@ -1,0 +1,234 @@
+.\"  -*- nroff -*-
+.\"
+.\" scp.1
+.\"
+.\" Author: Tatu Ylonen <ylo@cs.hut.fi>
+.\"
+.\" Copyright (c) 1995 Tatu Ylonen <ylo@cs.hut.fi>, Espoo, Finland
+.\"                    All rights reserved
+.\"
+.\" Created: Sun May  7 00:14:37 1995 ylo
+.\"
+.\" $OpenBSD: scp.1,v 1.39 2006/01/20 00:14:55 dtucker Exp $
+.\"
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.Dd 25.září 1999
+.Dt SCP 1
+.Os
+.Sh JMÉNO
+.Nm scp
+.Nd \- secure copy \-\- kopíruje soubory mezi počítači za použití šifrované komunikace
+.Sh POUŽITÍ
+.Nm scp
+.Bk -words
+.Op Fl 1246BCpqrv
+.Op Fl c Ar šifra
+.Op Fl F Ar ssh_config
+.Op Fl i Ar soubor_s_identitou
+.Op Fl l Ar limit
+.Op Fl o Ar ssh_volby
+.Op Fl P Ar port
+.Op Fl S Ar program
+.Sm off
+.Oo
+.Op Ar uživatel č. @
+.Ar počítač1 č. :
+.Oc Ns Ar soubor1
+.Sm on
+.Op Ar ...
+.Sm off
+.Oo
+.Op Ar uživatel č. @
+.Ar počítač2 č. :
+.Oc Ar soubor2
+.Sm on
+.Ek
+.Sh POPIS
+.Nm
+Příkaz
+.Nm
+slouží ke kopírování souborů mezi počítači v
+síti.  Pro přenos dat využívá
+.Xr ssh 1
+a používá stejnou
+autentizaci a poskytuje stejné zabezpečení jako
+.Xr ssh 1.
+Na rozdíl
+od
+.Xr rcp 1
+se
+.Nm
+ptá na přihlašovací hesla (login password)
+nebo přístupová hesla (passphrase), jestliže jsou pro autentizaci
+potřebná.
+.Pp
+Všechna jména souborů použitá jako parametry příkazu
+.Nm
+mohou
+obsahovat jméno počítače a uživatele pro označení, že soubor má
+být kopírován na nebo ze zadaného počítače.  Lze kopírovat i soubory
+mezi dvěma vzdálenými počítači.
+.Pp
+Povolené jsou následující volby:
+.Bl -tag -width Ds
+.It Fl 1
+Přinutí
+.Nm
+použít protokol 1.
+.It Fl 2
+Přinutí
+.Nm
+použít protokol 2.
+.It Fl 4
+Přinutí
+.Nm
+používat pouze IPv4 adresy.
+.It Fl 6
+Přinutí
+.Nm
+používat pouze IPv6 adresy.
+.It Fl B
+Bude pracovat v dávkovém režimu (nebude se ptát na přihlašovací ani
+přístupová hesla).
+.It Fl C
+Povolí kompresi. Předá programu
+.Xr ssh 1
+volbu
+.Fl C
+pro povolení
+komprese.
+.It Fl c Ar šifra
+Udává druh šifry, která má být použita pro šifrování přenosu
+dat. Tato volba je přímo předávána programu
+.Xr ssh 1 .
+.It Fl F Ar ssh_config
+Určí alternativní konfigurační soubor
+.Nm ssh
+pro uživatele.  Tato
+volba je přímo předávána programu
+.Xr ssh 1 .
+.It Fl i Ar soubor_s_identitou
+Udává jméno souboru, z něhož se čte identita (soukromý klíč) pro
+RSA autentizaci. Tato volba je přímo předávána programu
+.Xr ssh 1 .
+.It Fl l Ar limit
+Omezuje přenosovou rychlost, zadává se v Kbit/s.
+.It Fl o Ar ssh_volby
+Může být použito pro předání voleb programu
+.Nm ssh
+ve formátu,
+který používá
+.Xr ssh_config 5 .
+To se hodí pro použití voleb, pro
+něž v programu
+.Nm scp
+neexistuje vlastní volba.  Úplné informace o
+níže uvedených volbách a jejich možných hodnotách jsou uvedeny v
+.Xr ssh_config 5 .
+.Pp
+.Bl -tag -width Ds -offset indent -compact
+.It AddressFamily
+.It BatchMode
+.It BindAddress
+.It ChallengeResponseAuthentication
+.It CheckHostIP
+.It Cipher
+.It Ciphers
+.It Compression
+.It CompressionLevel
+.It ConnectionAttempts
+.It ConnectTimeout
+.It ControlMaster
+.It ControlPath
+.It GlobalKnownHostsFile
+.It GSSAPIAuthentication
+.It GSSAPIDelegateCredentials
+.It HashKnownHosts
+.It Host
+.It HostbasedAuthentication
+.It HostKeyAlgorithms
+.It HostKeyAlias
+.It HOSTNAME
+.It IdentityFile
+.It IdentitiesOnly
+.It KbdInteractiveDevices
+.It LogLevel
+.It MACs
+.It NoHostAuthenticationForLocalhost
+.It NumberOfPasswordPrompts
+.It PasswordAuthentication
+.It Port
+.It PreferredAuthentications
+.It Protocol
+.It ProxyCommand
+.It PubkeyAuthentication
+.It RekeyLimit
+.It RhostsRSAAuthentication
+.It RSAAuthentication
+.It SendEnv
+.It ServerAliveInterval
+.It ServerAliveCountMax
+.It SmartcardDevice
+.It StrictHostKeyChecking
+.It TCPKeepAlive
+.It UsePrivilegedPort
+.It User
+.It UserKnownHostsFile
+.It VerifyHostKeyDNS
+.El
+.It Fl P Ar port
+Určuje port použitý pro připojení na vzdálený počítač. Pro tuto
+volbu je použito velké písmeno
+.Sq P ,
+protože význam volby
+.Fl p
+(zachování časů a práv souboru) byl převzat z programu
+.Xr rcp 1 .
+.It Fl p
+Zachovává čas poslední změny, čas posledního přístupu a práva
+původního souboru.
+.It Fl q
+Vypne zobrazování statistiky.
+.It Fl r
+Rekurzivně kopíruje celé adresáře.
+.It Fl S Ar program
+Určuje cestu k
+.Ar programu
+, který bude použit pro šifrované
+spojení.  Program musí rozumět volbám
+.Xr ssh 1.
+.It Fl v
+Upovídaný režim. Zajistí, že příkazy
+.Nm
+a
+.Xr ssh 1
+budou
+vypisovat ladící zprávy. Užitečné pro ladící účely při
+problémech se spojením, autentizací a konfigurací.
+.El
+.Sh NÁVRATOVÉ HODNOTY
+.Nm
+skončí s 0 při úspěchu nebo s >0, pokud došlo k chybě.
+.Sh DALŠÍ INFORMACE
+.Xr rcp 1 ,
+.Xr sftp 1 ,
+.Xr ssh 1 ,
+.Xr ssh-add 1 ,
+.Xr ssh-agent 1 ,
+.Xr ssh-keygen 1 ,
+.Xr ssh_config 5 ,
+.Xr sshd 8
+.Sh HISTORIE
+V programu
+.Nm
+byl použit zdrojový kód programu
+.Xr rcp 1
+z
+University of California.
+.Sh AUTOŘI
+.An Timo Rinne Aq tri@iki.fi
+.An Tatu Ylonen Aq ylo@cs.hut.fi

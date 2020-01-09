@@ -1,0 +1,226 @@
+.\"  -*- nroff -*-
+.\"
+.\" ssh-keygen.1
+.\"
+.\" Author: Tatu Ylonen <ylo@cs.hut.fi>
+.\"
+.\" Copyright (c) 1995 Tatu Ylonen <ylo@cs.hut.fi>, Espoo, Finland
+.\"                    All rights reserved
+.\"
+.\" Created: Sat Apr 22 23:55:14 1995 ylo
+.\"
+.\" $Id: ssh-keygen.1,v 1.10 1998/09/25 03:40:00 kolar Exp $
+.\" $Log: ssh-keygen.1,v $
+.\" Translation into Czech 1998/09/25 03:40:00  kolar
+.\" <Petr.Kolar@vslib.cz>
+.\"
+.\" Revision 1.10  1998/07/08 00:40:42  kivinen
+.\" 	Changed to do similar commercial #ifdef processing than other
+.\" 	files.
+.\"
+.\" Revision 1.9  1997/04/27 21:59:09  kivinen
+.\" 	Added F-SECURE stuff.
+.\"
+.\" Revision 1.8  1997/03/25 05:42:26  kivinen
+.\" 	Small changes from Sakari. Changed ylo's email to @ssh.fi.
+.\"
+.\" Revision 1.7  1996/10/03 23:27:59  ylo
+.\" 	A minor clarification.
+.\"
+.\" Revision 1.6  1996/10/03 23:27:02  ylo
+.\" 	Fixed a typo.
+.\"
+.\" Revision 1.5  1996/10/03 16:54:57  ttsalo
+.\" 	New feature: updating the keyfiles' cipher type.
+.\"
+.\" Revision 1.4  1996/09/29 01:00:38  ylo
+.\" 	Updated to use 3DES.
+.\"
+.\" Revision 1.3  1996/08/06 07:55:01  ylo
+.\" 	Added a note about empty passphrases.
+.\"
+.\" Revision 1.2  1996/05/30 16:10:50  ylo
+.\" 	Documented -f.
+.\"
+.\" Revision 1.1.1.1  1996/02/18 21:38:13  ylo
+.\" 	Imported ssh-1.2.13.
+.\"
+.\" Revision 1.3  1995/08/29  22:30:01  ylo
+.\" 	Improved manual pages from Andrew Macpherson.
+.\"
+.\" Revision 1.2  1995/07/13  01:36:30  ylo
+.\" 	Removed "Last modified" header.
+.\" 	Added cvs log.
+.\"
+.\" $Endlog$
+.\"
+.\"
+.\"
+.\"
+.\" #ifndef F_SECURE_COMMERCIAL
+.TH SSH-KEYGEN 1 "8. listopadu 1995" "SSH" "SSH"
+.do hla cs
+.do hpf hyphen.cs
+.\" #endif F_SECURE_COMMERCIAL
+
+.SH JMÉNO
+ssh-keygen \- generátor páru autentizačních klíčů 
+
+.SH POUŽITÍ
+.LP
+.B ssh-keygen
+[\c
+.BI \-b \ bitů\c
+]
+[\c
+.BI \-f \ soubor\c
+]
+[\c
+.BI \-N \ nové-přístup-heslo\c
+]
+[\c
+.BI \-C \ komentář\c
+]
+
+.B "ssh-keygen \-p
+[\c
+.BI \-P \ staré-přístup-heslo\c
+]
+[\c
+.BI \-N \ nové-přístup-heslo\c
+]
+
+.B "ssh-keygen \-c
+[\c
+.BI \-P \ přístupové-heslo\c
+]
+[\c
+.BI \-C \ komentář\c
+]
+
+.B "ssh-keygen \-u
+[\c
+.BI \-f \ soubor\c
+]
+[\c
+.BI \-P \ přístupové-heslo\c
+]
+
+.SH POPIS
+.LP
+Program
+.B ssh-keygen
+generuje a spravuje autentizační klíče pro 
+.BR ssh (1).
+Normálně každý uživatel, který si přeje používat
+.B ssh
+s RSA autentizací, spustí jednou příkaz
+.B ssh-keygen
+pro vytvoření autentizačního klíče a jeho uložení do
+.IR \&$HOME/\s+2.\s0ssh/identity ".
+Správce systému může používat
+.B ssh-keygen
+pro generování klíčů počítače.
+.LP
+Program normálně vygeneruje klíč a zeptá se na jméno souboru, do kterého
+má uložit soukromý klíč. Veřejný klíč uloží do souboru se stejným
+jménem, ale s připojeným ".pub". Program se také zeptá na přístupové
+heslo (passphrase). Přístupové heslo může být prázdné (klíč počítače
+musí mít prázdné přístupové heslo), nebo to může být řetězec libovolné
+délky. Dobrá přístupová hesla mají délku 10-30 znaků a nejsou tvořena
+větou nebo čímkoli, co jde snadno uhodnout (anglický text má entropii
+pouze 1-2 bity na slovo, takže poskytuje velmi špatná přístupová hesla).
+Přístupové heslo může být změněno později použitím volby
+.BR \-p .
+.LP
+Neexistuje žádný způsob, jak zjistit zapomenuté přístupové heslo.
+Pokud zapomenete nebo ztratíte přístupové heslo, budete muset
+vygenerovat nový klíč a zkopírovat příslušný veřejný klíč na
+ostatní stroje.
+.LP
+JE DŮRAZNĚ DOPORUČENO POUŽITÍ DOBRÉHO, NEUHODNUTELNÉHO PŘÍSTUPOVÉHO HESLA.
+NEPOUŽÍVEJTE PRÁZDNÉ PŘÍSTUPOVÉ HESLO POKUD NEVÍTE, CO DĚLÁTE.
+.LP
+V souboru s klíči je také položka komentář. Tato položka slouží
+uživateli pro snadnější identifikaci klíče. Komentář může informovat,
+k čemu klíč je nebo jak je užitečný. Při vytváření klíče je komentář
+inicializován na uživatel@počítač, ale může být kdykoli změněn
+použitím volby
+.BR \-c .
+.LP
+Šifra použitá na zašifrování klíče přístupovým heslem je definována
+v ssh.h. Použitím volby
+.B \-u
+mohou být klíče zašifrované jakoukoli podporovanou šifrou změněny na
+tuto implicitní šifru.
+
+.SH VOLBY
+.TP 0.6i
+.BI \-b \ bitů
+Určuje délku vytvářeného klíče v bitech. Minimum je 512 bitů.
+Obecně se za dostačující pokládá 1024 bitů; klíče s větší délkou
+nepřinášejí žádné další zlepšení bezpečnosti, ale pouze zpomalují.
+Implicitní délka je 1024 bitů.
+.TP
+.B \-c
+Změní komentář v souborech se soukromými a veřejnými klíči.
+Program ze zeptá na jméno souboru, který obsahuje soukromý klíč,
+na přístupové heslo (jestliže jej klíč má), a na nový komentář.
+.TP
+.B \-f
+Určuje jméno souboru, do něhož bude uložen nebo z něhož bude čten
+klíč.
+.TP
+.B \-p
+Změní přístupové heslo k souboru se soukromým klíčem místo
+vytvoření nového soukromého klíče. Program se zeptá na jméno
+souboru, který obsahuje soukromý klíč, na staré přístupové heslo,
+a dvakrát na nové přístupové heslo.
+.TP
+.B \-u
+Změní šifru klíče na implicitní (určena při překladu programu
+v současnosti 3DES).
+.TP
+.B \-C
+Definuje nový komentář.
+.TP
+.B \-N
+Definuje nové přístupové heslo.
+.TP
+.B \-P
+Definuje (staré) přístupové heslo.
+
+.SH SOUBORY
+.TP 0.6i
+.I \&$HOME/\s+2.\s0ssh/random_seed
+Soubor je použit pro inicializaci generátoru náhodných čísel. Tento
+soubor nesmí být čitelný kýmkoli kromě uživatele. Tento soubor je
+vytvořený při prvním spuštění programu a pokaždé je updatován.
+.TP
+.I \&$HOME/\s+2.\s0ssh/identity
+Obsahuje RSA autentizační identity uživatele. Soubor
+nesmí být čitelný pro nikoho kromě vlastníka. Při generování
+klíče je možné zadat přístupové heslo, které bude použito
+pro zašifrování soukromé části souboru šifrou 3DES.
+Tento soubor není automaticky používán příkazem
+.BR ssh-keygen ",
+ale je poskytován jako implicitní soubor pro soukromý klíč.
+.TP
+.I \&$HOME/\s+2.\s0ssh/identity.pub
+Obsahuje veřejný klíč pro autentizaci. Obsah tohoto souboru musí
+být přidán do \f4$HOME/\s+2.\s0ssh/authorized_keys\f1 na všech strojích,
+kam se budete chtít přihlašovat s použitím RSA autentizace. Obsah
+tohoto souboru není nutné udržovat v tajnosti.
+
+.SH AUTOR
+.LP
+Tatu Ylonen <ylo@ssh.fi>
+
+.SH VIZ TÉŽ
+.LP
+.BR ssh (1),
+.BR sshd (8),
+.BR ssh-agent (1),
+.BR ssh-add (1)
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

@@ -1,0 +1,123 @@
+.TH ISALPHA 3  "5.ledna 1997" "GNU" "Linux - příručka programátora"
+.do hla cs
+.do hpf hyphen.cs
+.SH JMÉNO
+isalnum, isalpha, isascii, isblank, iscntrl, isdigit, isgraph, islower, 
+isprint, ispunct, isspace, isupper, isxdigit \- klasifikace znaků
+.SH SYNTAXE
+.nf
+.B #include <ctype.h>
+.sp
+.BI "int isalnum (int " "c" ");"
+.nl
+.BI "int isalpha (int " "c" ");"
+.nl
+.BI "int isascii (int " "c" ");"
+.nl
+.BI "int isblank (int " "c" ");"
+.nl
+.BI "int iscntrl (int " "c" ");"
+.nl
+.BI "int isdigit (int " "c" ");"
+.nl
+.BI "int isgraph (int " "c" ");"
+.nl
+.BI "int islower (int " "c" ");"
+.nl
+.BI "int isprint (int " "c" ");"
+.nl
+.BI "int ispunct (int " "c" ");"
+.nl
+.BI "int isspace (int " "c" ");"
+.nl
+.BI "int isupper (int " "c" ");"
+.nl
+.BI "int isxdigit (int " "c" ");"
+.fi
+.SH POPIS
+Tyto funkce kontrolují, jestli znak
+.IR c ,
+který musí mít hodnotu typu 
+.B unsigned char
+nebo
+.BR EOF ,
+je součástí nějaké skupiny znaků.
+.TP 
+.B "isalnum()"
+kontroluje, je-li znak alfanumerický; je to ekvivalent testu
+.BI "(isalpha(" c ") || isdigit(" c "))" \fR.
+.TP
+.B "isalpha()"
+kontrola na písmeno
+.BI "(isupper(" c ") || islower(" c "))" \fR.
+.TP
+.B "isascii()"
+kontroluje, je-li \fIc\fP je 7-bitová hodnota typu
+.I unsigned char ,
+která je součástí sady znaků ASCII.  Tato funkce je BSD i SVID rozšířením.
+.TP
+.B "isblank()"
+kontrola na prázdný znak; tedy na mezeru nebo tabulátor. Tato funkce je GNU
+extenzí.
+.TP
+.B "iscntrl()"
+kontrola na řídící znak.
+.TP
+.B "isdigit()"
+kontrola na číslici (0 až 9).
+.TP
+.B "isgraph()"
+kontrola na jakýkoliv tisknutelný znak kromě mezery.
+.TP
+.B "islower()"
+kontrola na malé písmeno.
+.TP
+.B "isprint()"
+kontrola na jakýkoliv tisknutelný znak včetně mezery.
+.TP
+.B "ispunct()"
+kontrola na tisknutelný znak různý od mezery nebo alfanumerického znaku.
+.TP
+.B "isspace()"
+kontrola na `bílý' znak. V 
+.B """C"""
+a
+.B """POSIX"""
+locale to jsou: mezera, form-feed
+.RB ( '\ef' ),
+nový řádek
+.RB ( '\en' ),
+carriage return
+.RB ( '\er' ),
+horizontální tabulátor 
+.RB ( '\et' ),
+a vertikální tabulátor
+.RB ( '\ev' ).
+.TP
+.B "isupper()"
+kontrola na velké písmeno.
+.TP
+.B "isxdigit()"
+kontrola na šestnáctkovou číslici, tj. jednu z
+.nl
+.BR "0 1 2 3 4 5 6 7 8 9 0 a b c d e f A B C D E F" .
+.SH NÁVRATOVÁ HODNOTA
+Hodnota je nenulová pokud
+.I c
+spadá do testované skupiny znaků a nula pokud tam nepatří.
+.SH SPLŇUJE STANDARDY
+ANSI - C, BSD 4.3.
+\fBisascii()\fP je BSD a SVID extenzí.
+\fBisblank()\fP je GNU rozšíření.
+.SH "CHYBY"
+To zda znak náleží do nějaké skupiny také závisí na současné locale.
+Např.,
+.B isupper()
+nerozpozná A s přehláskou jako velké písmeno ve standardní
+.B "C"
+locale.
+.SH DALŠÍ INFORMACE
+.BR tolower "(3), " toupper "(3), " setlocale "(3), " ascii "(7), " locale (7)
+
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

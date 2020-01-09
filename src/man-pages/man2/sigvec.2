@@ -1,0 +1,26 @@
+.TH SIGVEC 2 "18. února 1997" "Linux 1.3" "Linux \- příručka Programátora"
+.do hla cs
+.do hpf hyphen.cs
+.SH JMÉNO
+sigvec \- BSD prostředky pro práci se signály
+
+.SH SYNTAXE
+.B #include <bsd/signal.h>
+.sp
+.BI "int sigvec(int " sig ", struct sigvec *" vec ", struct sigvec *" ovec );
+
+.SH POPIS
+Tato funkce je zastaralá a místo ní se doporučuje používat volání
+.BR sigaction (2).
+.PP
+V Linuxu je funkce
+.B sigvec
+implementována jako makro, volající
+.BR sigaction .
+Umožňuje přibližně totéž co BSD funkce sigvec.
+.SH "SPLŇUJE STANDARDY"
+BSD, SVr4
+.SH "DALŠÍ INFORMACE"
+.BR sigaction "(2), " signal (2)
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

@@ -1,0 +1,21 @@
+.TH HYPOT 3  "5.ledna 1997" "" "Linux - příručka programátora"
+.do hla cs
+.do hpf hyphen.cs
+.SH JMÉNO
+hypot \- eukleidovská vzdálenost
+.SH SYNTAXE
+.nf
+.B #include <math.h>
+.sp
+.BI "double hypot(double " x ", double " y );
+.fi
+.SH POPIS
+Funkce \fBhypot()\fP vrací hodnotu sqrt(x*x + y*y). Je to velikost přepony
+pravoúhlého trojúhelníka s odvěsnami \fIx\fP a \fIy\fP, neboli vzdálenost
+bodu (x, y) od počátku.
+.SH SPLŇUJE STANDARDY
+SVID 3, BSD 4.3
+.SH DALŠÍ INFORMACE
+.BR sqrt (3)
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

@@ -1,0 +1,1254 @@
+.\"  -*- nroff -*-
+.\"
+.\" ssh.1.in
+.\"
+.\" Author: Tatu Ylonen <ylo@cs.hut.fi>
+.\"
+.\" Copyright (c) 1995 Tatu Ylonen <ylo@cs.hut.fi>, Espoo, Finland
+.\"                    All rights reserved
+.\"
+.\" Created: Sat Apr 22 21:55:14 1995 ylo
+.\"
+.\" $Id: ssh.1.in,v 1.18 1998/09/25 04:07:00 kolar Exp $
+.\" $Log: ssh.1.in,v $
+.\" Translation into Czech 1998/09/25 04:07:00  kolar
+.\" <Petr.Kolar@vslib.cz>
+.\"
+.\" Revision 1.18  1998/07/08 00:41:03  kivinen
+.\" 	Changed to do similar commercial #ifdef processing than other
+.\" 	files. Fixed privileged typo.
+.\"
+.\" Revision 1.17  1998/06/11 00:10:36  kivinen
+.\" 	Fixed comment characters.
+.\"
+.\" Revision 1.16  1998/04/30  01:56:20  kivinen
+.\" 	Added PasswordPromptLogin and PasswordPromptHost option
+.\" 	documentation.
+.\"
+.\" Revision 1.15  1998/03/27 17:27:07  kivinen
+.\" 	Removed TSS.
+.\"
+.\" Revision 1.14  1998/03/27 17:01:15  kivinen
+.\" 	Documented -g option and GatewayPorts config option.
+.\"
+.\" Revision 1.13  1998/01/02 06:22:26  kivinen
+.\" 	Sorted options. Added XAuthLocation option. Renamed
+.\" 	SSH_AUTHENTICATION_SOCKET to SSH_AUTH_SOCK.
+.\"
+.\" Revision 1.12  1997/05/08 03:05:39  kivinen
+.\" 	Added \ before all '-characters (it is troff command if it is
+.\" 	in the beginning of line).
+.\"
+.\" Revision 1.11  1997/04/27 21:50:30  kivinen
+.\" 	Added F-SECURE stuff.
+.\"
+.\" Revision 1.10  1997/04/23 00:04:36  kivinen
+.\" 	Documented ClearAllForwardings and NumberOfPasswordPrompts
+.\" 	options. Sorted options.
+.\"
+.\" Revision 1.9  1997/04/17 04:17:23  kivinen
+.\" 	Documented StrictHostKeyChecking=ask.
+.\"
+.\" Revision 1.8  1997/03/27 03:16:23  kivinen
+.\" 	Added kerberos patches from Glenn Machin.
+.\" 	Added -V and -k options.
+.\"
+.\" Revision 1.7  1997/03/26 05:35:12  kivinen
+.\" 	Documented UsePriviledgedPort config file option and -P
+.\" 	option.
+.\"
+.\" Revision 1.6  1997/03/25 05:42:57  kivinen
+.\" 	Updated. Changed ylo's email to @ssh.fi.
+.\"
+.\" Revision 1.5  1997/03/19 17:43:26  kivinen
+.\" 	Documented TISAuthentication stuff.
+.\"
+.\" Revision 1.4  1997/01/10 17:47:25  ttsalo
+.\"     Updated the enviroment variable descriptions
+.\"
+.\" Revision 1.3  1996/09/29 01:03:36  ylo
+.\" 	Documented blowfish.
+.\"
+.\" Revision 1.2  1996/09/27 14:31:34  ttsalo
+.\" 	Socks5 support from David Kĺgedal  <davidk@lysator.liu.se>
+.\"
+.\" Revision 1.1.1.1  1996/02/18 21:38:13  ylo
+.\" 	Imported ssh-1.2.13.
+.\"
+.\" Revision 1.9  1995/10/02  01:28:11  ylo
+.\" 	Make substitutions in configure.
+.\"
+.\" Revision 1.8  1995/09/25  00:00:49  ylo
+.\" 	Added ConnectionAttempts.
+.\"
+.\" Revision 1.7  1995/08/31  09:23:03  ylo
+.\" 	Minor cleanup.
+.\"
+.\" Revision 1.6  1995/08/29  22:31:11  ylo
+.\" 	Improved manual pages from Andrew Macpherson.
+.\"
+.\" Revision 1.5  1995/08/21  23:27:44  ylo
+.\" 	Added -q.
+.\"
+.\" Revision 1.4  1995/07/27  00:40:24  ylo
+.\" 	Added GlobalKnownHostsFile and UserKnownHostsFile.
+.\"
+.\" Revision 1.3  1995/07/15  22:24:51  ylo
+.\" 	Added documentation for -o.
+.\"
+.\" Revision 1.2  1995/07/13  01:36:20  ylo
+.\" 	Removed "Last modified" header.
+.\" 	Added cvs log.
+.\" 
+.\" $Endlog$
+.\"
+.\"
+.\"
+.\"
+.\" #ifndef F_SECURE_COMMERCIAL
+.TH SSH 1 "8. listopadu 1995" "SSH" "SSH"
+.do hla cs
+.do hpf hyphen.cs
+.\" #endif F_SECURE_COMMERCIAL
+
+.SH JMÉNO
+ssh \- secure shell klient (program pro remote login)
+
+.SH POUŽITÍ
+.B ssh
+[\c
+.BI \-l \ přihlašovací_jméno\fR\c
+]
+.B počítač
+[\c
+.IR příkaz \c
+]
+
+.B ssh
+[\c
+.BR \-a \c
+]
+[\c
+.B \-c
+\fIidea\fR\||\|\fIblowfish\fR\||\|\fIdes\fR\||\|\fI3des\c
+\fR\||\|\fIarcfour\fR\||\|\fInone\fR\c
+]
+[\c
+.BI \-e \ escape_znak\fR\c
+]
+[\c
+.BI \-i \ soubor_identit\fR\c
+]
+[\c
+.BI \-l \ přihlašovací_jméno\fR\c
+]
+[\c
+.BR \-n \c
+]
+[\c
+.BR \-k \c
+]
+[\c
+.BR \-V \c
+]
+[\c
+.BI \-o \ volba\fR\c
+]
+[\c
+.BI \-p \ port\fR\c
+]
+[\c
+.BR \-q \c
+]
+[\c
+.BR \-P \c
+]
+[\c
+.BR \-t \c
+]
+[\c
+.BR \-v \c
+]
+[\c
+.BR \-x \c
+]
+[\c
+.BR \-C \c
+]
+[\c
+.BI \-L \ port\fB:\fIpočítač\fB:\fIvzdálport\fR\c
+]
+[\c
+.BI \-R \ port\fB:\fIpočítač\fB:\fIvzdálport\fR\c
+]
+.I počítač
+[\c
+.IR příkaz \c
+]
+
+.SH POPIS
+.LP
+Příkaz
+.B ssh
+(secure shell, bezpečný shell) slouží pro přihlašování na
+vzdálené počítače a pro spouštění příkazů na vzdálených počítačích.
+Je navržen jako náhrada příkazů rlogin a rsh a umožňuje bezpečnou
+zašifrovanou komunikaci mezi dvěma nedůvěryhodnými počítači přes
+nezabezpečenou síť. Umožňuje také forwardování X11 spojení nebo
+libovolných TCP/IP portů bezpečným kanálem.
+.LP
+Program
+.B ssh 
+slouží k připojení a přihlášení uživatele na zadaný
+.IR počítač .
+Uživatel musí prokázat svoji identitu na tomto vzdáleném stroji
+použitím jedné z následujících autentizačních metod:
+.LP
+První metoda je převzata z protokolu rsh/rlogin; normálně nebývá
+ssh serverem povolena, protože představuje ohrožení jeho bezpečnosti.
+Pokud je počítač, z něhož se uživatel hlásí, uveden v souboru
+.I /etc/hosts.equiv
+nebo
+.I /etc/ssh/shosts.equiv
+na vzdáleném stroji, a přihlašovací jména jsou na obou stranách
+stejná, uživateli je okamžitě povoleno přihlášení.
+Stejně funguje, jestliže uživatel má ve svém domovském adresáři
+na vzdáleném stroji soubor
+.I \&\s+2.\s0rhosts
+nebo
+.IR \&\s+2.\s0shosts ,
+v němž je řádek tvořený jménem klientského stroje, mezerou a jménem
+uživatele na klientském počítači.
+.LP
+Druhá (preferovaná) autentizační metoda používá soubor
+.B rhosts
+nebo
+.B hosts.equiv
+ve spojení s RSA autentizací počítače. To znamená, že
+přihlášení bude možné, 
+jestliže by bylo povoleno podle souborů
+.IR \&\s+2.\s0rhosts ,
+.IR \&\s+2.\s0shosts ,
+.IR /etc/hosts.equiv ,
+nebo
+.IR /etc/ssh/shosts.equiv ,
+a zároveň server zná a zkontroluje klíč klientského počítače (viz
+.I \&$HOME/\s+2.\s0ssh/known_hosts
+a
+.I /etc/ssh/ssh_known_hosts
+v části
+.BR \s-1SOUBORY\s0 ).
+Tato autentizační metoda uzavírá bezpečnostní díry
+využívající IP spoofingu, DNS spoofingu a routing spoofingu.
+[Poznámka pro správce:
+.IR /etc/hosts.equiv ", 
+.IR \&\s+2.\s0rhosts ",
+a protokol rlogin/rsh obecně jsou ze své podstaty nebezpečné a
+pokud je požadována bezpečnost, musí být zakázány.]
+.LP
+Jako třetí autentizační metodu používá
+.B ssh 
+autentizaci založenou na RSA.
+Toto schéma je založeno na šifrování s veřejným klíčem, což je šifrovací
+systém, v němž jsou pro šifrování a dešifrování použity dva různé klíče,
+přičemž ze šifrovacího klíče nelze odvodit dešifrovací klíč.
+Jedním z těchto systémů je RSA. Myšlenka je taková, že si každý uživatel
+pro účely autentizace vytvoří dvojici klíčů; jeden veřejný a druhý
+soukromý. Server zná veřejný klíč, soukromý klíč zná pouze uživatel.
+Soubor 
+.I \&$HOME/\s+2.\s0ssh/authorized_keys
+obsahuje seznam veřejných klíčů, které je možné použít pro přihlášení.
+Když se uživatel přihlásí, program
+.B ssh 
+oznámí serveru, kterou dvojici klíčů chce použít pro autentizaci.
+Server zkontroluje, zdali mu je daný klíč známý, a pokud ano, pošle
+uživateli (přesněji
+.B ssh
+programu spuštěnému uživatelem) výzvu -- náhodné číslo, zašifrované
+uživatelovým veřejným klíčem. Výzva může být dešifrována pouze
+použitím odpovídajícího soukromého klíče. Uživatelův klient
+dešifrováním výzvy prokáže, že zná soukromý klíč, aniž by jej
+prozradil serveru.
+.LP
+Program
+.B ssh
+implementuje RSA autentizační protokol automaticky. Uživatel
+vytvoří svůj pár RSA klíčů spuštěním programu
+.BR ssh-keygen (1).
+Ten uloží soukromý klíč do souboru
+.I \&\s+2.\s0ssh/identity
+a veřejný klíč do souboru
+.I \&\s+2.\s0ssh/identity.pub
+v uživatelově domovském adresáři. Uživatel potom musí přidat obsah
+souboru
+.I identity.pub
+do 
+.I \&\s+2.\s0ssh/authorized_keys
+ve svém domovském adresáři na vzdáleném stroji (soubor 
+.I authorized_keys
+odpovídá konvenčnímu souboru
+.I \&\s+2.\s0rhosts
+a obsahuje jeden klíč na každém řádku -- jeho řádky mohou být
+velmi dlouhé). Poté se uživatel může přihlašovat bez zadávání
+přihlašovacího hesla. RSA autentizace je mnohem bezpečnější
+než autentizace pomocí souboru rhosts. Soubor s uživatelovým
+soukromým klíčem je chráněn právy v operačním systému Unix
+(neúčinné jako ochrana před superuživatelem) a navíc
+přístupovým heslem (passphrase).
+.LP
+Nejpříjemnější způsob použití RSA autentizace je s použitím
+autentizačního agenta. Podrobnější informace viz
+.BR ssh-agent (1).
+.LP
+Jako čtvrtou autentizační metodu program
+.B ssh
+podporuje autentizaci uživatele pomocí TIS autentizačního serveru
+.BR authsrv (8).
+V některých případech není vhodné, aby byla uživatelská jména v TIS
+databázi shodná se jmény lokálních uživatelů. Může k tomu například
+dojít, pokud se uživatel autentizuje pomocí karty smartcard nebo
+Digipass. V tomto případě je v databázi jako uživatelské jméno
+obvykle uvedeno sériové číslo autentizačního zařízení. Mapování
+mezi jmény v TIS databázi a uživatelskými jmény zajišťuje soubor
+.IR /etc/ssh/sshd_tis.map .
+Jestliže tento soubor neexistuje, nebo v něm uživatel není uveden,
+předpokládá se, že obě jména jsou shodná.
+.LP
+Jestliže všechny autentizační metody selžou, 
+.B ssh
+se zeptá uživatele na přihlašovací heslo. Heslo je posláno
+na vzdálený počítač pro obvyklé ověření. Nicméně protože veškerá
+komunikace je šifrovaná, nelze odposlechem provozu v síti
+přihlašovací heslo zjistit.
+.LP
+Jestliže byla uživatelova identita serverem akceptována, server
+buď provede zadaný příkaz, nebo zajistí přihlášení uživatele
+a spustí pro něj normální shell. Přitom veškerá komunikace se
+vzdáleným počítačem je automaticky šifrována.
+.LP
+Jestliže byl vytvořen pseudoterminál (pro normální login session),
+může uživatel zadáním "~." ukončit spojení, zadáním "~^Z" suspendovat
+.BR ssh ,
+zadáním "~#" vypsat všechna forwardovaná spojení, a pokud se session
+čekáním na ukončení forwardovaného X11 nebo TCP/IP spojení zablokuje,
+může být převedena do pozadí zadání "~&" (nesmí být použito, dokud je
+aktivní uživatelský shell, protože by mohlo dojít k jeho zamrznutí).
+Všechny dostupné escape posloupnosti lze vypsat pomocí "~?".
+.LP
+Aby byl escape znak interpretován jako speciální, musí být použit
+na začátku session nebo po znaku konec řádku (newline). Samotný
+znak vlnka je nutné vkládat zdvojený "~~" (nebo následovaný jiným
+znakem než je popsáno výše). V konfiguračním souboru nebo volbou
+v příkazovém řádku lze escape znak změnit.
+.LP
+Pokud nebyl alokován žádný pseudoterminál, session bude transparentní
+a může být použita pro spolehlivý přenos binárních dat. Na většině
+systemů nastavení escape znaku na ``none'' také způsobí, že session
+bude transparentní i při použití tty.
+.LP
+Session skončí, pokud skončí příkaz nebo shell na vzdáleném stroji
+a spojení není používáno žádnými X11 a TCP/IP spojeními. Návratový
+kód vzdáleného programu je vrácen jako návratový kód příkazu
+.BR ssh .
+.LP
+Jestliže uživatel používá X11, je nastavena proměnná prostředí
+.B \s-1DISPLAY\s0
+tak, jako kdyby program komunikoval s X serverem na stejném stroji
+(tj. na ssh serveru). Číslo displeje však bude větší než nula,
+protože se nejedná o skutečný X server na ssh serveru, ale pouze
+o "proxy" X server, který zajišťuje forwardování X11 spojení
+bezpečným kanálem vytvořeným programem
+.B ssh
+na skutečný X server běžící na stejném stroji jako ssh klient.
+Aby vše fungovalo, jak je zde popsáno, uživatel nesmí ručně
+nastavovat proměnnou prostředí
+.BR \s-1DISPLAY\s0 ".
+Pro konfiguraci forwardování X11 spojení lze použít parametry na
+příkazovém řádku nebo v konfiguračním souboru.
+.LP
+Program
+.B ssh
+umožňuje automatické nastavování Xauthority dat na serveru.
+K tomuto účelu vygeneruje náhodné autorizační cookie, uloží jej
+v souboru Xauthority na serveru, a zajistí, že všechna
+forwardovaná spojení ponesou toto cookie a při otevření spojení
+jej nahradí opravdovým cookie. Skutečné autentizační cookie
+není nikdy posíláno na server (a žádné cookies nejsou nikdy
+posílány nezašifrovaně).
+.LP
+Jestliže uživatel používá autentizačního agenta, spojení
+s agentem bude automaticky forwardováno na vzdálenou stranu,
+pokud to není zakázáno volbou na příkazovém řádku nebo
+v konfiguračním souboru.
+.LP
+Forwardování libovolného TCP/IP spojení přes bezpečný kanál může
+být vyžádáno buď z příkazového řádku nebo v konfiguračním souboru.
+Jednou z možných aplikací TCP/IP forwardingu je bezpečné spojení
+s elektronickou peněženkou; druhou je zajištění průchodu firewallem.
+.LP
+Program
+.B ssh
+umí automaticky udržovat a používat databázi obsahující RSA
+identifikace všechny počítačů, se kterými dosud komunikoval.
+Databáze je uložena v souboru
+.I \&\s+2.\s0ssh/known_hosts
+v uživatelově domovském adresáři. Pro kontrolu je používán i soubor 
+.IR /etc/ssh/ssh_known_hosts .
+Při nastavení volby
+.B StrictHostKeyChecking
+na "no" budou jakékoli nové počítače automaticky přidány do uživatelského
+souboru. Jestliže se změní identifikace počítače,
+.B ssh
+na to upozorní a zakáže autentizaci přihlašovacím heslem, aby
+se zabránilo trojským koním získat uživatelovo přihlašovací heslo.
+Dalším účelem tohoto mechanismu je zabránění útokům typu
+man-in-the-middle, který by jinak mohl být použit na obejití
+šifrování. Volba
+.B StrictHostKeyChecking
+(viz dále) může být použita na zabránění přihlášení na stroje,
+jejichž klíč není známý nebo byl změněn.
+
+.ne 5
+.SH VOLBY
+.TP
+.B \-a
+Zakáže forwardování spojení s autentizačním agentem.
+V konfiguračním souboru lze nastavit i pro jednotlivé počítače.
+.ne 3
+.TP
+.BI \-c \ \fIidea\fR\||\|\fIdes\fR\||\|\fI3des\fR\||\|\fIblowfish\fR\||\|\fIarcfour\fR\||\|\fInone\fR
+Vybere šifru použitou pro šifrování session.
+Implicitně je použita šifra
+.BR \s-1idea\s0 ,
+která je pokládána za bezpečnou. 
+.B \s-1des\s0
+je sice standard pro šifrování dat, ale s dostatečným
+technickým zázemím (kterým mohou disponovat vlády, velké
+korporace a velké kriminální organizace) jej lze rozluštit.
+.B \s-13des\s0
+(triple-des) je trojice šifrování-dešifrování-šifrování se
+třemi různými klíči. Je pravděpodobně bezpečnější než DES.
+Pokud některý z konců nepodporuje šifru IDEA, je implicitně
+použita šifra
+.BR \s-13des\s0 .
+.B \s-1blowfish\s0
+je šifrovací algoritmus objevený Brucem Schneierem. Používá 128
+bitový klíč.
+.B \s-1arcfour\s0
+je algoritmus publikovaný v roce 1995 v Usenet News. Věří
+se, že je stejně silný jako šifra RC4 od RSA Data Security
+(RC4 je ochranná značka firmy RSA Data Security).
+V současnosti je to nejrychlejší používaný algoritmus.
+.B none
+zcela zakáže šifrování; je určeno pouze pro ladící účely,
+není bezpečné.
+.ne 3
+.TP
+.B \-e \fIch\fR\||\|\fI^ch\fR\||\|\fInone\fR
+Nastaví escape znak pro session používající pty (implicitně: ~).
+Escape znak je rozpoznán pouze na začátku řádku. Escape znak
+následovaný znakem tečka (.) uzavře spojení, následovaný znakem
+control-Z suspenduje spojení, a následovaný sebou samým pošle
+jeden escape znak. Nastavení znaku na 'none' zakáže jakékoli
+escape znaky a způsobí, že spojení bude plně transparentní.
+.ne 3
+.TP
+.B \-f
+Požaduje, aby ssh po provedení autentizace a zahájení
+forwardování přešel do pozadí. Tato volba je vhodná, pokud
+uživatel chce, aby ssh běžel v pozadí, ale ssh bude ještě
+ptát na přihlašovací nebo přístupová hesla. Může být vhodná
+také ve skriptech. Implikuje volbu
+.BR \-n .
+Doporučený způsob pro start X11 programů na vzdáleném počítači
+je "ssh -f počítač xterm".
+.ne 3
+.TP
+.BI \-i \ soubor_identit
+Udává jméno soubor, z něhož se čtou identity (soukromé klíče) pro 
+.B \s-1RSA\s0
+autentizaci. Implicitně je
+.I \&\s+2.\s0ssh/identity
+v uživatelově domovském adresáři. V konfiguračním souboru může
+být zadáno více souborů identit, pro každý počítač jeden.
+Lze použít více voleb \-i.
+.ne 3
+.TP
+.B \-k
+Zakáže forwardování kerberos tiketů.
+V konfiguračním souboru lze nastavit i pro jednotlivé počítače.
+.ne 3
+.TP
+.BI -l \ login_name
+Určuje uživatelské jméno na přihlášení vzdáleném počítači.
+V konfiguračním souboru lze nastavit i pro jednotlivé počítače.
+.ne 3
+.TP
+.B \-n
+Přesměruje stdin na /dev/null (zabraňuje čtení ze stdin).
+Musí být použito, jestliže je
+.B ssh
+spuštěn na pozadí. Obvyklým trikem je použít tuto volbu pro spuštění X11
+programů na vzdáleném stroji. Příkaz "ssh -n shadows.cs.hut.fi emacs &"
+odstartuje emacs na shadows.cs.hut.fi, a X11 spojení bude automaticky
+forwardováno přes zašifrovaný kanál.
+Program
+.B ssh
+bude spuštěn na pozadí.
+(Toto nebude fungovat jestliže
+.B ssh
+se bude ptát na přihlašovací nebo přístupové heslo; pak je třeba
+použít volbu -f.)
+.ne 3
+.TP
+.BI \-o "\ 'volba'
+Může být použito pro zadání voleb ve formátu použitém v konfiguračním
+souboru. Lze použít pro zadání parametrů, pro které neexistuje žádná volba
+v příkazovém řádku. Volba má stejný formát jako řádka v konfiguračním
+souboru.
+.ne 3
+.TP
+.BI \-p "\ port
+Port, na který se připojit na vzdáleném počítači.
+V konfiguračním souboru lze nastavit i pro jednotlivé počítače.
+.ne 3
+.TP
+.B \-q
+Tichý režim. Potlačí výpis varování a diagnostických zpráv. Jsou
+vypisovány pouze fatální chyby.
+.ne 3
+.TP
+.B \-P
+Použije neprivilegovaný port. S touto volbou nelze použít autentizaci
+pomocí rhosts nebo rsarhosts, ale může být použito na překonání
+některých firewallů, které nedovolují používat privilegované zdrojové
+porty. 
+.ne 3
+.TP
+.B \-t
+Vynutí přidělení pseudo-tty. Může být použito pro provádění libovolného
+obrazovkově orientovaného programu na vzdáleném stroji, což může být
+velmi užitečné například pro programy ovládané pomocí menu.
+.ne 3
+.TP
+.B \-v
+Upovídaný režim. Způsobí, že program
+.B ssh
+bude vypisovat ladící zprávy o své činnosti. Lze použít při ladění
+spojení a při autentizačních a konfiguračních problémech.
+.ne 3
+.TP
+.B \-V
+Vypíše pouze číslo verze a skončí.
+.ne 3
+.TP
+.B \-g
+Povolí vzdáleným strojům připojování na lokální forwardované porty.
+Implicitně se může na tyto porty připojovat pouze localhost.
+.ne 3
+.TP
+.B \-x
+Zakáže X11 forwardování.
+V konfiguračním souboru lze nastavit i pro jednotlivé počítače.
+.ne 3
+.TP
+.B \-C
+Bude komprimovat všechna data (včetně stdin, stdout, stderr, a
+dat pro forwardované X11 a TCP/IP spojení). Komprimační algoritmus
+je týž jako v programu gzip. Úroveň komprese může být zadána volbou
+.B CompressionLevel
+volba (viz dále). Komprese je žádoucí na modemových linkách a pro
+jiná pomalá spojení, ale přes rychlou síť bude zpomalovat činnost.
+Implicitní hodnota může být nastavenu pro jednotlivé počítače
+v konfiguračním souboru; viz volba
+.B Compress
+dále.
+.ne 3
+.TP
+.BI \-L "\ port:počítač:vzdálport
+Určuje, že zadaný port na lokálním počítači (tj. ssh klientovi) má
+být forwardován přes bezpečný kanál na ssh server a z něj má být
+navazováno TCP spojení na zadaný vzdálený počítač a port. Alokuje
+soket, který bude naslouchat na zadaném
+.BR port u
+na lokálním počítači, a kdykoli bude vytvořeno spojení na tento port,
+bude forwardováno přes bezpečný kanál, a ze vzdáleného stroje bude
+navázáno spojení na zadaný
+.BR počítač:vzdálport .
+Forwardování portu může být také nastaveno v konfiguračním souboru.
+Privilegované port může forwardovat pouze root.
+.ne 3
+.TP
+.BI \-R "\ port:počítač:vzdálport
+Určuje, že zadaný port na vzdáleném počítači (tj. serveru) má být
+forwardován na lokální počítač a odtud na další zadaný počítač a
+port. Alokuje soket, který bude naslouchat na zadaném
+.BR port u
+na vzdálené straně, a kdykoli je navázáno spojení na tento port,
+spojení bude forwardováno přes bezpečný kanál na lokální stroj,
+a z něj bude navázáno spojení na zadaný
+.BR počítač:vzdálport .
+Forwardování portů může být zadáno v konfiguračním souboru.
+Privilegované porty mohou být forwardovány pouze při přihlášení
+jako root na vzdáleném stroji.
+
+.SH KONFIGURAČNÍ SOUBORY
+.LP
+Program
+.B ssh
+získává konfigurační informace postupně z následujících zdrojů
+(v uvedeném pořadí):
+volby v příkazovém řádku, uživatelský konfigurační soubor
+(\fI\&$HOME/\s+2.\s0ssh/config\fR), a hlavní konfigurační soubor
+(\fI/etc/ssh/ssh_config\fR) pro celý počítač. Pro každý parameter bude
+použita první získaná hodnota.
+Konfigurační soubory obsahují sekce uvozené řádkem "Host",
+a každá sekce platí pouze pro počítače, které vyhovují
+jednomu ze vzorků zadaných v řádku "Host". Jméno počítače se
+porovnává v tom tvaru, v jakém je uvedeno na příkazovém řádku.
+.LP
+Protože se použije první získaná hodnota pro každý parameter,
+musí být na začátku souboru hodnoty specifické pro jednotlivé
+počítače, a obecné implicitní hodnoty na konci.
+.LP
+Konfigurační soubor má následující formát:
+.IP
+Prázdné řádky a řádky začínající znakem '#' jsou komentáře.
+.IP
+Ostatní řádky mají formát "klíčové-slovo argumenty" nebo
+"klíčové-slovo = argumenty". V konfiguračních souborech se
+rozlišují malá a velká písmena, ale v klíčových slovech nikoli.
+.ne 3
+.TP
+.de YN
+"\fByes\fR" nebo "\fBno\fR".
+..
+
+.B Host
+Omezuje následující deklarace (až po další řádek s klíčovým slovem
+.BR Host )
+pouze pro počítače, které vyhovují jednomu ze vzorků zadaných za
+klíčovým slovem. Vzorky mohou obsahovat žolíkové znaky '*' a '?'.
+Vzorek '*' vyhovuje všem počítačům. Vzorek se porovnává s parametrem
+.IR hostname
+zadaným v příkazovém řádku (t.j., jméno není konvertováno na kanonické
+před porovnáním se vzorkem).
+.ne 3
+
+.TP
+.B BatchMode
+Je-li nastaveno na "yes", program se nebude ptát na přístupové nebo
+přihlašovací heslo. Vhodné pro skripty a jiné dávkové úlohy, kde
+není žádný uživatel, který by zadal přihlašovací heslo. Argument
+musí být
+.YN
+.ne 3
+
+.TP
+.B Cipher
+Určuje druh šifry použité pro šifrování session. V současnosti jsou
+podporovány šifry
+.IR idea ",
+.IR des ",
+.IR 3des ",
+.IR blowfish ",
+.IR arcfour ",
+a
+.IR none .
+Implicitní je "idea" (nebo "3des" jestliže "idea" není podporována
+oběma stroji). Použití "none" (bez šifrování) je určeno pouze pro
+účely ladění, a výsledné spojení není bezpečné.
+.ne 3
+
+.TP
+.B ClearAllForwardings
+Po načtení všech konfiguračních souborů a zpracování příkazového
+řádku zruší veškeré forwardování. Lze použít pro zákaz forwardování
+uvedených v konfiguračním souboru při navazování druhého spojení na
+počítač, který má forwardování nastaveno v konfiguračním souboru.
+Program scp nastavuje tuto volbu implicitně na "on", takže i kdyby
+forwardování bylo vyžádáno v konfiguračním souboru, k chybě nedojde.
+.ne 3
+
+.TP
+.B Compression
+Určuje, zda použít kompresi. Argument musí být
+.YN
+.ne 3
+
+.TP
+.B CompressionLevel
+Určuje úroveň komprese, je-li povolena. Argument musí být celé
+číslo od 1 (nízká komprese, největší rychlost) do 9 (největší
+komprese, nejnižší rychlost). Implicitní úroveň, vhodná pro
+většinu aplikací, je 6. Hodnota má stejný význam jako v programu
+GNU gzip.
+.ne 3
+
+.TP
+.B ConnectionAttempts
+Určuje počet pokusů o spojení, které se provedou (s opakováním
+po sekundě), než ssh použije rsh nebo ukončením programu ssh.
+Argument musí být celé číslo. Vhodné pro použití ve skriptech,
+pokud se ne vždy podaří navázat spojení.
+.ne 3
+
+.TP
+.B EscapeChar
+Nastaví escape znak (implicitně ~). Escape znak může být také
+nastaven na příkazovém řádku. Argument musí být jediný znak
+'^' následované písmenem. Má-li být escape znak zcela zakázán
+(aby bylo spojení transparentní pro binární data), je třeba
+použít hodnotu ``none''.
+.ne 3
+
+.TP
+.B FallBackToRsh 
+Pokud se nepodaří navázat spojení pomocí
+.B ssh
+a spojení bude odmítnuto (protože na vzdáleném počítači neběží
+.BR sshd ),
+použije se automaticky
+.B rsh
+(přitom se vypíše varování, že komunikace nebude šifrovaná).
+Argument musí být
+.YN
+.ne 3
+
+.TP
+.B ForwardAgent
+Určuje, zda spojení s autentizačním agentem (pokud existuje)
+má být forwardováno na vzdálený stroj. Argument musí být
+.YN
+.ne 3
+
+.TP
+.B ForwardX11
+Určuje, zda X11 spojení má být automaticky přesměrováno přes
+bezpečný kanál a nastavena proměnné prostředí
+.BR \s-1DISPLAY\s0 .
+Argument musí být 
+.YN
+.ne 3
+
+.TP
+.B GatewayPorts
+Určuje, že také vzdálené stroje se mohou připojovat na lokálně
+forwardované porty. Argument musí být
+.YN
+.ne 3
+
+.TP
+.B GlobalKnownHostsFile
+Definuje, jaký soubor použít místo 
+.IR /etc/ssh/ssh_known_hosts ".
+.ne 3
+
+.TP
+.B HostName
+Definuje skutečné jméno vzdáleného počítače. Umožňuje používání
+přezdívek nebo zkratek pro jména počítačů. Implicitně je jméno
+počítače shodné se jménem zadaný v příkazovém řádku. Jsou povoleny
+i numerické IP adresy (jak i příkazovém řádku, tak jako argument
+.BR HostName ).
+.ne 3
+
+.TP
+.B IdentityFile
+Definuje soubor, ze kterého se čte uživatelova RSA autentizační
+identita (implicitně \fI\s+2.\s0ssh/identity\fR v uživatelově
+domovském adresáři). Navíc budou pro autentizaci použity i
+všechny identity známé autentizačnímu agentu. Ve jméně souboru
+lze použít znak vlnka pro označení uživatelova domovského adresáře.
+Konfigurační soubory mohou obsahovat více identit; tyto identity
+budou zkoušeny postupně.
+.ne 3
+
+.TP
+.B KeepAlive
+Určuje, zda systém má posílat protistraně udržovací zprávy
+(keepalive messages). Tyto zprávy umožňují zjistit přerušení
+spojení nebo havárii jednoho ze strojů. Ovšem i při dočasném
+přerušení komunikace bude spojení ukončeno. Řadě lidí se toto
+chování nelíbí, je však vhodné při dávkovém zpracování.
+
+Implicitní hodnota je "yes" (posílat udržovací zprávy), takže
+klient bude informován, pokud dojde k přerušení spojení nebo
+havárii vzdáleného počítače.
+
+Pro zákaz zasílání udržovacích zpráv musí být nastaveno "no"
+jak v konfiguraci serveru, tak klienta.
+.ne 3
+
+.TP
+.B KerberosAuthentication
+Určuje, zda má být použita autentizace Kerberos V5. 
+
+.TP
+.B KerberosTgtPassing
+Určuje, zda má být Kerberos V5 TGT forwardováno na server.
+
+.TP
+.B LocalForward
+Určuje, že TCP/IP port na lokálním stroji má být forwardován
+přes bezpečný kanál na vzdálený stroj a odtud na další zadaný
+počítač:port. První argument musí být číslo portu, druhý
+počítač:port. Lze zadat více forwardování a další forwardování
+mohou být zadána v příkazovém řádku. Privilegované porty může
+forwardovat pouze root.
+.ne 3
+
+.TP
+.B NumberOfPasswordPrompts
+Určuje počet výzev na zadání přihlašovacího hesla. Argument
+musí být celé číslo. Pamatujte, že také server omezuje počet
+pokusů (implicitně na 5), takže nastavení tohoto parametru na
+větší hodnotu nemá význam. Implicitní hodnota je 1.
+.ne 3
+
+.TP
+.B PasswordAuthentication
+Určuje, zda použít autentizaci přihlašovacím heslem.
+Argument musí být
+.YN
+.ne 3
+
+.TP
+.B PasswordPromptHost
+Určuje, zda ve výzvě k zadání hesla má být obsaženo jméno vzdáleného
+stroje.
+Argument musí být
+.YN
+.ne 3
+
+.TP
+.B PasswordPromptLogin
+Určuje, zda ve výzvě k zadání hesla má být obsaženo přihlašovací
+jméno na vzdáleném počítači.
+Argument musí být
+.YN
+.ne 3
+
+.TP
+.B Port
+Určuje číslo portu pro připojení na vzdálený počítač.
+Implicitně 22.
+.ne 3
+
+.TP
+.B ProxyCommand
+Definuje, jaký příkaz použít pro připojení na server. Příkazový
+řetězec může pokračovat do konce řádku, a bude prováděn shellem
+/bin/sh. V příkazovém řetězci bude %h nahrazeno jménem počítače,
+ke kterému se má připojovat a %p číslem portu. Příkaz může být
+v zásadě cokoli, ale musí číst z stdin a zapisovat na stdout.
+Musí se připojit na
+.B sshd
+server běžící na nějakém stroji, nebo někde provést "sshd -i".
+Správa klíčů počítačů bude prováděna užitím HostName počítače,
+ke kterému se připojuje (implicitně na jméno zadané uživatelem).
+
+Pamatujte, že
+.B ssh
+může být také zkonfigurováno pro podporu SOCKS systémů používajících
+--s-socks4 nebo --s-socks5 konfigurační volbu při překladu.
+.ne 3
+
+.TP
+.B RemoteForward
+Požaduje, aby zadaný TCP/IP port na vzdáleném stroji byl přes
+bezpečný kanál forwardován na lokální počítač, na kterém vyvolá
+TCP spojení na další zadaný počítač:port. První argument musí
+být číslo portu na vzdáleném stroji, druhý argument libovolný
+počítač:port. Lze zadat více než jedno forwardování a další
+mohou být zadána z příkazového řádku. Privilegované porty může
+forwardovat pouze root.
+.ne 3
+
+.TP
+.B RhostsAuthentication
+Určuje, zda zkoušet autentizaci založenou na souborech rhosts.
+Pamatujte, že tato deklarace ovlivní pouze stranu klienta a nemá
+žádný efekt na bezpečnost. Zákaz rhosts autentizace může snížit
+dobu autentizace při pomalém spojení, když rhosts autentizace
+není použita. Většina serverů nedovoluje RhostsAuthentication,
+protože není bezpečná (viz RhostsRSAAuthentication). Argument této
+volby musí být
+.YN
+.ne 3
+
+.TP
+.B RhostsRSAAuthentication
+Určuje, zda zkoušet autentizaci založenou na souborech rhosts
+s RSA autentizací počítačů, což bývá na většině uzlů primární
+autentizační metoda.
+Argument musí být
+.YN
+.ne 3
+
+.TP
+.B RSAAuthentication
+Určuje, zda zkoušet RSA autentizaci. Argument musí být
+.YN
+RSA autentizace může být použita, pokud existuje soubor
+identity, nebo běží autentizační agent.
+.ne 3
+
+.TP
+.B StrictHostKeyChecking
+Jestliže je tento příznak nastaven na "yes", 
+.B ssh
+nebude automaticky přidávat klíče počítačů do souboru
+.IR $HOME/.ssh/known_hosts ,
+a odmítne požadavek na připojení k počítači, jehož klíč byl změněn.
+Toto nastavení poskytuje maximální ochranu proti útokům typu trojského
+koně. Nicméně pokud není nainstalován aktuální soubor
+.I /etc/ssh/ssh_known_hosts
+obsahující klíče všech počítačů, na něž se často připojujete, je tato
+volba nepříjemná, protože nutí uživatele, aby všechny nové počítače
+přidával ručně. Kompromisem je nastavení na "ask", kdy budou nové
+klíče počítačů přidávány automaticky poté, co uživatel potvrdí že
+to opravdu chce. Jestliže je tato volba nastavena na "no", potom
+budou nové klíče počítačů přidávány do souboru
+.I $HOME/.ssh/known_hosts
+automaticky bez potvrzování. Klíče známých počítačů budou ověřovány
+automaticky ve všech případech.
+
+Argument musí být
+"\fByes\fR", "\fBno\fR" nebo "\fBask\fR".
+.ne 3
+
+.TP
+.B TISAuthentication
+Určuje, zda zkoušet TIS autentizaci. Argument této volby musí být
+.YN
+.ne 3
+
+.TP
+.B UsePrivilegedPort
+Určuje, zda při připojování na vzdálený počítač použít privilegovaný
+port. Jestliže je povolena autentizace založená na rhosts nebo
+rsarhosts, je implicitní hodnota je "yes".
+.ne 3
+
+.TP
+.B User
+Definuje uživatelské jméno na vzdáleném stroji. Lze použít, pokud má
+uživatel na různých strojích různá uživatelská jména. Odstraňuje
+problémy s nutností zadávání uživatelského jména na příkazovém řádku.
+.ne 3
+
+.TP
+.B UserKnownHostsFile
+Určuje, který soubor použít místo \fI$HOME/\s+2.\s0ssh/known_hosts\fR.
+.ne 3
+
+.TP
+.B UseRsh
+Určuje, že pro přihlašování na tento počítač musí být použit
+nebezpečný protokol rlogin/rsh. Je možné, že počítač vůbec
+nepodporuje
+.B ssh
+protocol. Způsobí, že
+.B ssh
+okamžitě vyvolá
+.BR rsh .
+Je-li zadána tato volba, budou všechny ostatní volby (kromě
+.BR HostName )
+ignorovány. Argument musí být
+.YN
+.ne 3
+
+.TP
+.B XAuthLocation
+Určuje cestu k programu xauth.
+.ne 3
+
+.SH PROMĚNNÉ PROSTŘEDÍ
+.LP
+Program
+.B ssh 
+normálně nastavuje následující proměnné prostředí:
+.TP
+.B DISPLAY
+Proměnná prostředí DISPLAY označuje umístění X11 serveru. Je
+automaticky nastavena programem 
+.BR ssh ,
+tak že obsahuje hodnotu ve tvaru "hostname:n", kde hostname označuje
+počítač, kde běží shell, a n je celé číslo >= 1. Ssh používá tuto
+speciální hodnotu pro forwardování X11 spojení přes bezpečný kanál.
+Uživatel normálně nesmí ručně nastavovat proměnnou DISPLAY, protože
+pak by X11 spojení bylo nebezpečný (a bude vyžadovat, aby uživatel
+ručně kopíroval jakékoli požadované autorizační cookies).
+.ne 3
+.TP
+.B HOME
+Bude nastavena na cestu do uživatelova domovského adresáře.
+.ne 3
+.TP
+.B LOGNAME
+Synonymum pro USER; nastavuje se pro kompatibilitu se systémy, které
+používají tuto proměnnou.
+.ne 3
+.TP
+.B MAIL
+Bude nastavena na jméno uživatelova mailboxu.
+.ne 3
+.TP
+.B PATH
+Bude nastavena na implicitní PATH zadanou při překladu programu
+.BR ssh ,
+nebo na některých systémech definovanou v
+.I /etc/environment 
+nebo 
+.IR /etc/default/login ".
+.ne 3
+.TP
+.B SSH_AUTH_SOCK
+Jestliže existuje, bude nastavena na jméno (včetně cesty) unix-domain
+soketu použitého pro komunikaci s autentizačním agentem (nebo jeho
+lokálním zástupcem).
+.ne 3
+.TP
+.B SSH_CLIENT
+Identifikuje klientský konec spojení. Tato proměnná obsahuje tři
+hodnoty oddělené mezerou: IP adresu klienta, číslo portu klienta,
+a číslo portu serveru. 
+.ne 3
+.TP
+.B SSH_ORIGINAL_COMMAND
+Bude obsahovat původní příkazový řádek, jestliže je spuštěn
+zadaný příkaz. Může být použita pro získání argumentů apod.
+z opačného konce.
+.ne 3
+.TP
+.B SSH_TTY
+Bude nastavena na jméno tty (včetně cesty) spojeného s aktuálním shellem
+nebo příkazem. Jestliže aktuální session nemá žádné tty, proměnná nebude
+nastavena.
+.ne 3
+.TP
+.B TZ
+Proměnná timezone bude nastavena, aby označovala aktuální časovou
+zónu, pokud byla nastavena při spuštění démona (tj., démon
+předává hodnota na nové spojení).
+.ne 3
+.TP
+.B USER
+Bude nastavena na jméno přihlášeného uživatele.
+.LP
+.RT
+Navíc příkaz 
+.B ssh
+čte  soubor
+.I /etc/environment 
+a 
+.IR $HOME/.ssh/environment ", 
+a přidává řádky tvaru
+.I PROMĚNNÁ=hodnota
+do prostředí. Některé systémy mohou mít další mechanismy pro
+nastavování prostředí, jako soubor
+.I /etc/default/login
+na systému Solaris.
+
+.ne 3
+.SH SOUBORY
+.TP
+.I \&$HOME/\s+2.\s0ssh/known_hosts
+Obsahuje klíče všech počítačů, na které se uživatel přihlásil
+(a které nejsou v \fI/etc/ssh/ssh_known_hosts\fR). Viz manuálová
+stránka k
+.BR sshd .
+.ne 3
+.TP
+.I \&$HOME/\s+2.\s0ssh/random_seed
+Použit jako hnízdo pro  generátor náhodných čísel. Soubor obsahuje
+senzitivní data a proto musí mít práva read/write pro uživatele a
+žádná práva pro ostatní. Tento soubor je vytvořen při prvním spuštění
+programu a je automaticky aktualizován. Uživatel nikdy nemusí číst
+nebo modifikovat tento soubor ručně.
+.ne 5
+.TP
+.I \&$HOME/\s+2.\s0ssh/identity
+Obsahuje RSA autentizační identitu uživatele. Tento soubor obsahuje
+senzitivní data a musí být čitelný uživatelem, ale nedostupný pro
+ostatní. Při generování klíče je možné specifikovat přístupové heslo.
+Přístupové heslo bude použito na zašifrování senzitivní části tohoto
+souboru použitím šifry
+.BR \s-1IDEA\s0 ".
+.ne 3
+.TP
+.I \&$HOME/\s+2.\s0ssh/identity.pub 
+Obsahuje veřejný klíč pro autentizaci (veřejnou část
+souboru identity v podobě čitelné člověkem). Obsah tohoto souboru
+musí být přidán do \fI$HOME/\s+2.\s0ssh/authorized_keys\fR na
+všech strojích, na které se chcete přihlašovat s použitím RSA
+autentizace. Soubor neobsahuje citlivá data a může (ale nemusí)
+být čitelný pro kohokoli. Tento soubor není nikdy použit
+automaticky a není nezbytný; je použit pouze pro snazší práci
+uživatele.
+.ne 3
+.TP
+.I \&$HOME/\s+2.\s0ssh/config
+Konfigurační soubor pro jednotlivé uživatele. Jeho formát
+je popsán výše. Soubor je používán
+.B ssh
+klientem. Obvykle neobsahuje jakákoli citlivé informace,
+ale doporučená práva jsou read/write pro uživatele, a žádná pro
+ostatní.
+.ne 3
+.TP
+.I \&$HOME/\s+2.\s0ssh/authorized_keys
+Obsahuje seznam RSA klíčů, které mohou být použity pro přihlašování
+tohoto uživatele. Jeho formát je popsán v manuálové stránce programu
+.BR sshd .
+V nejjednodušším případě je formát stejný jako formát .pub
+identity souboru (to jest každý řádek obsahuje počet bitů v modulu
+veřejný exponent, modulus, a komentářové pole, oddělené mezerami).
+Tento soubor neobsahuje zvláště citlivé informace, ale doporučená
+práva jsou read/write pro uživatele, a žádná práva pro ostatní.
+.ne 3
+.TP
+.I /etc/ssh/ssh_known_hosts
+Seznam známých klíčů počítačů pro celý systém. Tento soubor musí být
+připraven správcem systému tak, aby obsahoval veřejné klíče všech počítačů
+v organizaci. Soubor musí být čitelný pro všechny. Soubor obsahuje
+veřejné klíče, jeden na řádku, v následujícím formátu (pole jsou oddělena
+mezerami): jméno počítače, počet bitů v modulu, veřejný exponent,
+modulus, a nepovinný komentář. Používají-li se různá jména pro týž stroj,
+musí být v souboru uvedena všechna jeho jména oddělená čárkami. Formát
+je popsán na
+.B sshd 
+manuálové stránce.
+.IP
+Program
+.B sshd
+používá kanonické jméno počítače (vrácené domain name servery)
+pro verifikaci klientských počítačů při přihlašování; ostatní jména
+jsou potřeba protože
+.B ssh
+nekonvertuje uživatelem zadané jméno na kanonické jméno před
+kontrolou klíče, aby osoba, která má přístup k domain name serveru,
+nemohla mást autentizaci počítačů.
+.ne 3
+.TP
+.I /etc/ssh/ssh_config
+Konfigurační soubor pro celý systém (pro všechny uživatele). Tento
+soubor poskytuje implicitní hodnoty, pro parametry, které nejsou
+zadány v uživatelově konfiguračním souboru, a pro uživatele, kteří
+nemají konfigurační soubor. Tento soubor musí být čitelný pro všechny.
+.ne 3
+.TP
+.I $HOME/\s+2.\s0rhosts
+Tento soubor je použit pro \s+2.\s0rhosts autentizaci. Obsahuje
+seznam dvojic počítač/uživatel, pro které je povoleno přihlášení.
+(Pamatujte, že tento soubor je také používán programy rlogin a rsh,
+díky kterým je použití tohoto souboru nebezpečné.)
+Každý řádek v tomto souboru obsahuje jméno počítače (v kanonické formě
+vrácené domain name serverem) a jméno uživatele na tomto počítači,
+oddělené mezerou. Tento soubor musí být vlastněný uživatelem, a nesmí
+mít právo zápisu pro nikoho jiného. Doporučená práva jsou read/write
+pro uživatele a žádná pro ostatní.
+.IP
+Pamatujte, že implicitně má být
+.B sshd
+instalován tak, že požaduje úspěšnou RSA autentizaci počítače
+před \s+2.\s0rhosts autentizací. Jestliže server nemá klíč
+klientského počítače v souboru \fI/etc/ssh/ssh_known_hosts\fR, může
+uživatel uložit klíč do souboru \fI$HOME/\s+2.\s0ssh/known_hosts\fR.
+Nejsnazší způsob, jak toho dosáhnout, je spojit se zpět ze serveru na
+klienta pomocí ssh; tím se klíč počítače automaticky přidá do souboru
+\fI$HOME/\s+2.\s0ssh/known_hosts\fR.
+.ne 3
+.TP
+.I $HOME/\s+2.\s0shosts
+Tento soubor se používá přesně stejným způsobem jako \s+2.\s0rhosts.
+Jeho účelem je umožnit rhosts autentizaci pro
+.BR ssh ,
+aniž by bylo povoleno přihlášení pomocí rlogin nebo rsh.
+.ne 3
+.TP
+.I /etc/hosts.equiv
+Tento soubor se používá při autentizaci pomocí souboru
+\s+2.\s0rhosts. Obsahuje kanonická jména počítačů, na každém
+řádku jeden (formát je detailně popsán na manuálové stránce
+programu
+.BR sshd ). Jestliže je klientský počítač nalezen v tomto
+souboru, je automaticky povolené přihlášení, pokud je jméno
+uživatele na serveru i klientu stejné. Navíc je normálně
+nutná úspěšná RSA autentizace počítače. Tento soubor musí
+zapisovatelný pouze uživatelem root.
+.TP
+.I /etc/ssh/shosts.equiv
+Tento soubor je zpracováván přesně jako 
+.IR /etc/hosts.equiv ".  
+Může být užitečný na povolení přihlášení pomocí
+.BR ssh ,
+ale nikoli pro rsh/rlogin.
+.ne 3
+.TP
+.I /etc/ssh/sshrc
+Příkazy v tomto souboru budou provedeny programem
+.B ssh
+po přihlášení uživatele, ale před provedením uživatelova shellu
+(nebo příkaz).
+Viz manuálová stránka
+.B sshd
+pro další informace.
+.ne 3
+.TP
+.I $HOME/.ssh/rc
+Příkazy v tomto souboru budou provedeny programem
+.B ssh
+po přihlášení uživatele, ale před provedením uživatelova shellu
+(nebo příkaz).
+Viz manuálová stránka
+.B sshd
+pro další informace.
+
+.SH INSTALACE
+.LP
+Program
+.B ssh
+je normálně instalován jako setuid root. Práva uživatele root
+potřebuje pouze pro autentizaci pomocí souboru rhosts
+(vyžaduje, aby spojení přicházelo z privilegovaného portu,
+a alokování takového portu vyžaduje práva uživatele root).
+Také musí být schopen číst soubor
+\fI/etc/ssh/ssh_host_key\fR pro
+.B \s-1RSA\s0
+autentizaci počítačů. Program
+.B ssh
+lze použít
+bez oprávnění uživatele root, ale autentizace pomocí souboru
+rhosts bude zakázána.  
+Program
+.B ssh
+se vzdá jakýchkoli zvláštních práv bezprostředně po navázání
+spojení se vzdáleným počítačem.
+.LP
+Byla vynaložena značná práce, aby byl program
+.B ssh
+bezpečný. Nicméně pokud objevíte bezpečnostní problém, oznamte to
+prosím ihned na <ssh-bugs@cs.hut.fi>.
+
+.SH AUTOR
+.LP
+Tatu Ylonen <ylo@ssh.fi>
+.LP
+Informace o nových verzích, mailing listech, a podobně
+můžete nalézt na domovské WWW stránce programu ssh
+na http://www.cs.hut.fi/ssh.
+
+.SH VIZ TAKÉ
+.BR sshd (8),
+.BR ssh-keygen (1),
+.BR ssh-agent (1),
+.BR ssh-add (1),
+.BR scp (1),
+.BR make-ssh-known-hosts (1),
+.BR rlogin (1),
+.BR rsh (1),
+.BR telnet (1)
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

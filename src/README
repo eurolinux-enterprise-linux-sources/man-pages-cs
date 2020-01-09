@@ -1,0 +1,21 @@
+This package contains Linux man pages in Czech.
+
+Much is missing - contributions are welcome. Mail them to
+tropikhajma@gmail.com.
+The latest release can be found at 
+http://sweb.cz/tropikhajma/man-pages-cs/index.html
+
+All the pages are now in utf-8 format and separated by package of origin. 
+It may be necessary to recode them to ISO-8859-2 in some distributions.
+Man pages from the package man-pages-cs-0.16 are included.
+
+Copyrights: These man pages come under various copyrights. All are freely
+distributable when the nroff source is included.
+
+NOTE: The Makefile script uses Debian-specific man syntax for the check part.
+Will not work with classic man 1.6.
+
+#NOTE!!! This version is the first after the start of OmegaT transition.
+#Filename structure has changed, the md5sum schema has been abandoned
+#(mostly due to changes in the english man-pages). The Makefile and
+#scripts are BROKEN. I need you to fix this - thanks in advance!

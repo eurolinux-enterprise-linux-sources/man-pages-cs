@@ -1,0 +1,24 @@
+.TH EXIT 3  "26.prosince 1996" "GNU" "Linux - příručka programátora"
+.do hla cs
+.do hpf hyphen.cs
+.SH JMÉNO
+exit \- normálně ukončí proces
+.SH SYNTAXE
+.nf
+.B #include <stdlib.h>
+.sp
+.BI "void exit(int " status );
+.fi
+.SH POPIS
+Funkce \fBexit()\fP normálně ukončí proces a vrátí hodnotu \fIstatus\fP
+rodiči. Všechny funkce registrované funkcemi \fBatexit()\fP a \fBon_exit()\fP
+jsou vyvolány v opačném pořadí jejich registrace. Všechny otevřené proudy
+jsou vyprázdněny a uzavřeny.
+.SH NÁVRATOVÁ HODNOTA
+Funkce \fBexit()\fP se nikdy nevrací.
+.SH SPLŇUJE STANDARDY
+SVID 3, POSIX, BSD 4.3, ISO 9899
+.SH DALŠÍ INFORMACE
+.BR _exit "(2), " atexit "(3), " on_exit (3)
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

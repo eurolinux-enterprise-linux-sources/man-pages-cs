@@ -1,0 +1,68 @@
+.\" Hey Emacs! Tento soubor je ze zdroje -*- nroff -*-.
+.\"
+.\" Copyright (c) 1995 Michael Chastain (mec@shell.portal.com), 15 April 1995.
+.\" Přeložil Doubek Václav, 06/2001
+.\"
+.\" Tato dokumentace je volně šiřitelná; můžete ji volně distribuovat a
+.\" upravovat v souladu s podmínkami GNU General Public Licence
+.\" na základě distribuce Free Softwaru; verze 2 podléhá také této
+.\" licenci, stejně jako jakákoliv jiná verze.
+.\"
+.\" GNU General Public Licence doporučuje u "kódu objektu"
+.\" a "vykonavatelného kódu" výstup převádět a ukládat do jiného
+.\" formátu nebo ve formátu typického pro systém, včetně
+.\" přechodného nebo tisknutého výstupu.
+.\"
+.\" Tento manuál je distribuovaný v naději, že bude užitečný,
+.\" ale BEZ ZÁRUK; dokonce bez záruky v OBCHODNÍ ČINNOSTI nebo
+.\" JINÉHO PODNIKATELSKÉHO ZÁMĚRU. Pro více informací se podívejte
+.\" na licenci GNU General Public.
+.\"
+.\" Měli by jste mít zálohovanou kopii licence od GNU General Public
+.\" společně s tímto manuálem; jestliže ne, napište na Free Software
+.\" Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111,
+.\" USA.
+.\"
+.\" Upraveno Tue Oct 22 22:11:53 1996 by Eric S. Raymond <esr@thyrsus.com>
+.TH IPC 2 "15 April 1995" "Linux 1.2.4" "Linux Programmer's Manual"
+.SH NAME
+socketcall \- socketové systémové volání
+.SH STRUČNÝ PŘEHLED
+.BI "int socketcall(int" " call, " "unsigned long *" "args);"
+.SH POPIS
+.B socketcall
+je běžný vstupní bod jádra pro socketové systémové volání.
+.I call
+určuje, která socketová funkce bude vyvolána.
+.I args
+jsou ukazatele do bloku obsahujícího aktuální parametry,
+které jsou předány příslušnému volání.
+.PP
+Uživatelské programy by měly volat příslušné funkce jejich obvyklými jmény.
+Funkci 
+.B socketcall
+by měli používat jen implementátoři standardních knihoven a hackeři
+zabývající se podrobně jádrem Linuxu.
+.SH "POZNÁMKA"
+Toto volání je specifické pro Linux, a nemělo by být používáno v
+přenositelných programech určených i pro jiné platformy.
+.SH "VIZ TAKÉ"
+.BR accept (2),
+.BR bind (2),
+.BR connect (2),
+.BR getpeername (2),
+.BR getsockname (2),
+.BR getsockopt (2),
+.BR listen (2),
+.BR recv (2),
+.BR recvfrom (2),
+.BR send (2),
+.BR sendto (2),
+.BR setsockopt (2),
+.BR shutdown (2),
+.BR socket (2),
+.BR socketpair (2)
+.SH PŘELOŽIL
+Václav Doubek (vaclav.doubek@pslib.cz)
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

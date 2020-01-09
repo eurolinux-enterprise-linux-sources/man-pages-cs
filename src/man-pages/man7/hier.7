@@ -1,0 +1,415 @@
+.\" Copyright (c) 1993 by Thomas Koenig (ig25@rz.uni-karlsruhe.de)
+.\"
+.\" Permission is granted to make and distribute verbatim copies of this
+.\" manual provided the copyright notice and this permission notice are
+.\" preserved on all copies.
+.\"
+.\" Permission is granted to copy and distribute modified versions of this
+.\" manual under the conditions for verbatim copying, provided that the
+.\" entire resulting derived work is distributed under the terms of a
+.\" permission notice identical to this one.
+.\"
+.\" Since the Linux kernel and libraries are constantly changing, this
+.\" manual page may be incorrect or out-of-date.  The author(s) assume no
+.\" responsibility for errors or omissions, or for damages resulting from
+.\" the use of the information contained herein.  The author(s) may not
+.\" have taken the same level of care in the production of this manual,
+.\" which is licensed free of charge, as they might when working
+.\" professionally.
+.\"
+.\" Formatted or processed versions of this manual, if unaccompanied by
+.\" the source, must acknowledge the copyright and authors of this work.
+.\" License.
+.\" Modified Sun Jul 25 11:05:58 1993 by Rik Faith (faith@cs.unc.edu)
+.\" Modified Sat Feb 10 16:18:03 1996 by Urs Thuermann (urs@isnogud.escape.de)
+.\" Modified Mon Jun 16 20:02:00 1997 by Nicolás Lichtmaier <nick@debian.org>
+.\" Modified Mon Feb  6 16:41:00 1999 by Nicolás Lichtmaier <nick@debian.org>
+.\" Modified Tue Feb  8 16:46:45 2000 by Chris Pepper <pepper@tgg.com>
+.\" Modified Fri Sep  7 20:32:45 2001 by Tammy Fox <tfox@redhat.com>
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH HIER 7 2001\-09\-07 Linux "Linux \- příručka programátora"
+.SH JMÉNO
+hier \- Popis hierarchie souborového systému
+.SH POPIS
+Typická instalace Linuxu má, mimo jiné, následující adresáře:
+.TP 
+\fI/\fP
+Kořenový adresář. Zde začíná celý adresářový strom.
+.TP 
+\fI/bin\fP
+Obsahuje spustitelné programy, které jsou potřeba pro jednouživatelský
+režim a pro spuštění systému či jeho opravu.
+.TP 
+\fI/boot\fP
+Obsahuje statické soubory pro zavaděč operačního systému. Tento
+adresář obsahuje jen soubory, které jsou potřeba v čase zavádění
+operačního systému.  Program na vytvoření map\-souboru a konfigurační
+soubory mají být v \fI/sbin\fP a \fI/etc\fP.
+.TP 
+\fI/dev\fP
+Speciální soubory a ovladače fyzických zařízení. Viz \fBmknod\fP(1).
+.TP 
+\fI/etc\fP
+Obsahuje soubory s lokálním nastavením počítače. Některé větší
+programové balíky, jako X11, používají své vlastní podadresáře pod
+\fI/etc\fP.  Některá nastavení také mohou ležet v \fI/usr/etc\fP.  Ale v
+každém případě mají programy hledat svoje soubory s nastavením v
+\fI/etc\fP, přičemž zde mohou být symbolické odkazy do \fI/usr/etc\fP.
+.TP 
+\fI/etc/opt\fP
+Individuální konfigurační soubory pro nestandardní aplikace
+nainstalované v \fI/opt\fP.
+.TP 
+\fI/etc/sgml\fP
+Obsahuje konfigurační soubory pro SGML a XML (volitelné).
+.TP 
+\fI/etc/skel\fP
+Při vytváření nového uživatelského účtu se obvykle kopírují
+soubory z tohoto adresáře do domovského adresáře nového uživatele.
+.TP 
+\fI/etc/X11\fP
+Nastavení pro X11 okenní systém (volitelné).
+.TP 
+\fI/home\fP
+Na počítačích s domovskými adresáři pro uživatele je toto jejich
+obvyklé místo, ať už přímo či nepřímo. Struktura plně závisí na
+rozhodnutí místního správce.
+.TP 
+\fI/lib\fP
+Tento adresář obsahuje sdílené knihovny nutné pro start systému a běh
+příkazů z kořenového souborového systému.
+.TP 
+\fI/media\fP
+Tento adresář obsahuje přípojné body pro výměnná média, jako jsou
+CD a DVD disky nebo USB flash disků.
+.TP 
+\fI/mnt\fP
+Je místo pro připojení dočasně připojeného souborového systému.  V
+některých distribucích obsahuje \fI/mnt\fP podadresáře určené jako
+přípojné body pro několik dočasných souborových systémů.
+.TP 
+\fI/opt\fP
+Tento adresář by měl obsahovat dodatečné balíčky se statickými
+soubory.
+.TP 
+\fI/proc\fP
+Toto je připojovací místo pro souborový systém \fIproc\fP, který
+poskytuje informace o jádře a o běžících procesech. Více o tomto
+pseudo\-souborovém systému viz \fBproc\fP(5).
+.TP 
+\fI/root\fP
+Tento adresář je obvykle domovským adresářem uživatele root
+(volitelné).
+.TP 
+\fI/sbin\fP
+Tak jako \fI/bin,\fP tento adresář obsahuje programy nutné pro spuštění
+systému. U těchto se ovšem nepředpokládá jejich použití běžným
+uživatelem.
+.TP 
+\fI/tmp\fP
+Tento adresář obsahuje dočasné soubory, které mohou být smazány bez
+jakékoliv upozornění, například při startu systému nebo v rámci
+pravidelného úklidu.
+.TP 
+\fI/usr\fP
+Tento adresář je obvykle připojen jako oddělený svazek. Měl byl
+obsahovat pouze sdílitelná data jen pro čtení, takže jej lze snadno
+použít několika Linuxovými systémy najednou.
+.TP 
+\fI/usr/X11R6\fP
+Systém X\-Window, verze 11 release 6 (volitelné).
+.TP 
+\fI/usr/X11R6/bin\fP
+Binární soubory pro X\-Window system; sem je často odkazováno z
+tradičnějšího \fI/usr/bin/X11\fP.
+.TP 
+\fI/usr/X11R6/lib\fP
+Data pro X\-Window system.
+.TP 
+\fI/usr/X11R6/lib/X11\fP
+Obsahuje různé soubory potřebné pro běh X; často je sem odkazováno z
+\fI/usr/lib/X11\fP.
+.TP 
+\fI/usr/X11R6/include/X11\fP
+Obsahuje soubory potřebné pro překlad programů používajících
+X11. Často je sem odkazováno z \fI/usr/inlcude/X11\fP.
+.TP 
+\fI/usr/bin\fP
+Toto je hlavní místo pro spustitelné programy. Většina programů
+používaných běžným uživatelem, které nejsou potřeba pro start nebo
+opravu systému, nebo nejsou instalovány lokálně, by měla být zde.
+.TP 
+\fI/usr/bin/X11\fP
+Tradiční místo pro programy pro X11; pro Linux je to obvykle odkaz na
+\fI/usr/X11R6/bin\fP.
+.TP 
+\fI/usr/dict\fP
+Nahradil jej \fI/usr/share/dict\fP.
+.TP 
+\fI/usr/doc\fP
+Nahradil jej \fI/usr/share/doc\fP.
+.TP 
+\fI/usr/etc\fP
+Nastavení, která mohou být sdílena několika počítači, mohou být
+uložena zde.  K těmto souborům by se však mělo přistupovat pomocí
+odkazu z adresáře \fI/etc\fP.  Odkazy z \fI/etc\fP by měly ukazovat na
+odpovídající soubory v \fI/usr/etc\fP.
+.TP 
+\fI/usr/games\fP
+Binární soubory her a výukových programů (volitelné).
+.TP 
+\fI/usr/include\fP
+Hlavičkové soubory pro překladač jazyka C.
+.TP 
+\fI/usr/include/X11\fP
+Hlavičkové soubory pro překladač jazyka C a X\-Window system. Obvykle
+odkaz na \fI/usr/X11R6/include/X11\fP.
+.TP 
+\fI/usr/include/asm\fP
+Hlavičkové soubory s deklaracemi některých funkcí assembleru.  Obvykle
+odkaz na \fI/usr/src/linux/include/asm\fP.
+.TP 
+\fI/usr/include/linux\fP
+Tento adresář obsahuje informace, které se mohou měnit se změnou jádra
+či libc. Obvykle se jedná o odkaz na \fI/usr/src/linux/include/linux\fP pro
+získání informací zavislých na konkrétním systému.
+
+(Zde by měly být soubory, které fungují s aktuální libc a
+uživatelským prostorem. Nicméně zdrojové soubory jádra nejsou dělané
+na spolupráci s uživatelskými programy a nevědí nic o používané
+verzi libc. Je velmi pravděpodobné, že se něco rozbije, pokud budou
+\fI/usr/include/asm\fP a \fI/usr/include/linux\fP odkazovat na nějaký náhodný
+jaderný strom. Debian se tomu vyhýbá a používá hlavičkové soubory
+jádra, poskytované balíkem libc*\-dev.)
+.TP 
+\fI/usr/include/g++\fP
+Hlavičkové soubory pro překladač GNU C++.
+.TP 
+\fI/usr/lib\fP
+Knihovny, včetně sdílených, a některé programy, které se obvykle
+nespouštějí přímo. Složitější programy zde mohou mít
+podadresáře.
+.TP 
+\fI/usr/lib/X11\fP
+Obvyklé místo pro data pro programy z X windows a nastavení X. Pro Linux
+je to obvykle odkaz na \fI/usr/X11R6/lib/X11\fP.
+.TP 
+\fI/usr/lib/gcc\-lib\fP
+programy a hlavičky pro překladač GNU C, \fBgcc\fP(1).
+.TP 
+\fI/usr/lib/groff\fP
+Soubory pro formátovací systém GNU groff.
+.TP 
+\fI/usr/lib/uucp\fP
+Soubory pro \fBuucp\fP(1).
+.TP 
+\fI/usr/local\fP
+Obvyklé místo pro lokální soubory.
+.TP 
+\fI/usr/local/bin\fP
+Spustitelné lokální programy.
+.TP 
+\fI/usr/local/doc\fP
+Lokální dokumentace.
+.TP 
+\fI/usr/local/etc\fP
+Nastavení pro lokální programy.
+.TP 
+\fI/usr/local/games\fP
+Spustitelné soubory lokálně nainstalovaných her.
+.TP 
+\fI/usr/local/lib\fP
+Pomocné soubory pro lokální programy.
+.TP 
+\fI/usr/local/include\fP
+Hlavičkové soubory pro lokální překladač C.
+.TP 
+\fI/usr/local/info\fP
+Stránky info pro lokální programy.
+.TP 
+\fI/usr/local/man\fP
+Stránky man pro lokální programy.
+.TP 
+\fI/usr/local/sbin\fP
+Lokální programy pro správu systému.
+.TP 
+\fI/usr/local/share\fP
+Lokální data aplikací, která mohou být sdílena mezi různými
+architekturami stejného OS.
+.TP 
+\fI/usr/local/src\fP
+Zdrojový kód pro lokální programy.
+.TP 
+\fI/usr/man\fP
+Nahradil jej \fI/usr/share/man\fP.
+.TP 
+\fI/usr/sbin\fP
+Spustitelné programy pro správu systému, které nejsou nutné pro
+zavedení, opravu či připojení souborového systému \fI/usr\fP.
+.TP 
+\fI/usr/share\fP
+Obsahuje podadresáře s daty jednotlivých aplikací, která mohou být
+sdílena mezi různými architekturami stejného OS.  Často se jedná o
+věci, které byly kdysi v \fI/usr/doc\fP nebo \fI/usr/lib\fP nebo \fI/usr/man\fP.
+.TP 
+\fI/usr/share/dict\fP
+Obsahuje seznamy slov pro korektory pravopisu.
+.TP 
+\fI/usr/share/doc\fP
+Dokumentace k nainstalovaným programům.
+.TP 
+\fI/usr/share/games\fP
+Statické datové soubory k hrám z \fI/usr/games\fP.
+.TP 
+\fI/usr/share/info\fP
+Info stránky.
+.TP 
+\fI/usr/share/locale\fP
+Informace o locale
+.TP 
+\fI/usr/share/man\fP
+Manuálové stránky v podadresářích podle sekcí.
+.TP 
+\fI/usr/share/man/<locale>/man[1\-9]\fP
+Tyto podadresáře obsahují manuálové stránky pro dané locale ve
+zdrojovém tvaru. Systémy používající jediný jazyk a znakovou stránku
+pro všechny manuálové stránky mohou řetězec <locale> vynechat.
+.TP 
+\fI/usr/share/misc\fP
+Různá data, která mohou být sdílena mezi různými architekturami
+stejného OS.
+.TP 
+\fI/usr/share/nls\fP
+Katalogy zpráv pro nativní podporu jazyků
+.TP 
+\fI/usr/share/sgml\fP
+Soubory pro SGML a XML.
+.TP 
+\fI/usr/share/terminfo\fP
+Databáze pro terminfo.
+.TP 
+\fI/usr/share/tmac\fP
+Makra troff, která nejsou distribuována s groff.
+.TP 
+\fI/usr/share/zoneinfo\fP
+Soubory pro informace o časové zóně.
+.TP 
+\fI/usr/src\fP
+Zdrojový kód pro komponenty systému, spolu s některými referenčními
+balíčky. Nepracujte zde s vlastními projekty \- soubory v /usr by měly
+být jen ke čtení, s výjimkou okamžiku instalace software.
+.TP 
+\fI/usr/src/linux\fP
+Toto bylo tradičně místo pro zdrojový kód jádra.  Některé distribuce
+zde dávají zdrojový kód svého výchozího jádra.  Při tvorbě
+vlastního jádra by měl být použit jiný adresář.
+.TP 
+\fI/usr/tmp\fP
+Zastaralý. Měl by to být odkaz na \fI/var/tmp\fP.  Tento odkaz je zde jen z
+důvodů kompatibility a neměl by se používat.
+.TP 
+\fI/var\fP
+Obsahuje soubory, které mohou měnit velikost, jako např. spool a logy.
+.TP 
+\fI/var/adm\fP
+Tento adresář je nahrazen \fI/var/log\fP a měl by být odkazem na
+\fI/var/log\fP.
+.TP 
+\fI/var/backups\fP
+Rezervováno z historických důvodů.
+.TP 
+\fI/var/cache\fP
+Obsahuje cachovaná data programů.
+.TP 
+\fI/var/catman/cat[1\-9]  nebo  /var/cache/man/cat[1\-9]\fP
+Předformátované manuálové stránky podle sekcí. (Používání
+předformátovaných manuálových stránek je zastaralé.)
+.TP 
+\fI/var/cron\fP
+Rezervováno z historických důvodů.
+.TP 
+\fI/var/lib\fP
+Proměnlivé stavové informace pro programy.
+.TP 
+\fI/var/local\fP
+Proměnná data pro \fI/usr/local\fP.
+.TP 
+\fI/var/lock\fP
+[přibližně] Zde se ukládají zámky. Zámky pro zařízení mají
+vypadat takto: \fILCK..<device>\fP kde \fI<device>\fP je jméno
+zařízení v souborovém systému.  Jména zámků mají obsahovat (stejně
+jako pro HDU UUCP) PID jako 10\-znakové desítkové číslo kódované v
+ASCII, končící znakem nový řádek.
+.TP 
+\fI/var/log\fP
+Různé protokoly o běhu systému.
+.TP 
+\fI/var/opt\fP
+Proměnná data pro \fI/opt\fP.
+.TP 
+\fI/var/mail\fP
+Poštovní schránky uživatelů. Nahrazuje \fI/var/spool/mail\fP.
+.TP 
+\fI/var/msgs\fP
+Rezervováno z historických důvodů.
+.TP 
+\fI/var/preserve\fP
+Rezervováno z historických důvodů.
+.TP 
+\fI/var/run\fP
+Soubory obsahující proměnné běžícího systému, jako soubory s
+identifikacemi procesů (PID) a záznamy o přihlášených uživatelích
+\fI(utmp)\fP.  Tyto soubory se obvykle mažou při startu systému.
+.TP 
+\fI/var/spool\fP
+Sdílená data (případně jejich fronty) různých programů.
+.TP 
+\fI/var/spool/at\fP
+Data pro \fBat\fP(1).
+.TP 
+\fI/var/spool/cron\fP
+Data pro \fBcron\fP(8).
+.TP 
+\fI/var/spool/lpd\fP
+Data pro tisk.
+.TP 
+\fI/var/spool/mail\fP
+Nahradil jej \fI/var/mail\fP.
+.TP 
+\fI/var/spool/mqueue\fP
+Fronta odchozí pošty.
+.TP 
+\fI/var/spool/news\fP
+Sdílený adresář pro news.
+.TP 
+\fI/var/spool/rwho\fP
+Sdílené soubory pro \fBrwhod\fP(8).
+.TP 
+\fI/var/spool/smail\fP
+Sdílená data pro \fBsmail\fP(1)  (poštovní agent).
+.TP 
+\fI/var/spool/uucp\fP
+Sdílena data pro \fBuucp\fP(1).
+.TP 
+\fI/var/tmp\fP
+Jako \fI/tmp\fP, tento adresář obsahuje dočasné soubory po neurčenou dobu.
+.TP 
+\fI/var/yp\fP
+Databázové soubory pro NIS.
+.SH "SPLŇUJE STANDARDY"
+The Filesystem Hierarchy Standard, Version 2.2
+<http://www.pathname.com/fhs/>.
+.SH CHYBY
+Tento seznam není vyčerpávající; různé systémy mohou být nastaveny
+různě.
+.SH "DALŠÍ INFORMACE"
+\fBfind\fP(1), \fBln\fP(1), \fBproc\fP(5), \fBmount\fP(8)
+
+The Filesystem Hierarchy Standard
+.SH TIRÁŽ
+Tato stránka je součástí projektu Linux \fIman\-pages\fP.  Popis projektu a
+informace o hlášení chyb najdete na http://www.kernel.org/doc/man\-pages/.

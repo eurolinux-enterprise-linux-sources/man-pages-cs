@@ -1,0 +1,187 @@
+.TH EXPORTS 5 "2. května 1998"
+.do hla cs
+.do hpf hyphen.cs
+.UC 5
+.SH JMÉNO
+exports \- souborové systémy exportované pomocí NFS
+.SH SYTAXE
+.B /etc/exports
+.SH POPIS
+Soubor
+.I /etc/exports
+definuje přístupová práva pro souborové systémy, které mohou
+být exportovány NFS klientům. Je používán jak NFS mount démonem,
+.BR (mountd (8))
+tak i NFS server démonem
+.BR (nfsd (8)).
+.PP
+Formát souboru je podobný formátu souboru
+.I exports
+na SunOS, přičemž definuje některá rozšíření. Každá řádka obsahuje bod
+připojení (mount point) a seznam počítačů či síťových skupin, které
+mají právo tento souborový systém v tomto bodě připojit. Ke každému
+jménu počítače je možno připojit seznam připojovacích parametrů v
+závorkách.  Prázdné řádky jsou ignorovány a znak # uvozuje komentář až
+do konce řádku.
+.PP
+.SS Základní přepínače
+.TP
+.IR secure "\*d"
+Tento přepínač vyžaduje, aby připojení vycházelo z portu s číslem menším
+než IPPORT_RESERVED (1024). Toto je standardní nastavení. Pro jeho změnu
+zadejte
+.IR insecure .
+.TP
+.IR ro
+Povoluje přístup pouze pro čtení pro toto připojení. Standardně je povolen
+přístup i pro zápis. Ten je možno explicitně uvést pomocí přepínače
+.IR rw .
+.TP
+.IR link_relative
+Konvertuje absolutní symbolické odkazy (tj. ty, které začínají lomítkem)
+na relativní přidáním správného počtu ../ na začátek, abychom se posunuli
+z adresáře s odkazem do kořene serveru. Tento přepínač má význam pouze
+tehdy, není-li souborový systém připojen jako kořen.
+.TP
+.IR link_absolute
+Odkazům se ponechává jejich původní význam. Toto je standardní nastavení.
+.SS Mapování uživatelských identifikací
+.PP
+.I nfsd
+zakládá kontrolu přístupu k souborům na serveru na uid a gid, které je
+součástí každého NFS RPC požadavku. Logický požadavek, aby uživatel
+přistupoval na soubory na serveru stejně jako na lokální vyžaduje, aby
+uid a gid byla na klientu i serveru totožná. Toto však není vždy
+pravda a někdy je dokonce vyžadováno, aby tomu tak nebylo.
+.PP
+Velmi často není vhodné, aby uživatel root na jednom počítači byl také
+rootem, když přistupuje na soubory na NFS serveru. Proto se uid 0 obvykle
+mapuje na jiné uid zvané anonymní nebo 
+.I nobody .
+Tento mód je standardní (nazývá se root squashing) a lze jej vypnout
+pomocí
+.IR no_root_squash .
+.PP
+Nfsd standardně získává anonymní uid a gid hledáním uživatele
+.I nobody
+v souboru /etc/passwd při startování démona. Jestliže jej nenalezne,
+použije -2 (65534) jako uid i gid. Tyto hodnoty mohou být změněny
+pomocí přepínačů
+.IR anonuid " a " anongid .
+.PP
+Navíc nfsd umožňuje nastavit mapování dalších uid a gid na uživatele nobody.
+Mapování všech na nobody lze nastavit přepínačem
+.IR all_squash .
+.PP 
+Aby bylo možno dynamicky nastavit mapování lokálních a vzdálených 
+uid a gid použijte 
+.I nfsd
+přepínač
+.I map_daemon ,
+který používá UGID RPC protokol. Aby vše fungovalo, je třeba spustit
+.BR ugidd (8)
+mapovací démon na straně klienta.
+.PP
+Zde je kompletní seznam mapovacích přepínačů:
+.TP
+.IR root_squash
+Mapuje požadavky uid/gid 0 na anonymní uid/gid. Všimněte si, že se to netýká
+jiných stejně citlivých uživatelů, jako je např. 
+.IR bin .
+.TP
+.IR no_root_squash
+Vypíná root_squash. Obvykle je vhodný pro bezdiskové stanice.
+.TP
+.IR squash_uids " a " squash_gids
+Seznam uid/gid, které se mají také mapovat na anonymního uživatele.
+Správný seznam vypadá např. takto:
+.IP
+squash_uids=0-15,20,25-50
+.IP
+Obvykle je však tento seznam jednodušší:
+.IP
+squash_uids=0-100
+.IP
+.TP
+.IR all_squash
+Mapuje všechny uživatele na anonymního. Lze jej s výhodou použít na
+NFS-export veřejných FTP stromů či jiných veřejně sdílených adresářů.
+Vypíná se pomocí 
+.IR no_all_squash ,
+což je standardní nastavení.
+.TP
+.IR map_daemon
+Tento přepínač zapíná dynamické mapování uid a gid. Každý požadavek
+je přeložen do odpovídajícího serverového uid/gid a každá odpověď
+zase obráceně. Vyžaduje, aby byl démon
+.BR rpc.ugidd (8)
+spuštěn na straně klienta. Standardně je nastaveno
+.IR map_identity ,
+které ponechává všechna uid beze změny. Přitom se však v každém 
+případě použije nastavení přepínačů sqash, které mají přednost.
+.TP
+.IR anonuid " a " anongid
+Tyto přepínače explicitně nastavují anonymní uid a gid. Primární použití 
+je pro PC/NFS klienty, kde se může každý požadavek jevit, jako byl přišel
+od jediného klienta. Jako příklad uveďme export pro 
+.I /home/joe
+v příkladech dole, které mapuje každý požadavek na uid 150 (o kterém se
+předpokládá, že patří uživateli joe).
+.IP
+.nf
+.fi
+.SH PŘÍKLAD
+.PP
+.nf
+.ta +3i
+# příklad souboru /etc/exports
+/               master(rw) trusty(rw,no_root_squash)
+/projects       proj*.local.domain(rw)
+/usr            *.local.domain(ro) @trusted(rw)
+/home/joe       pc001(rw,all_squash,anonuid=150,anongid=100)
+/pub            (ro,insecure,all_squash)
+.fi
+.PP
+První řádka exportuje celý souborový systém počítačům master a
+trusty. Navíc, veškerý squashing je vypnut pro klienta trusty.  Druhý
+a třetí příklad ukazuje, jak použít zástupné znaky pro jména počítačů
+a jména síťových skupin (to je @trusted). Čtvrtá řádka ukazuje export
+pro klienta PC/NFS (viz výše). Poslední řádka exportuje veřejný FTP
+adresář libovolnému počítači, přičemž všechny požadavky jsou prováděny
+jako uživatel nobody.
+Přepínač
+.I insecure 
+dovoluje připojit klienty, kteří nepoužívají porty rezervované pro NFS.
+.SH UPOZORNĚNÍ
+Na rozdíl od jiných implementací NFS serveru tento
+.B nfsd
+démon dovoluje exportovat adresář i podadresáře témuž klientovi, např.
+.IR /usr " a " /usr/X11R6 .
+V tomto případě se použijí přepínače, které jsou nejblíže. Dejme tomu, že
+klient přistupuje na soubor v 
+.IR /usr/X11R6 ,
+pak se uplatní přepínače pro 
+.I /usr/X11R6 .
+Toto platí v případě, že jsou tyto přepínače definovány maskou nebo pro
+síťovou skupinu.
+.SH SOUBORY
+.TP
+.I /etc/exports
+Konfigurační soubor pro  
+.BR nfsd (8).
+.TP
+.I /etc/passwd
+Soubor hesel.
+.SH DIAGNOSTIKA
+Chyba v tomto souboru je hlášena pomocí 
+.BR syslogd (8)
+jako úroveň NOTICE až DAEMON kdykoli je 
+.BR nfsd (8)
+nebo
+.BR mountd (8)
+spuštěn.
+.SH VIZ TÉŽ
+.BR mountd (8),
+.BR nfsd (8),
+.BR nfs (5),
+.BR passwd (5).

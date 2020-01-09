@@ -1,0 +1,160 @@
+.\" Copyright (c) 1983, 1990 The Regents of the University of California.
+.\" All rights reserved.
+.\"
+.\" Redistribution and use in source and binary forms, with or without
+.\" modification, are permitted provided that the following conditions
+.\" are met:
+.\" 1. Redistributions of source code must retain the above copyright
+.\"    notice, this list of conditions and the following disclaimer.
+.\" 2. Redistributions in binary form must reproduce the above copyright
+.\"    notice, this list of conditions and the following disclaimer in the
+.\"    documentation and/or other materials provided with the distribution.
+.\" 3. All advertising materials mentioning features or use of this software
+.\"    must display the following acknowledgement:
+.\"	This product includes software developed by the University of
+.\"	California, Berkeley and its contributors.
+.\" 4. Neither the name of the University nor the names of its contributors
+.\"    may be used to endorse or promote products derived from this software
+.\"    without specific prior written permission.
+.\"
+.\" THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+.\" ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+.\" IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+.\" ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+.\" FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+.\" DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+.\" OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+.\" HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+.\" LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+.\" OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+.\" SUCH DAMAGE.
+.\"
+.\"     from: @(#)talk.1	6.6 (Berkeley) 4/22/91
+.\"	$Id: talk.1,v 1.15 2000/07/30 23:57:02 dholland Exp $
+.\"
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.Dd 24.listopad 1999
+.Dt TALK 1
+.Os "Linux NetKit (0.17)"
+.Sh JMÉNO
+.Nm talk
+.Nd rozhovor s jiným uživatelem
+.Sh POUŽITÍ
+.Nm talk
+.Ar osoba
+.Op Ar jméno_tty
+.Sh POPIS
+.Nm Talk
+je vizuální komunikační program který kopíruje řádky z
+vašeho terminálu jinému uživateli.
+.Pp
+Parametry:
+.Bl -tag -width ttyname
+.It Ar osoba
+Jestliže si přejete hovořit s někým na stejném serveru, tak
+.Ar osoba
+je jeho přihlašovací jméno. Jestliže si přejete hovořit s
+uživatelem na jiném serveru, tak
+.Ar osoba
+má formu
+.Ql uživatel@server .
+.It Ar jméno_tty
+Jestliže si přejete hovořit s uživatelem který je přihlášen více
+než jednou, určuje
+.Ar jméno_tty
+příslušný terminál, na kterém
+má být zobrazena výzva.
+.Ar jméno_tty
+je ve formátu
+.Ql ttyXX
+nebo
+.Ql pts/X .
+.El
+.Pp
+Po spuštění
+.Nm talk
+kontaktuje talk démona na serveru druhého
+uživatele, který pak vypíše příslušnému uživateli vzkaz:
+.Bd -literal -offset indent -compact
+Message from TalkDaemon@váš_počítač...
+talk: connection requested by jeho_jméno@jeho_počítač.
+talk: respond with: talk jeho_jméno@jeho_počítač
+
+.Ed
+.Pp
+Uživatel může odpovědět zadáním příkazu:
+.Pp
+.Dl talk \ jeho_jméno@jeho_počítač
+.Pp
+.\".Ql ^L
+Nezáleží z kterého serveru příjemce odpovídá, pokud je jeho
+přihlašovací jméno stejné. Jakmile je komunikace navázána, mohou oba
+účastníci psát najednou; text, který napíší, se bude zobrazovat v
+oddělených oknech. Stisknutí kombinace kláves control-L (^L)  způsobí
+překreslení obrazovky. Mazání znaků, řádků a slov (obvykle ^H, ^U, a
+^W)  funguje normálně. Pro ukončení použijte kombinaci kláves pro
+přerušení (obvykle ^C);
+.Nm talk
+pak přesune kurzor na spodní část
+obrazovky a obnoví předchozí stav terminálu.
+.Pp
+Od verze netkit-ntalk 0.15 podporuje
+.Nm talk
+scrollování (rolování
+obrazovky); escape-p a escape-n rolují vlastní okno, ctrl-p a ctrl-n
+rolují druhé okno. Tyto zkratky jsou nyní obráceně, než byly ve verzi
+0.16; to může být sice nejprve matoucí, ale má to svou logiku - zkratky
+s escape se obtížněji používají, takže jsou použity pro méně
+časté operace.
+.Pp
+Pokud nechcete být rušeni výzvami od talk démona, můžete je blokovat
+použitím příkazu
+.Xr mesg 1 .
+Standardně tato hlášení blokována
+nejsou.  Některé programy, jako je
+.Xr nroff 1 ,
+.Xr pine 1 ,
+a
+.Xr pr 1 ,
+mohou výzvy při svém běhu dočasně blokovat, aby předešly
+smíchání výstupů.
+.Pp
+.Sh SOUBORY
+.Bl -tag -width /var/run/utmp -compact
+.It Pa /etc/hosts
+nalezení příjemcova počítače
+.It Pa /var/run/utmp
+nalezení příjemcova tty
+.El
+.Sh DALŠÍ INFORMACE
+.Xr mail 1 ,
+.Xr mesg 1 ,
+.Xr who 1 ,
+.Xr write 1 ,
+.Xr talkd 8
+.Sh CHYBY
+Protokol používaný ke komunikaci s talk démonem je hrozný.
+.Pp
+Verze
+.Xr talk 1
+vydaná s
+.Bx 4.2
+používá jiný a ještě
+hroznější protokol, který je navíc úplně nekompatibilní. Některé
+Unixy (zvláště ty od Sunu) tento starý protokol používaly.
+.Pp
+Staré verze programu
+.Nm talk
+mohou špatně fungovat na počítačích
+s více než jednou IP adresou, jako jsou stroje s dynamickými SLIP nebo
+PPP připojeními.  Tento problém byl vyřešen ve verzi netkit-ntalk 0.11,
+ale může ovlivnit osoby, se kterými chcete komunikovat.
+.Sh HISTORIE
+Příkaz
+.Nm
+se objevil ve verzi
+.Bx 4.2 .

@@ -1,0 +1,119 @@
+.\" Copyright (c) 1993 Michael Haardt (michael@moria.de),
+.\"     Fri Apr  2 11:32:09 MET DST 1993
+.\"
+.\" This is free documentation; you can redistribute it and/or
+.\" modify it under the terms of the GNU General Public License as
+.\" published by the Free Software Foundation; either version 2 of
+.\" the License, or (at your option) any later version.
+.\"
+.\" The GNU General Public License's references to "object code"
+.\" and "executables" are to be interpreted as the output of any
+.\" document formatting or typesetting system, including
+.\" intermediate and printed output.
+.\"
+.\" This manual is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public
+.\" License along with this manual; if not, write to the Free
+.\" Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111,
+.\" USA.
+.\"
+.\" Modified Sun Jul 25 10:46:28 1993 by Rik Faith (faith@cs.unc.edu)
+.\" Modified Sun Aug 21 18:12:27 1994 by Rik Faith (faith@cs.unc.edu)
+.\" Modified Sun Jun 18 01:53:57 1995 by Andries Brouwer (aeb@cwi.nl)
+.\" Modified Mon Jan  5 20:24:40 MET 1998 by Michael Haardt
+.\"  (michael@cantor.informatik.rwth-aachen.de)
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH PASSWD 5 1998\-01\-05 Linux "Linux \- příručka programátora"
+.SH JMÉNO
+passwd \- seznam hesel uživatelů
+.SH POPIS
+\fBPasswd\fP je čitelný textový soubor, který obsahuje seznam účtů
+systému, obsahující pro každý účet užitečné informace jako ID
+uživatele, ID skupiny, domovský adresář, shell apod.  Často také
+obsahuje zašifrovaná hesla účtů.  Měl by být čitelný pro všechny
+(mnoho utilit, jako \fBls\fP(1)  jej používají k namapování ID uživatele
+na jméno uživatele), ale zapisovatelný jen pro superuživatele.
+.PP
+Za starých dobrých časů nepředstavovalo povolení čtení pro všechny
+velký problém. Každý mohl číst zašifrovaná hesla, ale hardware byl
+příliš pomalý na rozluštění dobře zvoleného hesla a navíc
+převažovala představa přátelské komunity uživatelů. Dnes se často
+používá některá verze stínových hesel, kde \fI/etc/passwd\fP obsahuje
+hvězdičky (*) namísto zašifrovaných hesel, která jsou obsažena v
+\fI/etc/shadow\fP, který je čitelný pouze superuživatelem.
+.PP
+Bez ohledu na to, jestli jsou použita stínová hesla nebo ne, používá
+mnoho administrátorů hvězdičku v poli pro zašifrované heslo, aby
+zajistili, že se uživatel nemůže přihlásit pomocí hesla (viz
+Poznámky níže).
+.PP
+Když vytvoříte nový účet, nejprve dejte do pole pro heslo hvězdičku
+a potom použijte \fBpasswd\fP(1)  pro nastavení hesla.
+.PP
+Každý řádek tvoří jeden záznam, který má následující formát:
+.sp
+.RS
+jméno_účtu:heslo:UID:GID:GECOS:adresář:shell
+.RE
+.sp
+Popis jednotlivých polí:
+.RS
+.TP  1.0in
+\fIjméno_účtu\fP
+jméno uživatele systému. Nemělo by obsahovat velká písmena.
+.TP 
+\fIheslo\fP
+zašifrované heslo uživatele, hvězdička (*) nebo písmeno \(aqx\(aq.
+(Viz \fBpwconv\fP(8)  pro vysvětlení \(aqx\(aq.)
+.TP 
+\fIUID\fP
+číselná identifikace uživatele (user ID)
+.TP 
+\fIGID\fP
+číselná identifikace skupiny (group ID)
+.TP 
+\fIGECOS\fP
+Toto pole je volitelné a má jen informativní význam. Obvykle obsahuje
+celé jméno uživatele. GECOS znamená General Electric Comprehensive
+Operating System, který byl přejmenován na GCOS, když byla velká divize
+systémů GE prodána Honeywellu.  Dennis Ritchie řekl: "Občas jsme
+poslali tiskový výstup nebo dávku úloh GCOS serveru. Pole gcos v souboru
+hesel se používalo k uskladnění informací pro $IDENTcard. Nebylo to
+elegantní."
+.TP 
+\fIadresář\fP
+domovský adresář uživatele ( \fB$HOME\fP)
+.TP 
+\fIshell\fP
+program, který je spuštěn po úspěšném přihlášení (jestliže je
+prázdný, použije se \fI/bin/sh\fP).  Pokud je nastaven na neexistující
+spustitelný soubor, nebude se uživatel moci přihlásit pomocí
+\fBlogin\fP(1).
+.RE
+.SH SOUBORY
+\fI/etc/passwd\fP
+.SH POZNÁMKY
+Pokud chcete vytvořit skupiny uživatelů, musejí být jejich GID shodné
+a musí existovat záznam v \fI/etc/group\fP, nebo nebude žádná skupina
+existovat.
+.PP
+Pokud je zašifrované heslo nastaveno na hvězdičku, uživatel se nebude
+moci přihlásit pomocí \fBlogin\fP(1), ale stále ještě se může
+přihlásit pomocí \fBrlogin\fP(1), spouštět existující procesy a
+spouštět nové pomocí \fBrsh\fP(1), \fBcron\fP(8), \fBat\fP(1), nebo filtrů
+pošty apod. Uzamčení účtu prostou změnou shellu přináší stejné
+výsledky a navíc umožňuje použít \fBsu\fP(1).
+.SH "DALŠÍ INFORMACE"
+\fBlogin\fP(1), \fBpasswd\fP(1), \fBsu\fP(1), \fBgetpwent\fP(3), \fBgetpwnam\fP(3),
+\fBgroup\fP(5), \fBshadow\fP(5)
+.SH TIRÁŽ
+Tato stránka je součástí projektu Linux \fIman\-pages\fP.  Popis projektu a
+informace o hlášení chyb najdete na http://www.kernel.org/doc/man\-pages/.

@@ -1,0 +1,36 @@
+.\" -*- nroff -*-
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH PS2ASCII 1 "9. květen 2005" 8.16 "Ghostscript Tools"
+.\" $Id: ps2ascii.1,v 1.4 2005/05/09 22:04:37 Arabidopsis Exp $
+.SH JMÉNO
+ps2ascii \- Ghostscript převaděč z PostScriptu nebo PDF na ASCII
+.SH POUŽITÍ
+\fBps2ascii\fP [ \fIvstup.ps\fP [ \fIvýstup.txt\fP ] ]
+.br
+\fBps2ascii\fP \fIvstup.pdf\fP [ \fIvýstup.txt\fP ]
+.SH POPIS
+\fBps2ascii\fP používá \fBgs\fP(1) k extrakci ASCII textů ze souborů ve
+formátu \fBPostScript\fP(tm) nebo Adobe \fBPortable Document Format\fP (PDF).
+Pokud nejsou z příkazové řádky zadány žadné soubory, \fBgs\fP čte ze
+standardního vstupu. Sobory PDF však musí být zadány jménem souboru,
+nemohou být čteny ze standardního vstupu.  Pokud není zadáno jméno
+výstupního souboru, ASCII text je zapsán na standardní výstup.
+.PP
+\fBps2ascii\fP nebere v úvahu kódování fontu a nezachází příliš dobře
+s kerningem, proto při převodu PostScriptu (ale prozatím nikoli PDF)
+můžete zvážit použití programu \fBpstotext\fP (viz níže).
+.SH SOUBORY
+Spuštěním "\fBgs \-h\fP" zjistíte umístění dokumentace balíku
+Ghostscript ve vašem systému, ze které se dozvíte více podrobností.
+.SH "DALŠÍ INFORMACE"
+pstotext(1), http://www.research.digital.com/SRC/virtualpaper/pstotext.html
+.SH VERZE
+Tento dokument byl naposledy revidován pro Ghostscript verze 8.16.
+.SH AUTOR
+artofcode LLC a Artifex Software, bug\-gs at ghostscript.com, jsou hlavními
+udržovateli programu Ghostscript.  Významná vylepšení provedl David
+M. Jones <dmjones@theory.lcs.mit.edu>.

@@ -1,0 +1,74 @@
+.TH CONNECT 2 "5. dubna 1997" "Linux 0.99.11" "Linux - příručka programátora"
+.do hla cs
+.do hpf hyphen.cs
+.SH JMÉNO
+connect \- inicializuj spojení soketu
+.SH SYNTAXE
+.B #include <sys/types.h>
+.br
+.B #include <sys/socket.h>
+.sp
+.BI "int connect(int " sockfd ", struct sockaddr *" serv_addr ", int
+.BI " addrlen );
+.SH POPIS
+Parametr
+.I sockfd
+je soket.
+Je-li jeho typ
+.BR SOCK_DGRAM ,
+potom toto volání specifikuje, kam má tento soket standardně posílat data.
+Tato adresa je jediným místem, odkud a kam budou přijímány, resp. posílány
+datagramy. Je-li typ soketu
+.B SOCK_STREAM ,
+potom se toto volání pokusí navázat spojení s jiným soketem, který je
+specifikován v
+.BR serv_addr ,
+což je adresa v jmenném prostoru soketu. Každý jmenný prostor interpretuje
+adresu v 
+.BR serv_addr
+podle svého. Obvykle se mohou proudové sokety spojit 
+pouze jednou; datagramové sokety mohou použít volání
+.B connect
+vícekrát. Datagramové sokety mohou zrušit asociovaný soket tak, že se
+pokusí spojit s nějakou neplatnou adresou (nebo s adesou NULL).
+.SH NÁVRATOVÁ HODNOTA
+Je-li spojení navázáno, je vrácena 0, jinak \-1 a externí proměnná 
+.I errno
+je příslušně nastavena.
+.SH CHYBY
+Tento seznam je pouze všeobecný. Mohou existovat další specifické chyby pro
+použitý jmenný prostor.
+.TP
+.B EBADF
+Špatný deskriptor.
+.TP
+.B EFAULT
+Adresa soketu je mimo adresový prostor procesu.
+.TP
+.B ENOTSOCK
+Deskriptor není platným deskriptorem soketu.
+.TP
+.B EISCONN
+Soket je již spojen.
+.TP
+.B ECONNREFUSED
+Spojení bylo serverem odmítnuto.
+.TP
+.B ETIMEDOUT
+Časový limit pro spojení vypršel.
+.TP
+.B ENETUNREACH
+Síť není dosažitelná.
+.TP
+.B EADDRINUSE
+Adresa je již používána.
+.SH SPLŇUJE STANDARDY
+SVr4, 4.4BSD (volání
+.B connect
+se poprvé objevilo v BSD 4.2).  SVr4 dokumentuje další chybové kódy:
+EADDRNOTAVAIL, EINVAL, EAFNOSUPPORT, EALREADY, EINTR, EPROTOTYPE, ENOSR.
+.SH DALŠÍ INFORMACE
+.BR accept "(2), " bind "(2), " listen "(2), "
+.BR socket "(2), " getsockname (2)
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

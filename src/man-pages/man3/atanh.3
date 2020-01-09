@@ -1,0 +1,26 @@
+.TH ATANH 3  "5.ledna 1997" "" "Linux - příručka programátora"
+.do hla cs
+.do hpf hyphen.cs
+.SH JMÉNO
+atanh \- funkce inverzního hyperbolického tangens
+.SH SYNTAXE
+.nf
+.B #include <math.h>
+.sp
+.BI "double atanh(double " x );
+.fi
+.SH POPIS
+Funkce \fBatanh()\fP počítá inverzní hyperbolický tangens \fIx\fP, což je
+hodnota, jejíž hyperbolický tangens je \fIx\fP. Je-li absolutní hodnota
+\fIx\fP větší než 1.0, funkce \fBacosh()\fP vrací \fInot-a-number\fP (NaN)
+a je nastavena proměnná \fIerrno\fP .
+.SH CHYBY
+.TP
+.B EDOM
+\fIx\fP není z definičního oboru.
+.SH SPLŇUJE STANDARDY
+SVID 3, POSIX, BSD 4.3, ISO 9899
+.SH DALŠÍ INFORMACE
+.BR asinh "(3), " acosh "(3), " cosh "(3), " sinh "(3), " tanh (3)
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

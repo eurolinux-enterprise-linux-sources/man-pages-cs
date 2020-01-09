@@ -1,0 +1,169 @@
+.\" Copyright (c) 1993 by Thomas Koenig (ig25@rz.uni-karlsruhe.de)
+.\"
+.\" Permission is granted to make and distribute verbatim copies of this
+.\" manual provided the copyright notice and this permission notice are
+.\" preserved on all copies.
+.\"
+.\" Permission is granted to copy and distribute modified versions of this
+.\" manual under the conditions for verbatim copying, provided that the
+.\" entire resulting derived work is distributed under the terms of a
+.\" permission notice identical to this one.
+.\"
+.\" Since the Linux kernel and libraries are constantly changing, this
+.\" manual page may be incorrect or out-of-date.  The author(s) assume no
+.\" responsibility for errors or omissions, or for damages resulting from
+.\" the use of the information contained herein.  The author(s) may not
+.\" have taken the same level of care in the production of this manual,
+.\" which is licensed free of charge, as they might when working
+.\" professionally.
+.\"
+.\" Formatted or processed versions of this manual, if unaccompanied by
+.\" the source, must acknowledge the copyright and authors of this work.
+.\"
+.\" Modified Sat Jul 24 17:28:34 1993 by Rik Faith <faith@cs.unc.edu>
+.\" Modified Sun Jun 01 17:16:34 1997 by Jochen Hein
+.\"   <jochen.hein@delphi.central.de>
+.\" Modified Thu Apr 25 00:43:19 2002 by Bruno Haible <bruno@clisp.org>
+.\"
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH LOCALE 7 2008\-12\-05 Linux "Linux \- příručka programátora"
+.SH JMÉNO
+locale \- Popis vícejazykové podpory
+.SH POUŽITÍ
+.nf
+\fB#include <locale.h>\fP
+.fi
+.SH POPIS
+Locale je množina jazykových a kulturních pravidel pro popis takových
+aspektu jako jsou jazyk pro zprávy, různé znakové sady, abecední
+řazení atd. Každý program musí mít možnost zjistit jeho locale a
+chovat se podle jím daných pravidel.
+.PP
+Hlavičkový soubor \fI<locale.h>\fP deklaruje datové typy, funkce a
+makra, která tuto přenositelnost usnadňuje.
+.PP
+Deklarované funkce: \fBsetlocale\fP(3)  pro nastavení aktuálního lacale a
+\fBlocaleconv\fP(3)  pro zjištění informací o formátování čísel.
+.PP
+Různé kategorie pro lokální informace jsou definovány jako
+makra. Jestliže se použijí jako první argument pro funkci
+\fBsetlocale\fP(3)  je možno nastavit jednu z požadovaných kategorií:
+.TP 
+\fBLC_COLLATE\fP
+Mění chování funkcí \fBstrcoll\fP(3)  a \fBstrxfrm\fP(3), které se
+používají na porovnání řetězců v lokální abecedě, Například,
+ostré německé s se třídí jako "ss".
+.TP 
+\fBLC_CTYPE\fP
+Mění chování klasifikačních funkcí a maker jako \fBisupper\fP(3)  a
+\fBtoupper\fP(3), a funkcí pro vícebytové znaky jako je \fBmblen\fP(3)  nebo
+\fBwctomb\fP(3).
+.TP 
+\fBLC_MONETARY\fP
+Mění návratovou hodnotu funkce \fBlocaleconv\fP(3), která popisuje způsob
+jak jsou tištěna čísla, včetně detailů o desetinné tečce či
+čárce. Interně je tato informace použita ve funkci \fBstrfmon\fP(3).
+.TP 
+\fBLC_MESSAGES\fP
+mění jazyk zpráv a určuje jak vypadá pozitivní a negativní odpověď
+v daném jazyce. GNU C\-lib obsahuje pro tento účel funkce \fBgettext\fP(3),
+\fBngettext\fP(3), and \fBrpmatch\fP(3).  Funkce z GNU gettext se rovněž řídí
+proměnnou prostředí \fBLANGUAGE\fP (která obsahuje dvojtečkou oddělovaný
+seznam locales), je\-li tato nastavena na platné locale jiné než \fB"C"\fP.
+.TP 
+\fBLC_NUMERIC\fP
+Mění chování funkcí \fBprintf\fP(3)  a \fBscanf\fP(3)  kdykoli mají použít
+nastavení locale. Tuto informaci lze také číst pomocí funkce
+\fBlocaleconv\fP(3).
+.TP 
+\fBLC_TIME\fP
+mění chování funkcí \fBstrftime\fP(3), která zobrazuje současný čas
+podle lokálních pravidel; například v Evropě se běžně používá 24
+hodinový den, zatímco v USA 12 hodinový.
+.TP 
+\fBLC_ALL\fP
+.\" FIXME glibc 2.2.2 added new non-standard locale categories:
+.\" LC_ADDRESS, LC_IDENTIFICATION, LC_MEASUREMENT, LC_NAME,
+.\" LC_PAPER, LC_TELEPHONE.  These need to be documented.
+Nastavuje vše.
+.PP
+Jestliže je druhý argument pro \fBsetlocale\fP(3)  prázdný řetězec,
+\fB""\fP, hledá se základní locale takto:
+.IP 1.
+Jestliže je nastavena proměnná prostředí \fBLC_ALL\fP, použije se
+\fBLC_ALL .\fP
+.IP 2.
+Jestliže existuje proměnná prostředí, která se jmenuje stejně jako
+některá z kategorií, použije se tato.
+.IP 3.
+Jestliže je nastavena proměnná prostředí \fBLANG\fP, použije se hodnota
+\fBLANG .\fP
+.PP
+Hodnoty pro číselnou konverzi jsou nastaveny ve \fIstruct lconv ,\fP kterou
+vrací funkce \fBlocaleconv\fP(3), má následující deklaraci:
+.in +2n
+.nf
+
+struct lconv {
+
+      /* Číselná (nikoli peněžní) informace */
+
+
+      char *decimal_point;		/* Znak pro desetinnou čárku  */
+  char *thousands_sep;		/* Oddělovač tisíců  */
+  char *grouping; /* Každý prvek označuje počet číslic ve skupině;
+                     významnější hodnoty se zobrazují více vlevo.
+                     Pozice CHAR_MAX určuje odkud se již žádné
+                     oddělování nečiní. Prvek s hodnotou 0 označuje,
+                     že předchozí prvek se použije odtud doleva. */
+
+
+      /* Peněžní informace.  */
+
+
+      char *int_curr_symbol; /* První tři znaky jsou symbolem měny podle
+                            ISO 4217. Čtvrtý znak je oddělovač, pátý
+                            je \(aq\e0\(aq. */
+  char *currency_symbol;	/* Lokální symbol pro měnu  */
+  char *mon_decimal_point;	/* desetinná čárka  */
+  char *mon_thousands_sep;	/* Viz \fIthousands_sep\fP nahoře  */
+  char *mon_grouping;		/* Viz \fIgrouping\fP nahoře  */
+  char *positive_sign;		/* Kladné znaménko  */
+  char *negative_sign;		/* Záporné znaménko */
+  char int_frac_digits;		/* Mezinárodní počet des. míst  */
+  char frac_digits;		/* Lokální počet des. míst */
+  char p_cs_precedes;           /* 1 když znak měny předchází číslo,
+                                   0 když jej následuje */
+  char p_sep_by_space;          /* 1 když mezera odděluje
+                                   currency_symbol od desetinné čárky */ 
+  char n_cs_precedes;           /* 1 když currency_symbol předchází
+                                   záporné hodnoty, 0 když následuje */
+  char n_sep_by_space;          /* 1 když mezera odděluje
+                                   currency_symbol od záporné hodnoty */
+  /* Kladné a záporné znaménko:
+     0 Závorky kolem hodnoty a symbolu měny.
+     1 Znaménko před hodnotou i symbolem měny.
+     2 Znaménko následuje za hodnotou i symbolem měny.
+     3 Znaménko bezprostředně před symbolem měny.
+     4 Znaménko bezprostředně následuje symbolem měny. */
+  char p_sign_posn;
+  char n_sign_posn;
+};
+
+.fi
+.in
+.SH "SPLŇUJE STANDARDY"
+POSIX.1\-2001.
+
+Funkce GNU gettext jsou specifikovány v LI18NUX2000.
+.SH "DALŠÍ INFORMACE"
+\fBlocale\fP(1), \fBlocaledef\fP(1), \fBgettext\fP(3), \fBlocaleconv\fP(3),
+\fBngettext\fP(3), \fBnl_langinfo\fP(3), \fBrpmatch\fP(3), \fBsetlocale\fP(3),
+\fBstrcoll\fP(3), \fBstrfmon\fP(3), \fBstrftime\fP(3), \fBstrxfrm\fP(3)
+.SH TIRÁŽ
+Tato stránka je součástí projektu Linux \fIman\-pages\fP.  Popis projektu a
+informace o hlášení chyb najdete na http://www.kernel.org/doc/man\-pages/.

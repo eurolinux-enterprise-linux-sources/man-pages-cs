@@ -1,0 +1,31 @@
+.TH INDEX 3  "5.ledna 1997" "GNU" "Linux - příručka programátora"
+.do hla cs
+.do hpf hyphen.cs
+.SH JMÉNO
+index, rindex \- vyhledej znak v řetězci
+.SH SYNTAXE
+.nf
+.B #include <string.h>
+.sp
+.BI "char *index(const char *" s ", int " c );
+.sp
+.BI "char *rindex(const char *" s ", int " c );
+.fi
+.SH POPIS
+Funkce \fBindex()\fP vrací ukazatel na první výskyt znaku \fIc\fP v řetězci
+\fIs\fP.
+.PP
+Funkce \fBrindex()\fP vrací ukazatel na poslední výskyt znaku \fIc\fP v
+řetězci \fIs\fP.
+.PP
+Ukončovací znak NULL je považován za součást řetězce.
+.SH NÁVRATOVÁ HODNOTA
+FUnkce \fBindex()\fP a \fBrindex()\fP vrací ukazatel na nalezený řetězec
+nebo NULL pokud nebyl znak nalezen.
+.SH SPLŇUJE STANDARDY
+BSD 4.3
+.SH DALŠÍ INFORMACE
+.BR memchr "(3), " strchr "(3), " strpbrk "(3), " strrchr (3),
+.BR strsep "(3), " strspn "(3), " strstr "(3), " strtok (3)
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

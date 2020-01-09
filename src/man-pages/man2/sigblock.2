@@ -1,0 +1,72 @@
+.TH SIGBLOCK 2 "18.února 1997" "Linux 1.3" "Linux - příručka programátora"
+.do hla cs
+.do hpf hyphen.cs
+.SH JMÉNO
+sigblock, siggetmask, sigsetmask, sigmask \- práce s maskou signálů
+.SH SYNTAXE
+.B #include <signal.h>
+.sp
+.BI "int sigblock(int " mask );
+.sp
+.B int siggetmask(void);
+.sp
+.BI "int sigsetmask(int " mask );
+.sp
+.BI "int sigmask(int " signum );
+.SH POPIS
+Tyto funkce jsou zastaralé a nahrazuje je funkce
+.BR sigprocmask (2).
+
+Systémové volání
+.B sigblock
+přidává signály uvedené v parametru 
+.I mask
+k seznamu signálů, které jsou momentálně zablokovány.
+.PP
+Systémové volání
+.B sigsetmask
+nahrazuje seznam blokovaných signálů novým seznamem dodaným v parametru
+.IR mask .
+Signály jsou zablokovány, je\-li odpovídající bit v parametru
+.I mask
+nastaven na 1.
+.PP
+Aktuální seznam blokovaných signálů lze získat voláním funkce
+.BR siggetmask .
+.PP
+Makro
+.B sigmask
+slouží k vytvoření masky pro daný signál
+.IR signum .
+
+.SH "NÁVRATOVÉ HODNOTY"
+Funkce
+.B siggetmask
+vrací aktuální seznam blokovaných signálů.
+
+Funkce
+.B sigsetmask 
+a
+.B sigblock
+vracejí předchozí seznam blokovaných signálů.
+.SH POZNÁMKY
+Prototypy pro tyto funkce jsou k dispozici pouze tehdy, je\-li
+definována konstanta
+.B __USE_BSD
+před použitím
+.B <signal.h>.
+.PP
+Signály
+.B SIGKILL
+a
+.B SIGSTOP
+nelze blokovat \- toto omezení je dáno systémem.
+
+.SH "SPLŇUJE STANDARDY"
+4.4BSD. 
+Tyto funkce se objevily poprvé v BSD 4.3 a jsou zastaralé.
+V nových programech používejte prostředky POSIXu pro práci se signály.
+.SH "DALŠÍ INFORMACE"
+.BR kill "(2), " sigprocmask "(2), " signal (7)
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

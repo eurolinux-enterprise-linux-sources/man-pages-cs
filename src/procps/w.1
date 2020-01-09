@@ -1,0 +1,76 @@
+.\"             -*-Nroff-*-
+.\"
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH W 1 "8. prosince 1993 " " " "Linux \- Příručka uživatele"
+.SH JMÉNO
+w \- Zobrazí, kdo je přihlášený k systému a co dělá.
+.SH POUŽITÍ
+\fBw \-\fP [\fBhusfV\fP] [\fIuživatel\fP]
+.SH POPIS
+\fBw \fP zobrazí informace o uživatelích přihlášených k počítači a
+jejich procesech.  V záhlaví se zobrazí (v tomto pořadí): aktuální
+čas, jak dlouho už systém běží, kolik uživatelů je právě
+přihlášených a průměrné zatížení systému za posledních 1, 5 a 15
+minut.
+.sp
+V následujících řádcích je pro každého uživatele vypsáno:
+přihlašovací jméno, jméno konzoly, počítač, odkud je uživatel
+přihlášen, čas přihlášení, délka trvání nečinnosti, JCPU, PCPU a
+příkazový řádek jeho aktuálního procesu.
+.sp
+Čas JCPU je čas použitý všemi procesy spuštěnými z dané konzoly
+(tty).  Nejsou v něm zahrnuty úlohy spuštěné v minulosti na pozadí,
+ale zahrnuje i právě bežící úlohy na pozadí.
+.sp
+PCPU čas je čas, použitý aktuálním procesem uvedeným v posledním
+poli.
+
+.PP
+.SH "VOLBY PŘÍKAZOVÉ ŘÁDKY"
+.TP  0.5i
+\fB\-h \fP
+Nezobrazuje záhlaví.
+.TP  0.5i
+\fB\-u \fP
+Ignoruje uživatelské jméno při zjišťování aktuálního procesu a
+času cpu.  Pro demonstraci zkuste "su" a "w" a "w \-u".
+.TP  0.5i
+\fB\-s \fP
+Použije krátký formát výpisu.  Nezobrazuje čas přihlášení ani
+časy JCPU a PCPU.
+.TP  0.5i
+\fB\-f \fP
+Přepíná zobrazení pole \fBfrom\fP (jméno vzdáleného
+počítače). Implicitně se pole \fBfrom\fP nezobrazuje, ale správce
+počítače nebo udržovatel distribuce může zkompilovat program tak, že
+pole \fBfrom\fP se implicitně zobrazuje.
+.TP  0.5i
+\fB\-V \fP
+Vypíše číslo verze.
+.TP  0.5i
+\fBuživatel \fP
+Vypíše informace pouze o zadaném uživateli.
+
+.SH SOUBORY
+.TP 
+\fI/var/run/utmp\fP
+informace o tom, kdo je aktuálně přihlášený
+.TP 
+\fI/proc\fP
+informace o procesech
+.PP
+
+.SH "DALŠÍ INFORMACE"
+\fBfree\fP(1), \fBps\fP(1), \fBtop\fP(1), \fBuptime\fP(1), \fButmp\fP(5), \fBwho\fP(1)
+
+.SH AUTOŘI
+\fBw\fP byl téměř zcela přepsán Charlesem Blakem. Vychází z programu od
+Larryho Greenfielda <greenfie@gauss.rutgers.edu> a Michaela
+K. Johnsona <johnsonm@redhat.com>.
+
+Chyby týkající se programu prosím zasílejte na
+<albert@users.sf.net>

@@ -1,0 +1,184 @@
+.TH SYSCONF 3  "26.prosince 1996" "GNU" "Linux - příručka programátora"
+.do hla cs
+.do hpf hyphen.cs
+.SH JMÉNO
+sysconf \- Získej konfigurační informace za běhu.
+.SH SYNTAXE
+.nf
+.B #include <unistd.h>
+.sp
+.BI "long sysconf(int " "name" ");"
+.fi
+.SH POPIS
+.B sysconf()
+poskytuje aplikaci možnost, jak získat hodnoty systémových omezení nebo
+voleb za běhu.
+.PP
+Ekvivalentní makra definovaná v 
+.B <unistd.h>
+mohou poskytnout pouze informativní hodnoty; jestliže aplikace bude chtít
+využít hodnot, které se mohou měnit, je lépe použít volání
+.B sysconf()
+, které vrátí aktuální hodnoty.
+.PP
+Limity, jež závisí na konkrétním souboru lze získat pomocí 
+.BR fpathconf() " or " pathconf() .
+.PP
+Následující hodnoty můžete dosadit za
+.IR name .
+Nejdříve POSIX.1 kompatibilní hodnoty:
+.TP
+.B _SC_ARG_MAX
+Maximální délka argumentů pro funkce z rodiny
+.B exec()
+; odpovídající makro z
+.B <unistd.h>
+je
+.BR ARG_MAX .
+.TP
+.B _SC_CHILD_MAX
+Počet simultánně běžících procesů jednoho uživatele, odpovídající makro je
+.BR _POSIX_CHILD_MAX .
+.TP
+.B _SC_CLK_TCK
+Počet taktů hodin za sekundu; odpovídající makro je 
+.BR CLK_TCK .
+.TP
+.B _SC_STREAM_MAX
+Maximální počet proudů, které může mít proces kdykoliv otevřen.
+Odpovídající POSIX makro je 
+.BR STREAM_MAX ,
+odpovídající standard C makro je
+.BR FOPEN_MAX .
+.TP
+.B _SC_TZNAME_MAX
+Maximální počet bytů ve jménu časového pásma, odpovídající makro je 
+.BR TZNAME_MAX .
+.TP
+.B _SC_OPEN_MAX
+Maximální počet souborů, které může mít proces kdykoliv otevřen,
+odpovídající makro je
+.BR _POSIX_OPEN_MAX .
+.TP
+.B _SC_JOB_CONTROL
+Indikuje je-li podporováno POSIXové řízení procesů, odpovídající makro je
+.BR _POSIX_JOB_CONTROL .
+.TP
+.B _SC_SAVED_IDS
+Indikuje, má-li proces uloženo set-user-ID a set-group-ID;
+odpovídající makro je 
+.BR _POSIX_SAVED_IDS .
+.TP
+.B _SC_VERSION
+značí měsíc a rok POSIX.1 standardu ve formátu
+.BR YYYYMML
+; hodnota
+.B 199309L
+je nejnovější revize - z roku 1993.
+.PP
+Dále, hodnoty POSIX.2 :
+.TP
+.B _SC_BC_BASE_MAX
+maximální hodnota
+.I obase
+braná jako správná v utilitě
+.BR bc (1)
+; odpovídající makro je
+.BR BC_BASE_MAX .
+.TP
+.B _SC_BC_DIM_MAX
+maximální počet prvků v poli pro utilitu
+.BR bc (1);
+odpovídající makro je
+.BR BC_DIM_MAX . 
+.TP
+.B _SC_BC_SCALE_MAX
+maximální hodnota
+.I scale
+povolená
+.BR bc (1);
+odpovídající makro je
+.BR BC_SCALE_MAX .
+.TP
+.B _SC_BC_STRING_MAX
+maximální délka řetězce povolená
+.BR bc (1);
+odpovídající makro je
+.BR BC_STRING_MAX .
+.TP
+.B _SC_COLL_WEIGHTS_MAX
+maximální počet šířek, které mohou být přiřazeny záznamu
+.B LC_COLLATE order
+v definičním souboru locale; odpovídající makro je
+.BR COLL_WEIGHTS_MAX .
+.TP
+.B _SC_EXPR_NEST_MAX
+maximální počet výrazů, které mohou být vnořeny v závorkách v
+.BR expr (1).
+Odpovídající makro je
+.BR EXPR_NEST_MAX .
+.TP
+.B _SC_LINE_MAX
+Maximální délka vstupního řádku pro utility, jak ze standardního vstupu, tak
+i ze souboru.
+Odpovídající makro je
+.BR LINE_MAX .
+.TP
+.B _SC_RE_DUP_MAX
+Maximální počet opakovaných výskytů regulárního výrazu v intervalové notaci
+.B \e{m,n\e} ;
+odpovídající makro je
+.BR RE_DUP_MAX .
+.TP
+.B _SC_2_VERSION
+verze POSIX.2 standardu ve formátu YYYYMML. 
+Odpovídající makro je 
+.BR POSIX2_VERSION .
+.TP
+.B _SC_2_DEV
+jsou podporovány POSIX.2 standardy týkající se jazyka C ?
+Odpovídající makro je
+.BR POSIX2_C_DEV .
+.TP
+.B _SC_2_FORT_DEV
+jsou podporovány POSIX.2 standardy týkající se jazyka FORTRAN ?
+Odpovídající makro je
+.BR POSIX2_FORT_RUN .
+.TP
+.B _SC_2_FORT_RUN
+jsou podporovány POSIX.2 FORTRAN utility ?
+Odpovídající makro je
+.BR POSIX2_FORT_RUN .
+.TP
+.B POSIX2_LOCALEDEF
+je možno vytvářet POSIX.2 locales pomocí
+.BR locale (1) ;
+odpovídající makro je
+.BR POSIX2_LOCALEDEF .
+.TP
+.B _SC_2_SW_DEV
+je podporována volba POSIX.2 vývojových utilit ?
+Odpovídající makro je
+.BR POSIX2_SW_DEV .
+.SH NÁVRATOVÁ HODNOTA
+Navrácená hodnota je hodnota systémového parametru. 1 je-li tato volba k
+dispozici, 0 jestliže není, nebo -1 v případě chyby. Proměnná 
+.I errno
+není nastavena.
+.SH SPLŇUJE STANDARDY
+POSIX.1, návrh POSIX.2
+.SH CHYBY
+Je velmi těžké používat 
+.B ARG_MAX
+protože není specifikováno, jaké množství paměti je při volání
+.B exec()
+spotřebováno uživatelskými proměnnými v prostředí.
+.PP
+Některé hodnoty mohou být příliš velké; nejsou vhodné k alokování paměti.
+.PP
+POSIX.2 ještě není standardem a proto se informace v této manuálové stránce
+jistě stanou předmětem změn.
+.SH DALŠÍ INFORMACE
+.BR bc "(1), " expr "(1), " locale "(1), " fpathconf "(3), " pathconf (3)
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

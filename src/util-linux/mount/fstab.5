@@ -1,0 +1,132 @@
+.\" Copyright (c) 1980, 1989, 1991 The Regents of the University of California.
+.\" All rights reserved.
+.\"
+.\" Redistribution and use in source and binary forms, with or without
+.\" modification, are permitted provided that the following conditions
+.\" are met:
+.\" 1. Redistributions of source code must retain the above copyright
+.\"    notice, this list of conditions and the following disclaimer.
+.\" 2. Redistributions in binary form must reproduce the above copyright
+.\"    notice, this list of conditions and the following disclaimer in the
+.\"    documentation and/or other materials provided with the distribution.
+.\" 3. All advertising materials mentioning features or use of this software
+.\"    must display the following acknowledgement:
+.\"	This product includes software developed by the University of
+.\"	California, Berkeley and its contributors.
+.\" 4. Neither the name of the University nor the names of its contributors
+.\"    may be used to endorse or promote products derived from this software
+.\"    without specific prior written permission.
+.\"
+.\" THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+.\" ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+.\" IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+.\" ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+.\" FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+.\" DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+.\" OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+.\" HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+.\" LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+.\" OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+.\" SUCH DAMAGE.
+.\"
+.\"     @(#)fstab.5	6.5 (Berkeley) 5/10/91
+.\"
+.\" Modified Sat Mar  6 20:45:03 1993, faith@cs.unc.edu, for Linux
+.\" Sat Oct  9 10:07:10 1993: converted to man format by faith@cs.unc.edu
+.\" Sat Nov 20 20:47:38 1993: hpfs documentation added
+.\" Sat Nov 27 20:23:32 1993: Updated authorship information
+.\" Wed Jul 26 00:00:00 1995: Updated some nfs stuff, joey@infodrom.north.de
+.\" Tue Apr  2 00:38:28 1996: added info about "noauto", "user", etc.
+.\" Tue Jun 15 20:02:18 1999: added LABEL and UUID
+.\" Sat Jul 14 2001: Michael K. Johnson <johnsonm@redhat.com> added -O
+.\"
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH FSTAB 5 "15.června 1999" "Linux 2.2" "Linux \- příručka programátora"
+.SH JMÉNO
+fstab \- statická informace o souborových systémech
+.SH POUŽITÍ
+\fB#include <fstab.h>\fP
+.SH POPIS
+Soubor \fBfstab\fP obsahuje popisnou informaci o různých souborových
+systémech.  \fBfstab\fP je programy pouze čten, nikoli zapisován, to má na
+starosti správce (vytvořit a udržovat tento soubor). Každý svazek je
+popsán na samostatném řádku; jednotlivá pole jsou oddělena tabulátory
+nebo mezerami. Řádky začínající znakem '#' jsou komentáře. Pořadí
+záznamů v \fBfstab\fP je důležité, protože \fBfsck\fP(8), \fBmount\fP(8), a
+\fBumount\fP(8)  sekvenčně čtou \fBfstab\fP a vykonávají svou práci.
+
+První pole (\fIfs_spec\fP)  popisuje blokové zařízení nebo vzdálený
+svazek pro připojení.
+.LP
+Pro obvyklá připojení to znamená (odkaz na) node blokového zařízení
+(tak, jak jej vytvořil \fBmknod\fP(8))  pro zařízení, které má být
+připojeno, jako např. `/dev/cdrom' nebo `/dev/sdb7'.  Pro připojení NFS
+svazku to bude <hostitel>:<adresář>,
+např. `knuth.aeb.nl:/'.  Pro procfs se použije `proc'.
+.LP
+Namísto explicitního určení zařízení je možné určit svazek (ext2
+nebo xfs), který má být připojen pomocí jeho UUID nebo jmenovky (viz
+\fBe2label\fP(8)  nebo \fBxfs_admin\fP(8)), zapsáním LABEL=<jmenovka>
+nebo UUID=<uuid>, např. `LABEL=Boot' nebo
+`UUID=3e6be9de\%\-8139\%\-11d1\%\-9106\%\-a43f08d823a6'.  Tím se zvýší
+robustnost systému, protože přidáním či odebráním SCSI disku se sice
+změní jméno zařízení, ale nikoliv jmenovka svazku.
+
+Druhé pole (\fIfs_file\fP)  popisuje připojovací bod pro souborový
+systém. Pro swap je nutno zadat \*(lqnone\*(rq. Pokud jméno připojovacího bodu
+obsahuje mezery, měly by být escapovány jako `\e040'.
+
+Třetí pole (\fIfs_vfstype\fP)  popisuje typ připojovaného souborového
+systému. Linux podporuje mnoho souborových systémů, jako např.:
+\fIadfs\fP, \fIaffs\fP, \fIautofs\fP, \fIcoda\fP, \fIcoherent\fP, \fIcramfs\fP, \fIdevpts\fP,
+\fIefs\fP, \fIext2\fP, \fIext3\fP, \fIhfs\fP, \fIhpfs\fP, \fIiso9660\fP, \fIjfs\fP, \fIminix\fP,
+\fImsdos\fP, \fIncpfs\fP, \fInfs\fP, \fIntfs\fP, \fIproc\fP, \fIqnx4\fP, \fIreiserfs\fP,
+\fIromfs\fP, \fIsmbfs\fP, \fIsysv\fP, \fItmpfs\fP, \fIudf\fP, \fIufs\fP, \fIumsdos\fP, \fIvfat\fP,
+\fIxenix\fP, \fIxfs\fP, a možná i jiné \- viz \fBmount\fP(8).  Souborové systémy,
+které podporuje právě běžící jádro udává \fI/proc/filesystems\fP.
+\fIswap\fP označuje svazek nebo soubor použitý pro swap (virtuální
+paměť), viz \& \fBswapon\fP(8).  Jestliže \fIvfs_fstype\fP je zadáno jako
+\fIignore\fP, pak je záznam ignorován. Toto je výhodné pro označení
+svazků v současné době nepoužitých.
+
+Čtvrté pole (\fIfs_mntops\fP)  popisuje volby pro připojení souborového
+systému.
+
+Toto pole je seznamem voleb oddělených čárkami. Vždy obsahuje typ
+připojení a eventuálně další volby pro daný souborový systém. Pro
+volby ne\-nfs souborových systémů viz \fBmount\fP(8).  Dokumentaci voleb pro
+nfs lze nalézt v manuálové stránce \fBnfs\fP(5).  Společné pro všechny
+souborové systémy jsou volby \*(lqnoauto\*(rq (nepřipojovat automaticky při
+zadání "mount \-a", např. při startu), \*(lquser\*(rq (libovolný uživatel je
+oprávněn připojit daný svazek), \*(lqowner\*(rq (vlastník zařízení jej
+může připojit) a \*(lqcomment\*(rq (např. pro použití programy, které
+spravují fstab). Volby \*(lqowner\*(rq a \*(lqcomment\*(rq platí jen pro Linux.
+Detaily naleznete v manuálové stránce \fBmount\fP(8).
+
+Páté pole (\fIfs_freq\fP)  je použito programem \fBdump\fP(8)  pro určení,
+které souborové systémy je třeba zálohovat. Není\-li páté pole
+vyplněno, je považováno za nulu, a souborový systém není zálohován
+programem \fBdump\fP.
+
+Šesté pole (\fIfs_passno\fP)  používá program \fBfsck\fP(8)  pro určení
+pořadí svazků při kontrole po restartu. Kořenový souborový systém by
+měl mít hodnotu \fIfs_passno\fP rovnu 1, ostatní svazky pak hodnotu
+\fIfs_passno\fP rovnu 2. Souborové systémy jsou kontrolovány sériově,
+nicméně svazky na různých zařízeních jsou kontrolovány najednou s
+využitím paralelismu hardware. Není\-li šesté pole definováno, je jeho
+hodnota nula, a program \fBfsck\fP jej nebude kontrolovat.
+
+Správná metoda jak číst v programu \fBfstab\fP je použít proceduru
+\fBgetmntent\fP(3).
+.SH SOUBORY
+\fI/etc/fstab\fP
+.SH "DALŠÍ INFORMACE"
+\fBgetmntent\fP(3), \fBmount\fP(8), \fBswapon\fP(8), \fBfs\fP(5), \fBnfs\fP(5)
+.SH HISTORIE
+Předchůdce formátu souboru \fBfstab\fP se objevil v 4.0BSD.
+.\" But without comment convention, and options and vfs_type.
+.\" Instead there was a type rw/ro/rq/sw/xx, where xx is the present 'ignore'.

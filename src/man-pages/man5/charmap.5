@@ -1,0 +1,108 @@
+.\" Hey emacs, this is -*- nroff -*-
+.\"
+.\" This file is part of locale(1) which displays the settings of the
+.\" current locale.
+.\" Copyright (C) 1994  Jochen Hein (Hein@Student.TU-Clausthal.de)
+.\"
+.\" This program is free software; you can redistribute it and/or modify
+.\" it under the terms of the GNU General Public License as published by
+.\" the Free Software Foundation; either version 2 of the License, or
+.\" (at your option) any later version.
+.\"
+.\" This program is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public License
+.\" along with this program; if not, write to the Free Software
+.\" Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111, USA.
+.\"
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH CHARMAP 5 1994\-11\-28 "" "Linux \- příručka uživatele"
+.SH JMÉNO
+charmap \- symboly pro definici kódování znaků
+.SH POPIS
+.\" Not true anymore:
+.\" The portable character set is defined in the file
+.\" .I /usr/lib/nls/charmap/POSIX
+.\" .I /usr/share/i18n/charmap/POSIX
+.\" for reference purposes.
+Popis kódování znakové sady (charmap) definuje znakovou sadu dostupných
+znaků a jejich kódování. Všechny podporované sady musí obsahovat
+\fBportable character set\fP (přenositelnou znakovou sadu).
+.SS Syntaxe
+Popis znakové sady začíná hlavičkou, která obsahuje následující
+klíčová slova:
+.TP 
+\fI<codeset>\fP
+následované jménem znakové sady.
+.TP 
+\fI<mb_cur_max>\fP
+je následováno maximálním počtem bytů ve vícebytovém znaku. V
+současné době nejsou vícebytové znaky podporovány. Implicitní hodnota
+je 1.
+.TP 
+\fI<mb_cur_min>\fP
+je následováno minimálním počtem bytů na znak. Tato hodnota musí být
+menší nebo rovna \fBmb_cur_max\fP.  Není\-li zadána, považuje se za její
+hodnotu hodnota \fBmb_cur_max\fP.
+.TP 
+\fI<escape_char>\fP
+je následováno znakem, který má být použit jako prefix pro znaky,
+které je třeba interpretovat speciálním způsobem. Implicitně je to
+zpětné lomítko ( \fB\e\fP ).
+.TP 
+\fI<comment_char>\fP
+je následováno znakem, který bude použit pro uvození komentářů.
+Implicitně \fB# .\fP
+.PP
+Vlastní definice začíná klíčovým slovem \fBCHARMAP\fP napsaným od
+prvního sloupce.
+
+Další řádky souboru mohou mít jeden ze dvou tvarů pro definici
+kódování:
+.TP 
+\fI<symbolické\-jméno> <kódování> <komentář>\fP
+Definuje přesně jeden znak a jeho kódování.
+.TP 
+\fI<symbolické\-jméno>...<symbol.\-jméno> <kódování> <komentář>\fP
+Tato forma definuje několik znaků. To je užitečné jen pro vícebytové
+znaky, které nejsou momentálně podporovány.
+.PP
+Poslední řádka definici znakové sady musí obsahovat \fBEND CHARMAP.\fP
+.SS "Symbolická jména"
+\fBSymbolické jméno\fP pro znak obsahuje pouze znaky z \fBportable character
+set.\fP Samotné jméno je uzavřeno do <>.  Znaky následující po
+\fB<escape_char>\fP jsou interpretovány jako oni sami; například
+sekvence \fB<\e\e\e>>\fP reprezentuje symbolické jméno \fB\e>\fP
+uzavřené v ostrých závorkách.
+.SS "Kódování znaků"
+Kódování může mít jednu ze tří forem:
+.TP 
+\fI<escape_char>d<číslo>\fP
+s desítkovým číslem
+.TP 
+\fI<escape_char>x<číslo>\fP
+s šestnáctkovým číslem
+.TP 
+\fI<escape_char><číslo>\fP
+.\" FIXME comments
+.\" FIXME char ... char
+s osmičkovým číslem.
+.SH SOUBORY
+.\" .SH AUTHOR
+.\" Jochen Hein (jochen.hein@delphi.central.de)
+\fI/usr/share/i18n/charmaps/*\fP
+.SH "SPLŇUJE STANDARDY"
+POSIX.2.
+.SH "DALŠÍ INFORMACE"
+\fBlocale\fP(1), \fBlocaledef\fP(1), \fBlocaleconv\fP(3), \fBsetlocale\fP(3),
+\fBlocale\fP(5)
+.SH TIRÁŽ
+Tato stránka je součástí projektu Linux \fIman\-pages\fP.  Popis projektu a
+informace o hlášení chyb najdete na http://www.kernel.org/doc/man\-pages/.

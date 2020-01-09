@@ -1,0 +1,63 @@
+.\" Copyright (c) 1993 Michael Haardt (michael@moria.de),
+.\"     Fri Apr  2 11:32:09 MET DST 1993
+.\"
+.\" This is free documentation; you can redistribute it and/or
+.\" modify it under the terms of the GNU General Public License as
+.\" published by the Free Software Foundation; either version 2 of
+.\" the License, or (at your option) any later version.
+.\"
+.\" The GNU General Public License's references to "object code"
+.\" and "executables" are to be interpreted as the output of any
+.\" document formatting or typesetting system, including
+.\" intermediate and printed output.
+.\"
+.\" This manual is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public
+.\" License along with this manual; if not, write to the Free
+.\" Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111,
+.\" USA.
+.\"
+.\" Modified 1993-07-24 by Rik Faith (faith@cs.unc.edu)
+.\" Modified 2003-04-07 by Michael Kerrisk
+.\"
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH TTY 4 2003\-04\-07 Linux "Linux \- příručka programátora"
+.SH JMÉNO
+tty \- řídící terminál
+.SH POPIS
+Soubor \fI/dev/tty\fP je znakový speciální soubor s hlavním číslem 5 a
+vedlejším 0. Obvykle je jeho vlastníkem.skupinou root.tty a jeho
+přístupová práva jsou 0666. Je to synonymum pro řídící terminál
+procesu, je\-li nějaký.
+.LP
+Toto zařízení podporuje všechny \fBioctl\fP(2)  požadavky zařízení, na
+které ukazuje, a navíc ještě \fBTIOCNOTTY\fP.
+.SS TIOCNOTTY
+Odpojí volající proces od jeho řídícího terminálu.
+.sp
+Pokud je proces session leader, jsou skupině procesů v popředí poslány
+signály \fBSIGHUP\fP a \fBSIGCONT\fP a všechny procesy v aktuálním sezení
+ztratí svůj řídící tty.
+.sp
+Tento \fBioctl\fP(2)  požadavek pracuje pouze na souborových deskriptorech
+připojených na \fI/dev/tty\fP; je používán démony když jsou spuštěni
+uživatelem z terminálu.  Proces se pokusí otevřít \fI/dev/tty\fP; je\-li
+otevření úspěšné, odpojí se od terminálu pomocí
+\fBTIOCNOTTY\fP. Jestliže otevření selže, proces samozřejmě není
+připojen na terminál a proto se od něj nemusí odpojovat.
+.SH SOUBORY
+/dev/tty
+.SH "DALŠÍ INFORMACE"
+\fBchown\fP(1), \fBmknod\fP(1), \fBioctl\fP(2), \fBtermios\fP(3), \fBconsole\fP(4),
+\fBtty_ioctl\fP(4), \fBttyS\fP(4), \fBagetty\fP(8), \fBmingetty\fP(8)
+.SH TIRÁŽ
+Tato stránka je součástí projektu Linux \fIman\-pages\fP.  Popis projektu a
+informace o hlášení chyb najdete na http://www.kernel.org/doc/man\-pages/.

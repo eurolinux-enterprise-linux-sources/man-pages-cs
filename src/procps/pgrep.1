@@ -1,0 +1,169 @@
+.\" Manual page for pgrep / pkill.
+.\" Licensed under version 2 of the GNU General Public License.
+.\" Copyright 2000 Kjetil Torgrim Homme
+.\"
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH PGREP 1 "25.červen 2000" Linux "Linux \- Příručka uživatele"
+.SH JMÉNO
+pgrep, pkill \- vyhledává procesy, nebo posílá procesům signály, podle
+jména a jiných vlastností
+
+.SH POUŽITÍ
+pgrep [\-flvx] [\-d \fIoddělovač\fP] [\-n|\-o] [\-P \fIppid\fP,...] [\-g \fIpgrp\fP,...]
+.br
+    [\-s \fIsid\fP,...] [\-u \fIeuid\fP,...] [\-U \fIuid\fP,...] [\-G \fIgid\fP,...]
+.br
+    [\-t \fIterminál\fP,...] [\fIvzor\fP]
+
+pkill [\-\fIsignál\fP] [\-fvx] [\-n|\-o] [\-P \fIppid\fP,...] [\-g \fIpgrp\fP,...]
+.br
+    [\-s \fIsid\fP,...] [\-u \fIeuid\fP,...] [\-U \fIuid\fP,...] [\-G \fIgid\fP,...]
+.br
+    [\-t \fIterminál\fP,...] [\fIvzor\fP]
+
+.SH POPIS
+\fBpgrep\fP prohledává běžící procesy a vypisuje ID procesů, které
+vyhovují zadaným kritériím. Musí souhlasit všechna kritéria. Např.
+
+pgrep \-u root sshd
+
+vypíše jenom procesy které se jmenují \fBsshd\fP a zároveň je jejich
+vlastníkem root.  Na druhou stranu,
+
+pgrep \-u root,daemon
+
+vypíše procesy vlastněné uživatelem \fBroot\fP nebo uživatelem \fBdaemon\fP.
+
+\fBpkill\fP posílá zadaný signál (standartně \fBSIGTERM\fP) každému
+vyhovujícímu procesu místo vypisování na standartní výstup.
+
+.SH VOLBY
+.TP 
+\-d \fIoddělovač\fP
+Nastavuje použitý oddělovač mezi čísly procesů na výstupu
+(standartně je použit znak nového řádku). (Dostupné pouze v
+\fBpgrep\fPu.)
+.TP 
+\-f
+\fIVzor\fP je normálně vyhledáván pouze ve jménech procesů.  S
+přepínačem \-f se vyhledává v celém příkazu, kterým byly spuštěny.
+.TP 
+\-g \fIskupina\-procesů\fP,...
+Vyhoví procesy, které jsou součástí \fIskupiny\-procesů\fP. Skupina
+procesů 0 je pgrep nebo pkill sám.
+.TP 
+\-G \fIid\-skupiny\fP,...
+Vyhoví procesy, jejichž GID (identifikační číslo skupiny)  odpovídá
+vzoru. Může být zadán jak číselně, tak symbolicky.
+.TP 
+\-l
+Kromě ID procesů vypíše i jejich jména. (Dostupné pouze v \fBpgrep\fPu.)
+.TP 
+\-n
+Vybere pouze nejnovější (naposledy spuštěný) proces, který vyhovuje
+podmínkám.
+.TP 
+\-o
+Vybere pouze nejstarší (nejdříve spuštěný) proces, který vyhovuje
+podmínkám.
+.TP 
+\-P \fIid\-rodičovského\-procesu\fP,...
+Vyhoví pouze procesy, jejihž rodič je \fIid\-rodičovského procesu\fP.
+.TP 
+\-s \fIid\-relace\fP,...
+Vyhoví jenom procesy, které jsou součástí dané relace. Ralace 0 je
+interpretována jako relace samotného \fBpgrep\fPu nebo \fBpkill\fPu.
+.TP 
+\-t \fIterminál\fP,...
+Vyhoví pouze procesy, které jsou spuštěny na daném terminálu.  Jméno
+terminálu může být specifikováno s prefixem "/dev/".
+.TP 
+\-u \fIeuid\fP,...
+Vyhoví pouze procesy s odpovídajícím efektivním uživatelským ID.
+Může být použita číselná i symbolická hodnota.
+.TP 
+\-U \fIuid\fP,...
+Vyhoví pouze procesy s odpovídajícím uživatelským ID.  Může být
+použita číselná i symbolická hodnota.
+.TP 
+\-v
+Vypíše všechny procesy, které \fBneodpovídají\fP zadání.
+.TP 
+\-x
+Vyhoví pouze procesy, jejichž jméno (nebo, pokud je použito \-f,
+příkaz) \fBpřesně\fP odpovídá \fIvzoru\fP.
+.TP 
+\-\fIsignál\fP
+Definuje signál, který je poslán všem vyhovujícím procesům.  Může
+být použita jak číselná, tak symbolická hodnota.  (Dostupné pouze v
+\fBpkill\fPu.)
+
+.SH OPERANDY
+.TP 
+\fIvzor\fP
+Specifikuje rozšířený regulární výraz, který je porovnáván se
+jmény procesů, nebo jejich příkazy.
+
+.SH PŘÍKLADY
+Příklad 1: Vyhledá procesy jménem \fBjméno\fP vlastněné uživatelem
+root:
+
+unix$ pgrep \-u root jméno
+
+Příklad 2: Přinutí \fBsyslog\fP znovu načíst svůj konfigurační soubor:
+
+unix$ pkill \-HUP syslogd
+
+Příklad 3: Vypíše detailní informace o všech procesech \fBxterm\fP:
+
+unix$ ps \-fp $(pgrep \-d, \-x xterm)
+
+Příklad 4: Všechny procesy \fBnetscape\fP přinutí běžet lépe:
+
+renice +4 `pgrep netscape`
+
+.SH "NÁVRATOVÁ HODNOTA"
+.TP 
+\fI0\fP
+Podmínkám vyhovuje alespoň jeden proces.
+.TP 
+\fI1\fP
+Žádný proces nevyhovuje zadaným podmínkám.
+.TP 
+\fI2\fP
+Chyba v syntaxi na příkazovém řádku.
+.TP 
+\fI3\fP
+Závažná chyba: nedostatek paměti apod.
+
+.SH POZNÁMKY
+Jména procesů pro porovnání jsou maximálně 15 znaků dlouhá, protože
+se berou ze suboru /proc/\fIpid\fP/stat. Pro delší jména použijte parametr
+\-f, který bere informace ze souboru /proc/\fIpid\fP/cmdline.
+
+Běžící \fBpgrep\fP nebo \fBpkill\fP nikdy nevrátí sám sebe jako výsledek.
+
+.SH CHYBY
+Přepínače \-n, \-o a \-v nemohou být kombinovány. Pokud to budete
+potřebovat, dejte mi vědět.
+
+Vypisuje i zaniklé procesy (zombie).
+
+.SH "DALŠÍ INFORMACE"
+ps(1) regex(7) signal(7) killall(1) skill(1) kill(1) kill(2)
+
+.SH STANDARDY
+\fBpkill\fP a \fBpgrep\fP se poprvé objevily v Solarisu 7. Tato implementace je
+plně kompatibilní.
+
+.SH AUTOR
+Kjetil Torgrim Homme <kjetilho@ifi.uio.no>
+
+Albert Cahalan <albert@users.sf.net> je údržbář balíku procps.
+
+Chyby týkající se programu prosím zasílejte na
+<procps\-feedback@lists.sf.net>

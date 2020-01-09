@@ -1,0 +1,159 @@
+.\" Copyright 1996 Daniel Quinlan (Daniel.Quinlan@linux.org)
+.\"
+.\" This is free documentation; you can redistribute it and/or
+.\" modify it under the terms of the GNU General Public License as
+.\" published by the Free Software Foundation; either version 2 of
+.\" the License, or (at your option) any later version.
+.\"
+.\" The GNU General Public License's references to "object code"
+.\" and "executables" are to be interpreted as the output of any
+.\" document formatting or typesetting system, including
+.\" intermediate and printed output.
+.\"
+.\" This manual is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public
+.\" License along with this manual; if not, write to the Free
+.\" Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111,
+.\" USA.
+.\"
+.\" 2007-12-14 mtk Added Reiserfs, XFS, JFS.
+.\"
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH FILESYSTEMS 5 2007\-12\-14 Linux "Linux \- příručka programátora"
+.nh
+.SH JMÉNO
+filesystems \- Linux file\-system types: minix, ext, ext2, ext3, Reiserfs,
+XFS, JFS, xia, msdos, umsdos, vfat, proc, nfs, iso9660, hpfs, sysv, smb,
+ncpfs
+.SH POPIS
+Pokud, jak je zvykem, je souborový systém \fBproc\fP připojen na \fI/proc\fP,
+lze v souboru \fI/proc/filesystems\fP najít seznam souborových systémů,
+které vaše jádro podporuje. (Pokud potřebujete použít souborový
+systém, který není momentálně v jádře, vložte do jádra
+příslušný modul nebo znovu přeložte jádro s potřebnými parametry.)
+
+Aby bylo možné používat souborový systém, je nutné jej \fIpřipojit\fP.
+Viz \fBmount\fP(8).
+
+Níže najdete popis různých souborových systémů.
+.TP  10
+\fBminix\fP
+je souborový systém operačního systému Minix, první souborový systém
+Linuxu. Má mnoho nedostatků: maximální velikost svazku 64MB, krátká
+jména souborů, pouze jeden časový údaj pro soubor atd. Stále má
+význam pro diskety a ramdisky.
+.TP 
+\fBext\fP
+je rozšířením souborového systému \fBminix\fP.  Byl kompletně překonán
+svou druhou verzí (\fBext2\fP)  a byl vypuštěn z jádra (v 2.1.21).
+.TP 
+\fBext2\fP
+je velmi výkonný souborový systém použitý v Linuxu jak pro harddisky,
+tak pro výměnná média.  Druhý rozšířený souborový systém je
+navržen jako rozšíření souborového systému \fBext\fP. \fBext2\fP dosahuje
+nejlepších výsledků (v rychlosti a zátěží CPU) mezi všemi
+souborovými systémy podporovanými Linuxem.
+.TP 
+\fBext3\fP
+je žurnálová verze souborového systému ext2. Je velmi jednoduché
+přecházet mezi ext2 a ext3.
+.TP 
+\fBReiserfs\fP
+je žurnálový souborový systém navržený Hansem Reiserem, který byl
+začleněn do Linuxu v jádru 2.4.1.
+.TP 
+\fBXFS\fP
+je žurnálový souborový systém, který vyvinula SGI.  Byl začleněn do
+Linuxu v jádru 2.4.20.
+.TP 
+\fBJFS\fP
+je žurnálový souborový systém, který vyvinula IBM.  Byl začleněn do
+Linuxu v jádru 2.4.24.
+.TP 
+\fBxiafs\fP
+byl navržen jako stabilní, bezpečný souborový systém rozšiřující
+kód souborového systému minix. Poskytuje nejdůležitější základní
+služby bez zbytečné složitosti.  Souborový systém \fBxia\fP již není
+aktivně vyvíjen ani udržován. Byl z jádra odstraněn ve verzi 2.1.21.
+.TP 
+\fBmsdos\fP
+je souborový systém použitý operačními systémy DOS, Windows a
+některými implementacemi OS/2. Jména souborů pod \fBmsdosem\fP nesmí být
+delší než 8 znaků, po nich následuje nepovinná tečka a tříznaková
+přípona.
+.TP 
+\fBumsdos\fP
+je rozšíření souborového systému DOSu použité Linuxem. Přidává
+možnost použít dlouhá jména, UID a GID, POSIXová přístupová práva
+a speciální soubory (zařízení, named pipes atd.) nad souborovým
+systémem DOSu bez zrušení kompatibility s ním.
+.TP 
+\fBvfat\fP
+je rozšíření souborového systému DOSu použité v Microsoft Windows 95
+a Windows NT. VFAT přidává podporu dlouhých jmen nad souborovým
+systémem msdos.
+.TP 
+\fBproc\fP
+je virtuální souborový systém použitý jako rozhraní pro data z jádra
+namísto čtení a interpretace zařízení \fI/dev/kmem\fP. Poznamenejme, že
+tyto soubory nezabírají místo na disku. Viz \fBproc\fP(5).
+.TP 
+\fBiso9660\fP
+je souborový systém pro CD\-ROM podle standardu ISO 9660.
+.RS
+.TP 
+\fBHigh Sierra\fP
+Linux podporuje standard High Sierra, předchůdce standardu ISO 9660 pro
+CD\-ROMy. Je automaticky rozpoznán v rámci podpory souborového systému
+\fBiso9660\fP pod Linuxem.
+.TP 
+\fBRock Ridge\fP
+Linux podporuje záznamy System Use Sharing Protocol definované v rámci
+Rock Ridge Interchange Protocol. Toto rozšíření je použito pro další
+rozšiřující popis souborů v souborovém systému \fBiso9660\fP pro
+UNIXový operační systém, přičemž dodává informace jako dlouhá
+jména, UID/GID, POSIXová přístupová práva a zařízení. Je
+automaticky rozpoznán podporou souborového systému \fBiso9660\fP pod
+Linuxem.
+.RE
+.TP 
+\fBhpfs\fP
+je High Performance Filesystem, použitý v OS/2. Tento souborový systém
+lze pod Linuxem pouze číst, především z důvodu nedostatku dokumentace.
+.TP 
+\fBsysv\fP
+je implementací souborového systému SystemV/Coherent pro
+Linux. Implementuje podporu pro Xenix FS, SystemV/386 FS a Coherent FS.
+.TP 
+\fBnfs\fP
+je síťový souborový systém umožňující přístup na disky
+nacházející se na jiných počítačích.
+.TP 
+\fBsmb\fP
+je síťový souborový systém implementující protokol SMB, použitý ve
+Windows for Workgroups, Windows NT a v Lan Manageru.
+.sp
+Pro použití souborového systému \fBsmb\fP potřebujete speciální
+připojovací program, který najdete v balíčku ksmbfs na
+\fIftp://sunsite.unc.edu/pub/Linux/system/Filesystems/smbfs\fP.
+.TP 
+\fBncpfs\fP
+je síťový souborový systém implementující protokol NCP, použitý
+programy firmy Novell NetWare.
+.sp
+Pro použití souborového systému \fBncpfs\fP, potřebujete speciální
+připojovací program, který najdete na adrese
+\fIftp://linux01.gwdg.de/pub/ncpfs\fP.
+.SH "DALŠÍ INFORMACE"
+\fBproc\fP(5), \fBfsck\fP(8), \fBmkfs\fP(8), \fBmount\fP(8)
+.SH TIRÁŽ
+Tato stránka je součástí projektu Linux \fIman\-pages\fP.  Popis projektu a
+informace o hlášení chyb najdete na http://www.kernel.org/doc/man\-pages/.

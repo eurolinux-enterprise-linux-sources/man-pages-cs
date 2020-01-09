@@ -1,0 +1,109 @@
+.TH ACCESS 2 "4. září 1998" "Linux 1.2.13" "Linux - Příručka programátora"
+.do hla cs
+.do hpf hyphen.cs
+.SH JMÉNO
+access \- kontroluje přístupová práva k souboru
+.SH SYNTAXE
+.nf
+.B #include <unistd.h>
+.sp
+.BI "int access(const char *" pathname ", int " mode );
+.fi
+.SH POPIS
+.B access
+kontroluje, zda proces může číst či zapisovat do souboru (nebo jiného
+objektu souborového systému) se jménem
+.I pathname .
+Lze jej také použít ke zjištění existence 
+.I pathname .
+Pokud je
+.I pathname
+symbolický odkaz, pak jsou testována přístupová práva souboru, na
+který odkaz směřuje.
+
+.I mode
+je maska obsahující jednu či více těchto možností:
+.BR R_OK ", " W_OK ", " X_OK " a " F_OK .
+
+.BR R_OK ", " W_OK " a " X_OK
+provede testování, zda soubor existuje a má pro běžící proces nastavená práva ke
+čtení (Read), psaní (Write) a vykonání (eXecute).
+.B F_OK
+kontroluje pouze existenci souboru.
+
+Výsledek testu závisí na přístupových právech adresářů, jež náleží
+cestě k souboru
+.IR pathname ,
+a na přístupových právech adresářů a souborů, na které směřují
+symbolické odkazy na cestě.
+
+Kontrola je provedena se 
+.I skutečným
+uid a gid procesu. Nebere se zřetel na efektivní id, které se projeví
+při souborové operaci. Tak mohou setuid programy snadno zjistit
+skutečná práva uživatele.
+
+Kontrolují se pouze příznakové bity; ne typ souboru či jeho obsah.
+Pokud je adresář "zápisu schopný", lze v něm pravděpodobně tvořit
+soubory - nemůžeme do něj zapisovat, jako do běžného souboru. Zrovna
+tak DOSový soubor může být "spustitelný", ale
+.BR execve (2)
+bude stále protestovat.
+.SH "NÁVRATOVÁ HODNOTA"
+Při úspěchu (všechna kontrolovaná práva jsou dostupná) vrací nulu.
+Při neúspěchu (alespoň jeden druh přístupu reprezentovaný příslušným
+bitem z
+.I mode
+je odepřen, nebo nastane jiná chyba), vrací
+\-1, a proměnná
+.I errno
+je nastavena.
+.SH CHYBY
+.TP
+.B EACCES
+Požadovaný přístup by byl odepřen. 
+.TP
+.B EFAULT
+.I pathname
+odkazuje někam mimo přístupný adresovatelný diskový prostor.
+.TP
+.B EINVAL
+.I mode
+je zadán chybně.
+.TP
+.B ENAMETOOLONG
+.I pathname
+je příliš dlouhý.
+.TP
+.B ENOENT
+Adresáře v
+.I pathname
+by mohly být přístupné, ale neexistují, nebo jsou to volné symbolické odkazy.
+.TP
+.B ENOTDIR
+Části
+.I pathname
+použité jako adresáře ve skutečnosti nejsou adresáře
+.TP
+.B ENOMEM
+Málo paměti jádra.
+.TP
+.B ELOOP
+.I pathname
+obsahuje cyklický symbolický odkaz, např. symbolický odkaz odkazuje
+sám na sebe.
+.SH OMEZENÍ
+.B access
+vrací chybu i kdyby jeden jediný druh přístupu byl odepřen a všechny
+ostatní umožněny.
+.P
+.B access
+může zlobit na NFS souborových systémech, které mají zapnuté mapování UID,
+protože mapovaní UID je prováděno na serveru a je skryto před klienty.
+.SH "SPLŇUJE STANDARDY"
+SVID, AT&T, POSIX, X/OPEN, BSD 4.3
+.SH "DALŠÍ INFORMACE"
+.BR stat "(2), " open "(2), " chmod "(2), " chown "(2), "
+.BR setuid "(2), " setgid (2).
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

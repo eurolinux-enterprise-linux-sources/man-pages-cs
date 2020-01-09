@@ -1,0 +1,154 @@
+.TH LILO 8 "26.prosince 1996"
+.do hla cs
+.do hpf hyphen.cs
+.SH JMÉNO
+lilo \- instaluje zavaděč systému
+.SH SYNTAXE
+Hlavní funkce:
+.LP
+.B " /sbin/lilo"
+\- instalace zavaděče Linuxu
+.LP
+Jiná použití:
+.LP
+.B " /sbin/lilo -q"
+\- zobrazí současnou bootovací mapu - seznam jader, které je možno při
+bootování zvolit.
+.br
+.B " /sbin/lilo -R"
+\- slouží pro nastavení standardní příkazové řádky pro následující reboot.
+.br
+.B " /sbin/lilo -I"
+\- zobrazí cestu k bootovatelnému obrazu jádra.
+.br
+.B " /sbin/lilo {-u|-U}"
+\- odinstaluje lilo.
+.SH POPIS
+.LP
+.B lilo
+nainstaluje zavaděč systému, který bude aktivován při každém dalším zavádění
+systému. Má spoustu voleb.
+.LP
+.TP
+.B \-\^v
+Verbose. V závislosti na počtu voleb \fB-v\fP bude lilo tisknout více a více
+zpráv o své činnosti.
+.TP
+.B \-\^q
+Vypíše jádra, která je možné nabootovat.
+.B lilo
+má soubor, standardně
+.IR "/boot/map" ,
+který obsahuje jména a umístění jader. Tato volba je všechny vypíše.
+.TP
+.BI "\-\^m " map-soubor
+lilo použije specifikovaný mapový soubor místo standardního \fB/boot/map\fP.
+.TP
+.BI "\-\^C " config-soubor
+.B lilo
+čte standardně své instrukce o tom, které soubory má zmapovat, ze svého
+konfiguračního souboru
+.IR "/etc/lilo.conf" .
+Tato volba může být použita ke specifikaci jiného konfiguračního souboru.
+.TP
+.BI "\-\^d " delay
+Jestliže jste specifikovali více jader a při bootování jste stiskli klávesu 
+Shift, lilo zobrazí prompt a čeká na Vaši volbu jádra. Nebudete-li na tuto
+výzvu reagovat, lilo zavede první kernel, který je na seznamu bootovatelných
+kernelů. Tato volba určuje počet desetin sekundy před jeho zavedením.
+.TP
+.BI "\-\^D " label
+Použij kernel se zadaným jménem místo prvního v seznamu.
+.TP
+.BI "\-\^r " root-directory
+Předtím, než něco provedeš, udělej \fIchroot\fP do specifikovaného adresáře.
+Je velmi často používáno při opravě z boot disku.
+.TP
+.BI "\-\^t "
+Test. Proveď vše jak máš, pouze nic nezapisuj na disk.
+Používá se společně s \fB-v\fP, abychom poznali, co bude
+.B lilo
+skutečně dělat.
+.TP
+.B "\-\^c"
+Kompaktní mapa. Tato volba sdružuje požadavky na čtení sousedních sektorů a
+tím velmi urychluje zavedení systému.
+.TP
+.BI "\-\^f " disk-tab
+Specifikace souboru, který obsahuje popis geometrie disku.
+Standardní je
+.IR /etc/disktab .)
+.TP
+.BI "\-\^i " boot-sector
+Specifikuje nový boot sektor. Standardní je 
+.IR /boot/boot.b .)
+.TP
+.BI "\-\^l"
+Generuj lineární adresy a ne adresy ve formátu sektor/hlava/cylindr.
+.TP
+.BI "\-\^P " "{fix|ignore}"
+Uprav nebo ignoruj `poškozené' partition tabulky, t.j. partition tabulky s
+lineárními nebo sektor/hlava/cylindr adresami, které neodpovídají.
+.TP
+.BI "\-\^s " save-file
+Když
+.B lilo
+přepisuje boot sektor, uloží jeho starý obsah do souboru, standardně
+.I /boot/boot.NNNN
+kde NNNN závisí na čísle zařízení. Tato volba specifikuje jiný záložní
+soubor pro boot sektor. (Nebo společně s volbou \fB-u\fP určuje soubor, ze
+kterého se má bootsektor obnovit.)
+.TP
+.BI "\-\^S " save-file
+Standardně
+.B lilo
+nepřepisuje existující záložní soubor. Tato volba mu to umožní.
+.TP
+.BI "\-\^u " device-name
+Odinstaluje
+.BR lilo ,
+zkopíruje záložní boot sektor zpět.
+.TP
+.BI "\-\^U " device-name
+Totéž, ale nekontroluje čas.
+.TP
+.BI "\-\^R " "command line"
+Tato volba uloží standardní příkazovou řádku pro příští spuštění zavaděče.
+Zavaděč tuto řádku smaže: toto je pouze jednorázový příkaz. Je typicky
+používán v skriptech pro reboot.
+.TP
+.BI "\-\^I " "label"
+Název běžícího kernelu je po zavedení v proměnné BOOT_IMAGE.
+Tento příkaz vypíše odpovídající cestu k obrazu jádra.
+.TP
+.B "\-\^V"
+Vytiskne číslo verze.
+
+.LP
+Výše uvedené volby odpovídají klíčovým slovům v konfiguračním souboru podle
+této tabulky:
+.IP
+.TS
+l l.
+-b bootdev	boot=bootdev
+-c	compact
+-d dsec	delay=dsec
+-D label	default=label
+-i bootsector	install=bootsector
+-f file	disktab=file
+-l	linear
+-m mapfile	map=mapfile
+-P fix	fix-table
+-P ignore	ignore-table
+-s file	backup=file
+-S file	force-backup=file
+-v	verbose=level
+.TE
+.SH DALŠÍ INFORMACE
+lilo.conf(5).
+.br
+Distribuce programu lilo obsahuje rozsáhlejší dokumentaci.
+.SH AUTOR
+Werner Almesberger (almesber@bernina.ethz.ch).
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

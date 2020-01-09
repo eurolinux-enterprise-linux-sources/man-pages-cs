@@ -1,0 +1,28 @@
+.TH FMOD 3  "5.ledna 1997" "" "Linux - příručka programátora"
+.do hla cs
+.do hpf hyphen.cs
+.SH JMÉNO
+fmod \- desetinná zbytková funkce
+.SH SYNTAXE
+.nf
+.B #include <math.h>
+.sp
+.BI "double fmod(double " x ", double " y );
+.fi
+.SH POPIS
+Funkce \fBmodf()\fP počítá hodnotu podílu \fIx\fP děleno
+\fIy\fP. Návratová hodnota je \fIx\fP - \fIn\fP * \fIy\fP, kde \fIn\fP
+je podíl \fIx\fP / \fIy\fP, zaokrouhlený směrem k nule na celé číslo.
+.SH NÁVRATOVÁ HODNOTA
+Funkce \fBfmod()\fP vrací zbytek. Výjimkou je případ, kdy dělitel \fIy\fP má
+hodnotu 0. V tomto případě funkce selže a nastaví proměnnou \fIerrno\fP .
+.SH CHYBY
+.TP
+.B EDOM
+Dělitel \fIy\fP je 0.
+.SH SPLŇUJE STANDARDY
+SVID 3, POSIX, BSD 4.3, ISO 9899
+.SH DALŠÍ INFORMACE
+.BR drem (3)
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

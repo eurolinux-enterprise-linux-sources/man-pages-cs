@@ -1,0 +1,285 @@
+.\" t
+.\" Copyright (c) 1993 by Thomas Koenig (ig25@rz.uni-karlsruhe.de)
+.\"
+.\" Permission is granted to make and distribute verbatim copies of this
+.\" manual provided the copyright notice and this permission notice are
+.\" preserved on all copies.
+.\"
+.\" Permission is granted to copy and distribute modified versions of this
+.\" manual under the conditions for verbatim copying, provided that the
+.\" entire resulting derived work is distributed under the terms of a
+.\" permission notice identical to this one.
+.\"
+.\" Since the Linux kernel and libraries are constantly changing, this
+.\" manual page may be incorrect or out-of-date.  The author(s) assume no
+.\" responsibility for errors or omissions, or for damages resulting from
+.\" the use of the information contained herein.  The author(s) may not
+.\" have taken the same level of care in the production of this manual,
+.\" which is licensed free of charge, as they might when working
+.\" professionally.
+.\"
+.\" Formatted or processed versions of this manual, if unaccompanied by
+.\" the source, must acknowledge the copyright and authors of this work.
+.\" License.
+.\" Modified Sat Jul 24 17:35:15 1993 by Rik Faith <faith@cs.unc.edu>
+.\" Modified Sun Feb 19 22:02:32 1995 by Rik Faith <faith@cs.unc.edu>
+.\" Modified Tue Oct 22 23:28:12 1996 by Eric S. Raymond <esr@thyrsus.com>
+.\" Modified Sun Jan 26 21:56:56 1997 by Ralph Schleicher
+.\"    <rs@purple.UL.BaWue.DE>
+.\" Modified Mon Jun 16 20:24:58 1997 by Nicolás Lichtmaier <nick@debian.org>
+.\" Modified Sun Oct 18 22:11:28 1998 by Joseph S. Myers <jsm28@cam.ac.uk>
+.\" Modified Mon Nov 16 17:24:47 1998 by Andries Brouwer <aeb@cwi.nl>
+.\" Modified Thu Nov 16 23:28:25 2000 by David A. Wheeler
+.\"    <dwheeler@dwheeler.com>
+.\"
+.\" FIXME, mtk, May 2007: rendering this page yields the error:
+.\" grotty:suffixes.7:1725: character above first line discarded
+.\"
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH SUFFIXES 7 2000\-11\-16 Linux "Linux \- příručka programátora"
+.SH JMÉNO
+suffixes \- seznam přípon souborů
+.SH POPIS
+Je obvyklé rozlišovat obsah souboru podle jeho přípony, která sestává
+z tečky následované jedním nebo více písmeny. Mnoho standardních
+utilit, jako např. překladače, používají přípon, aby rozlišili typ
+souboru, se kterým pracují. Program \fBmake\fP(1)  je řízen pravidly,
+která jsou na příponách založena.
+.PP
+Následující seznam obsahuje přípony, které můžete na Linuxu nalézt.
+.PP
+.TS
+l | l
+_ | _
+lI |  l .
+Přípona\tTyp souboru
+ ,v\tsoubory pro RCS (Revision Control System)
+ \-\tzáložní soubor
+ .C\tzdrojové texty v C++, ekvivalentní s \fI.cc\fP
+ .F\tzdrojové texty v jazyce FORTRAN s direktivami \fBcpp\fP(1)
+\tnebo soubor komprimovaný programem freeze
+ .S\tzdrojové texty v assembleru s direktivami \fBcpp\fP(1)
+ .Y\tsoubory komprimované programem yabba
+ .Z\tsoubory komprimované programem \fBcompress\fP(1)
+ .[0\-9]+gf\tobecné soubory fontů pro TeX
+ .[0\-9]+pk\tkomprimované soubory fontů pro TeX
+ .[1\-9]\tmanuálové stránky odpovídající sekce
+ .[1\-9][a\-z]\tmanuálové stránky odpovídající sekce a podsekce
+ .a\tstatické knihovny
+ .ad\tX application default resource file
+ .ada\tzdrojové texty v jazyce Ada (body, spec nebo kombinace)
+ .adb\tzdrojové texty v jazyce Ada (body)
+ .ads\tzdrojové texty v jazyce Ada (spec)
+ .afm\tmetriky postscriptových fontů
+ .al\tPerl autoload file
+ .am\tvstupní soubor pro \fBautomake\fP(1)
+ .arc\tarchív \fBarc\fP(1)
+ .arj\tarchív \fBarj\fP(1)
+ .asc\tPGP data v ASCII formátu (veřejné klíče)
+ .asm\tzdrojové texty (GNU) assembleru
+ .au\tsoubor Audio sound
+ .aux\tpomocný soubor LaTeX
+ .avi\t(msvideo) film
+ .awk\tprogramy v jazyce AWK
+ .b\tLILO boot loader image
+ .bak\tzáložní soubory
+ .bash\t\fBbash\fP(1) shell script
+ .bb\tbasic block list data produced by
+\tgcc \-ftest\-coverage
+ .bbg\tbasic block graph data produced by
+\tgcc \-ftest\-coverage
+ .bbl\tBibTeX output
+ .bdf\tX font file
+ .bib\tTeX bibliographic database, BibTeX input
+ .bm\tbitmapa ve zdrojovém tvaru
+ .bmp\tbitmapa
+ .bz2\tsoubory komprimované programem \fBbzip2\fP(1)
+ .c\tzdrojový text v jazyce C
+ .cat\tkatalog zpráv
+ .cc\tzdrojový text v jazyce C++
+ .cf\tkonfigurační soubor
+ .cfg\tkonfigurační soubor
+ .cgi\tWWW content generating script or program
+ .cls\tLaTeX Class definition
+ .class\tJava compiled byte\-code
+ .conf\tkonfigurační soubor
+ .config\tkonfigurační soubor
+ .cpp\tekvivalent \fI.cc\fP
+ .csh\t\fBcsh\fP(1) shell script
+ .cxx\tekvivalent \fI.cc\fP
+ .dat\tdatový soubor
+ .deb\tDebian software package
+ .def\tzdrojové texty Modula\-2 pro definiční moduly
+ .def\tjiné definiční soubory
+ .desc\tinitial part of mail message unpacked with
+\t\fBmunpack\fP(1)
+ .diff\tsoubor odlišností (výstup programu \fBdiff\fP(1))
+ .dir\tdbm data base directory file
+ .doc\tdokumentační soubor
+ .dsc\tDebian Source Control (source package)
+ .dtx\tLaTeX package source file
+ .dvi\tvýstupní soubor TeXu (DeVice Independent)
+ .el\tzdrojový text v lispu pro EMACS
+ .elc\tkompilovaný lisp pro EMACS
+ .eps\tencapsulated PostScript
+ .exp\tzdrojový text Expect
+ .f\tzdrojový text ve FORTRANu
+ .f77\tzdrojový text ve FORTRANu 77
+ .f90\tzdrojový text ve FORTRANu 90
+ .fas\tpředkompilovaný common Lisp
+ .fi\thlavičkové soubory FORTRANu
+ .fig\tFIG image file (used by \fBxfig\fP(1))
+ .fmt\tTeX format file
+ .gif\tCompuserve Graphics Image File format
+ .gmo\tGNU format message catalog
+ .gsf\tghostscriptové fonty
+ .gz\tsoubor komprimovaný programem \fBgzip\fP(1)
+ .h\tC nebo C++ hlavičkové soubory
+ .help\tsoubor nápovědy
+ .hf\tekvivalent \fI.help\fP
+ .hlp\tekvivalent \fI.help\fP
+ .htm\t\fI.html\fP chudých
+ .html\tHTML dokument pro World Wide Web
+ .hqx\t7\-bit encoded Macintosh file
+ .i\tzdrojový text v C po zpracování preprocesorem
+ .icon\tbitmapa ve zdrojovém tvaru
+ .idx\todkazy nebo seznam pro hypertext
+\tnebo databáze
+ .image\tbitmapa ve zdrojovém tvaru
+ .in\tšablona pro konfiguraci, hlavně pro GNU autoconf
+ .info\tsoubory pro info
+ .info\-[0\-9]+\tsplit info files
+ .ins\tLaTeX package install file for docstrip
+ .itcl\titcl source code;
+\titcl ([incr Tcl]) is an OO extension of tcl
+ .java\tzdrojové texty v Javě
+ .jpeg\tJoint Photographic Experts Group format
+ .jpg\t\fI.jpeg\fP chudých
+ .kmap\t\fBlyx\fP(1) keymap
+ .l\tequivalent to \fI.lex\fP or \fI.lisp\fP
+ .lex\t\fBlex\fP(1) or \fBflex\fP(1) files
+ .lha\tlharc archív
+ .lib\tCommon\-Lisp library
+ .lisp\tLisp source
+ .ln\tsoubory pro \fBlint\fP(1)
+ .log\tlog file, in particular produced by TeX
+ .lsm\tLinux Software Map entry
+ .lsp\tzdrojový text pro Common Lisp
+ .lzh\tlharc archive
+ .m\tObjective\-C source code
+ .m4\tzdrojový text pro \fBm4\fP(1)
+ .mac\tsoubory maker pro různé programy
+ .man\tmanuálové stránky (obvykle zdrojový text spíše než již zformátované)
+ .map\tmap files for various programs
+ .me\tzdrojový text pro Nroff, který používá maker me
+ .mf\tzdrojový text pro Metafont (generátor fontů pro TeX)
+ .mgp\tMagicPoint file
+ .mm\tzdrojové texty pro  \fBgroff\fP(1) ve formátu mm
+ .mo\tMessage catalog binary file
+ .mod\tzdrojové texty pro Modula\-2 pro implementační moduly
+ .mov\t(quicktime) movie
+ .mp\tMetapost source
+ .mp2\tMPEG Layer 2 (audio) file
+ .mp3\tMPEG Layer 3 (audio) file
+ .mpeg\tfilm
+ .o\tobjektový soubor
+ .old\tstaré nebo záložní soubory
+ .orig\tzáložní (původní) verze souborů po použití \fBpatch\fP(1)
+ .out\tvýstupní soubor, často spustitelný soubor (a.out)
+ .p\tzdrojový text v jazyce Pascal
+ .pag\tdbm data base data file
+ .patch\todlišnosti souborů pro  \fBpatch\fP(1)
+ .pbm\tportable bitmap format
+ .pcf\tsoubory fontů pro X\-Window System
+ .pdf\tAdobe Portable Data Format
+\t(use Acrobat/\fBacroread\fP or \fBxpdf\fP)
+ .perl\tPerl source (see .ph, .pl and .pm)
+ .pfa\tdefiniční soubory fontů Postscript ve formátu ASCII
+ .pfb\tdefiniční soubory fontů Postscript ve binárním formátu
+ .pgm\tportable greymap format
+ .pgp\tPGP binární data
+ .ph\tPerl header file
+ .php\tPHP program file
+ .php3\tPHP3 program file
+ .pid\tsoubor s uloženým PID procesu démona (např. crond.pid)
+ .pl\tTeX property list file or Perl library file
+ .pm\tPerl module
+ .png\tobrázek ve formátu Portable Network Graphics
+ .po\tMessage catalog source
+ .pod\t\fBperldoc\fP(1) file
+ .ppm\tportable pixmap format
+ .pr\tbitmapa ve zdrojovém tvaru
+ .ps\tpostscriptový soubor
+ .py\tzdrojový text v jazyce Python
+ .pyc\tcompiled python
+ .qt\tfilm ve formátu quicktime
+ .r\tzdrojový text v RATFOR (zastaralý)
+ .rej\t"záplaty", které \fBpatch\fP(1) nemohl aplikovat
+ .rpm\tRedHat software package
+ .rtf\tRich Text Format file
+ .rules\tpravidla pro něco
+ .s\tzdrojový text v assembleru
+ .sa\tstub knihovny pro sdílené knihovny ve formátu a.out
+ .sc\tpříkazy pro spreadsheet \fBsc\fP(1)
+ .scm\tScheme source code
+ .sed\tsed source file
+ .sgml\tSGML source file
+ .sh\tskripty pro \fBsh\fP(1)
+ .shar\tarchív vytvořený utilitou \fBshar\fP(1)
+ .so\tsdílené nebo dynamické knihovny
+ .sql\tSQL source
+ .sqml\tSQML schema or query program
+ .sty\tLaTeX style files
+ .sym\tkompilované Modula\-2 definiční moduly
+ .tar\tarchív vytvořený utilitou \fBtar\fP(1)
+ .tar.Z\tarchív tar(1) komprimovaný pomocí \fBcompress\fP(1)
+ .tar.bz2\tarchív tar(1) komprimovaný pomocí \fBbzip2\fP(1)
+ .tar.gz\tarchív tar(1) komprimovaný pomocí \fBgzip\fP(1)
+ .taz\tarchív tar(1) komprimovaný pomocí \fBcompress\fP(1)
+ .tcl\tzdrojový text tcl
+ .tex\tzdrojový text pro TeX nebo LaTeX
+ .texi\tekvivalent \fI.texinfo\fP
+ .texinfo\tzdrojový text pro TeXinfo
+ .text\ttextové soubory
+ .tfm\tmetriky fontů pro TeX
+ .tgz\tarchív taru komprimovaný pomocí \fBgzip\fP(1)
+ .tif\t\fI.tiff\fP chudých
+ .tiff\tTagged Image File Format
+ .tk\ttcl/tk script
+ .tmp\tdočasné soubory
+ .tmpl\tšablonové soubory
+ .txt\tekvivalent \fI.text\fP
+ .uu\tekvivalent \fI.uue\fP
+ .uue\tbinární soubor kódovaný pomocí \fBuuencode\fP(1)
+ .vf\tTeX virtual font file
+ .vpl\tTeX virtual property list file
+ .w\tSilvio Levi's CWEB
+ .wav\twave sound file
+ .web\tDonald Knuth's WEB
+ .wml\tSource file for Web Meta Language
+ .xbm\tX11 bitmap source
+ .xcf\tGIMP graphic
+ .xml\teXtended Markup Language file
+ .xpm\tX11 pixmap source
+ .xs\tPerl xsub file produced by h2xs
+ .xsl\tXSL stylesheet
+ .y\tzdrojové texty pro \fByacc\fP(1) nebo \fBbison\fP(1)
+ .z\tsoubor komprimovaný programem \fBpack\fP(1) (nebo starým \fBgzip\fP(1))
+ .zip\t\fBzip\fP(1) archív
+ .zoo\t\fBzoo\fP(1) archív
+ ~\tzáložní soubory programu Emacs nebo \fBpatch\fP(1)
+ rc\tstartovací (`run control') soubory, např. \fI.newsrc\fP
+.TE
+.SH "SPLŇUJE STANDARDY"
+Obvyklé UNIXové konvence.
+.SH CHYBY
+Tento seznam není úplný.
+.SH "DALŠÍ INFORMACE"
+\fBfile\fP(1), \fBmake\fP(1)
+.SH TIRÁŽ
+Tato stránka je součástí projektu Linux \fIman\-pages\fP.  Popis projektu a
+informace o hlášení chyb najdete na http://www.kernel.org/doc/man\-pages/.

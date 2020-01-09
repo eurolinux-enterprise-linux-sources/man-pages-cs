@@ -1,0 +1,34 @@
+.\"             -*-Nroff-*-
+.\"
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH UPTIME 1 "26.leden 1993" "Cohesive Systems" "Linux \- Příručka uživatele"
+.SH JMÉNO
+uptime \- informuje o tom, jak dlouho běží systém
+.SH POUŽITÍ
+\fBuptime\fP
+.br
+\fBuptime\fP [\fB\-V\fP]
+.SH POPIS
+\fBuptime\fP poskytuje jednu řádku s následujícími informacemi:
+Systémový čas, jak dlouho už systém běží, kolik uživatelů je
+právě přihlášeno a průměrné vytížení procesoru za posledních 1,
+5 a 15 minut.
+.sp
+Stejná informace je obsažena v záhlaví zobrazovaném programem \fBw\fP(1).
+.SH SOUBORY
+\fI/var/run/utmp\fP	informace o tom, kteří uživatelé jsou právě
+přihlášeni
+.br
+\fI/proc\fP	informace o procesech
+.SH AUTOŘI
+\fBuptime\fP napsali Larry Greenfield <greenfie@gauss.rutgers.edu> a
+Michael K. Johnson <johnsonm@sunsite.unc.edu>.
+
+Chyby týkající se programu prosím zasílejte na
+<albert@users.sf.net>
+.SH "DALŠÍ INFORMACE"
+\fBps\fP(1), \fBtop\fP(1), \fButmp\fP(5), \fBw\fP(1)

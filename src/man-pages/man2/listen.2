@@ -1,0 +1,61 @@
+.TH LISTEN 2 "11.dubna 1997" "BSD Man Page" "Linux - příručka programátora"
+.do hla cs
+.do hpf hyphen.cs
+.SH JMÉNO
+listen \- čekej na spojení na soketu
+.SH SYNTAXE
+.B #include <sys/socket.h>
+.sp
+.BI "int listen(int " s ", int " backlog );
+.SH POPIS
+K přijetí spojení na soketu je nejdříve třeba tento soket vytvořit funkcí
+.BR socket (2),
+ochota akceptovat příchozí spojení a délka fronty čekajících požadavků je
+specifikována funkcí 
+.BR listen ,
+a poté jsou požadavky na spojení akceptovány funkcí
+.BR accept (2).
+Volání
+.B listen
+lze aplikovat pouze na sokety typů
+.B SOCK_STREAM
+nebo
+.B SOCK_SEQPACKET.
+
+Parametr
+.I backlog
+specifikuje délku fronty čekajících požadavků na spojení. Je-li fronta
+zaplněna, obdrží klient zprávu
+.BR ECONNREFUSED .
+.SH NÁVRATOVÁ HODNOTA
+V případě úspěchu je vrácena nula, jinak -1 a je příslušně nastavena
+proměnná
+.I errno
+.SH CHYBY
+.TP 0.8i
+.B EBADF
+Argument
+.I s
+není platným deskriptorem.
+.TP
+.B ENOTSOCK
+Argument
+.I s
+není deskriptorem soketu.
+.TP
+.B EOPNOTSUPP
+Typ soketu není podporován voláním
+.BR listen .
+.SH SPLŇUJE STANDARDY
+SVr4, 4.4BSD (volání
+.B listen
+se poprvé objevilo ve 4.2BSD). 
+.SH CHYBY
+Je-li soket typu AF\_INET a argument backlog je větší než 
+konstanta SOMAXCONN (128 v 2.0.29), je tiše zmenšen na 
+SOMAXCONN. Budete-li psát přenositelné aplikace, tak si z této konstanty nic
+nedělejte, protože např. některé BSD systémy limitují backlog na 5.
+.SH DALŠÍ INFORMACE
+.BR accept "(2), " connect "(2), " socket (2)
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

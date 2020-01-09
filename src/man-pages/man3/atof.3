@@ -1,0 +1,28 @@
+.TH ATOF 3  "6.ledna 1997" "GNU" "Linux - příručka programátora"
+.do hla cs
+.do hpf hyphen.cs
+.SH JMÉNO
+atof \- převádí řetězec na číslo typu double
+.SH SYNTAXE
+.nf
+.B #include <stdlib.h>
+.sp
+.BI "double atof(const char *" nptr );
+.fi
+.SH POPIS
+Funkce \fBatof()\fP převádí úvodní část řetězce
+\fInptr\fP na číslo typu double. Její chování je stejné jako u funkce 
+.sp
+.RS
+.B strtod(nptr, (char **)NULL);
+.RE
+.sp
+kromě toho, že \fBatof()\fP nedetekuje žádné chyby.
+.SH NÁVRATOVÁ HODNOTA
+Převedené číslo.
+.SH SPLŇUJE STANDARDY
+SVID 3, POSIX, BSD 4.3, ISO 9899
+.SH DALŠÍ INFORMACE
+.BR atoi "(3), " atol "(3), " strtod "(3), " strtol "(3), " strtoul (3)
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

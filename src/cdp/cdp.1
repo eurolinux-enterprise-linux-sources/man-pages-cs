@@ -1,0 +1,173 @@
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH cdp 1 "10.listopad 1995" "CD\-Play 0.33" "Audio CD Přehrávač"
+.SH JMÉNO
+cdplay \-\- interaktivní program, který umožňuje ovládání a
+přehrávání audio CD v textovém módu pod Linuxem.
+.SH POUŽITÍ
+\fBcdp\fP [ \-h | \-l | \-n | \-s ] [play <číslo_stopy>]
+.br
+\fBcdplay\fP [ \-h | \-l | \-n | \-s ] [play <číslo>] [stop] [table]
+.br
+                      \-s : start v tichém módu
+
+.br
+                      \-h : pomoc
+
+.br
+                      \-n : zamezit autopřehrávání
+
+.br
+                      \-l : pomalý start (čeká na zavedení)
+
+.br
+    play <číslo> : autoplay z <čísla> stopy na CD
+
+.br
+                  stop : zastavit přehrávání CD
+
+.br
+                table : zobrazit obsah TOC (tabulka obsahu) z databáze
+
+.br
+.sp
+Napište \fBcdp\fP pro spuštění programu. Zapněte NUM LOCK na numerické
+(keypad) klávesnici.  Stiskem DEL na numerické klávesnici se spustí menu
+s nápovědou.  Když \fBcdp\fP přehrává CD, zobrazuje číslo právě
+přehrávané stopy a celkový uplynulý čas CD i aktuální
+stopy. Všimněte si, že celkový uplynulý čas CD zahrnuje čas pro stopy
+datového typu jako doplněk k přehrávatelným stopám.
+
+Použijte \fBcdplay\fP jako neinteraktivní verzi cdp.
+.sp
+
+.SH POPIS
+\fBcdp\fP je interaktivní program, který umožňuje ovládání a
+přehrávání audio CD v textovém módu pod Linuxem.  Je založen na
+WorkBone, který se je zase založen na modulech "hardware.c", "database.c"
+a "struct.c" propracovaného programu X11 CD známého jako WorkMan.  \fBcdp\fP
+zobrazuje databázi CD, generovanou WorkManem. Umožňuje také tyto
+informace editovat.
+.PP
+\fBcdp\fP očekává zařízení /dev/cdrom. Jestliže toto zařízení
+nemáte, změňte v adresáři /dev symbolický odkaz 'cdrom' tak, aby
+ukazovala na zařízení mechaniky CD\-ROM. Například jestliže je CD\-ROM
+na zařízení 'mcd0', prověďte následující:
+.br
+.sp
+                              cd /dev
+
+.br 	
+                              ln \-sf mcd0 cdrom
+
+.br
+.sp 	
+.PP
+Popřípadě můžete editovat "hardware.c", aby odpovídal vaší cd rom a
+překompilovat program.
+.PP
+\fBcdp\fP používá numerickou klávesnici jako řídící panel a umožňuje
+vám přeskakovat stopy, přehrávat, pozastavit(pause), zastavit, a obnovit
+přehrávání audio CD. Ujistěte se, že máme rozsvícený NUM LOCK když
+používáte \fBcdp\fP.  Grafická šablona je zobrazena, aby vás
+informovala. Časy přehrávání jsou průběžně obnovovány a
+zobrazovány.
+.sp
+.br
+.bp
+                                  +numerická klávesnice+
+
+.br
+                 |                     |
+.br 		
+                 |    7     8     9    |
+.br 		
+                 |                     | 
+.br 		
+                 |    4     5     6    |
+.br 		
+                 |                     |
+.br 		
+                 |    1     2     3    |
+.br 		
+                 |                     |
+.br 		
+                                  |   0          del   |
+
+.br
+                 |                     |
+.br
+                 +\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-+
+.br
+.sp 2
+.br
+klávesa '9' na keypadu je "přehrávat"
+.br
+klávesa '8' na keypadu je "pausa/spustit"
+.br
+klávesa '7' na keypadu je "stop"
+.br
+klávesa '6' na keypadu je "další"
+.br
+klávesa '5' na keypadu je "opakovat"
+.br
+klávesa '4' na keypadu je "předchozí"
+.br
+klávesa '3' na keypadu je "skok dopředu o 15 sekund"
+.br
+klávesa '2' na keypadu je "tvrdé přerušení" (zastavení hudby)
+.br
+klávesa '1' na keypadu je "skok dozadu o 15 sekund "
+.br
+klávesa '0' na keypadu je "měkký odchod" (muzika pokračuje)
+.br
+klávesa '.' na keypadu je "nápověda"
+.br
+klávesa 'enter' edituje současnou stopu
+.br
+klávesa 'a' edituje jméno interpreta
+.br
+klávesa 'c' edituje jméno cd (alba)
+.PP
+.SH KOPÍROVÁNÍ
+\fBcdp\fP je \fBje volně šiřitelný software\fP poskytovaný BEZ jakékoliv
+ZÁRUKY, BA ANI v sobě nezahrnuje záruku obchodní nebo způsobilost pro
+určité použití. Používáte na vlastní riziko.  \fBcdp\fP může být
+použit jakkoliv po dobu, kdy splňujete podmínky Free Software Foundation
+\fBGNU General Public License \fP verze 2. Tento software by měl obsahovat
+kopii GNU General Public License.  Kopii této licence můžete získat
+napsáním na:
+.br
+.sp 2
+.br
+\	Free Software Foundation, Inc.,
+.br
+\	675 Mass Ave,
+.br
+\	Cambridge, MA 02139, USA.
+.br
+.sp
+.SH CHYBY
+Je nepravděpodobné, že bych dále vyvíjel \fBcdp\fP.  Rozšířil jsem
+WorkBone 0.1 o podporu WorkMan CD databází. Tento program je další
+rozšíření WorkBoneII 0.2 o podporu editace CD databáze.  Prosím,
+pošlete mi e\-mailem jakékoliv chyby, či možná vylepšení, jež
+zjistíte.  \fBcdp\fP pracuje s mojí Mitsumi FX001D CD\-ROM jednotkou, ale
+spolupráce s jinými jednotkami se může lišit. WorkMan používá
+běžná volání a funkce. Na rozdíl od WorkBone, cdp používá ncurses
+ke zobrazování. Jestli se někdo zajímá o jeho portování na další
+platformy, může mi poslat e\-mail.
+.br
+.sp
+Užijte si to.
+.br
+.sp
+Sariel Har\-Peled
+.br
+.sp
+sariel@math.tau.ac.il
+.br
+

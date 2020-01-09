@@ -1,0 +1,23 @@
+.TH ATAN 3  "5.ledna 1997" "" "Linux - příručka programátora"
+.do hla cs
+.do hpf hyphen.cs
+.SH JMÉNO
+atan \- funkce arcus tangens
+.SH SYNTAXE
+.nf
+.B #include <math.h>
+.sp
+.BI "double atan(double " x );
+.fi
+.SH POPIS
+Funkce \fBatan()\fP počítá arcus tangens čísla \fIx\fP; což je hodnota,
+jejíž tangens je \fIx\fP.
+.SH NÁVRATOVÁ HODNOTA
+Funkce \fBatan()\fP vrací arcus tangens v radiánech a její obor hodnot je
+uzavřený interval od -PI/2 do PI/2.
+.SH SPLŇUJE STANDARDY
+SVID 3, POSIX, BSD 4.3, ISO 9899
+.SH DALŠÍ INFORMACE
+.BR acos "(3), " asin "(3), " atan2 "(3), " cos "(3), " sin "(3), " tan (3)
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

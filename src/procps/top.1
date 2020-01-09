@@ -1,0 +1,442 @@
+.\" This file Copyright 1992 Robert J. Nation 
+.\" (nation@rocket.sanders.lockheed.com)
+.\" It may be distributed under the GNU Public License, version 2, nebo
+.\" všechny vyšší verze. Podívejte se do sekce COPYING of the GNU Public license
+.\" pro podmínky pod kterými může být tento soubor dále distribuován.
+.\"
+.\" Modified 1994/04/25 Michael Shields <mjshield@nyx.cs.du.edu>
+.\" Cleaned up, and my changes documented.  New `.It' macro.  Edited.
+.\" modified 1996/01/27 Helmut Geyer to match my changes.
+.
+.de It
+.TP 0.5i
+.B "\\$1 "
+..
+.TH TOP 1 "Feb 1 1993" "Linux" "Linux User's Manual"
+.SH NAME
+top \- Sledování procesu na CPU
+.SH SYNOPSIS
+.B top
+.RB [ \- ]
+.RB [ d
+.IR delay ]
+.RB [ p
+.IR pid ]
+.RB [ q ]
+.RB [ c ]
+.RB [ C ]
+.RB [ S ]
+.RB [ s ]
+.RB [ i ]
+.RB [ n
+.IR iter ]
+.RB [ b ]
+.SH POPIS
+.B top
+poskytuje pohled na zatížení procesoru v reálném čase.  Zobrazuje
+výčet úloh, které nejvíce zatěžují procesor a může poskytnout
+interaktivní rozhraní pro manipulaci s nimi. Může úlohy 
+třídit podle využití procesoru, paměti nebo délky běhu úlohy.
+.B top
+může být nastavován lépe než standardní
+.B top
+z balíčku procps.
+Většina vlastností může být vybrána interaktivním příkazem nebo 
+specifikováním vlastnosti v osobním nebo globálním konfiguračním
+souboru. Dále se dozvíte více.
+.PP
+.SH "VOLBY NA PŘÍKAZOVÉ ŘÁDCE"
+.It d
+Určuje dobu mezi obnovením obrazovky.  To můžete změnit pomocí
+.B s
+interaktivního příkazu.
+.It p
+sledovat jen procesy se zadaným id.
+Tato značka může být použita až dvacetkrát. Tato volba je není
+dostupná interaktivně ani nemůže být vložena do konfiguračního souboru.
+.It q
+V tomto případě
+.B top
+bude obnovovat bez prodlevy. Pokud má spouštějící superuživatelská 
+práva, top poběží s maximální možnou prioritou.
+.It S
+Určuje sčítací mód, kde každá úloha je vypisována s procesorovým
+časem který
+.IR "strávila včetně svých mrtvých potomků" .
+Je to jako 
+.B -S
+volba v
+.BR ps (1).
+Podívejte se níže na
+interaktivní příkaz
+.BR S .
+.It s
+Spustí
+.B top
+v bezpečnostním režimu.  Tím vypnete potenciálně nebezpečné
+interaktivní příkazy (viz níže). Zabezpečený
+.B top
+je ideální k ponechání běhu na obyčejném terminálu.
+.It i
+Spustí
+.B top
+s ignorováním nečinných a mrtvých úloh. Podívejte se na interaktivní příkaz
+.B i
+uvedený níže.
+.It C
+zobrazí celkové zatížení CPU navíc k jednotlivým CPU. Tato volba
+připadá v úvahu na SMP systémech.
+.It c
+zobrazí příkazovou řádku místo pouze příkazového jména. Výchozí
+chování bylo změno protože se jeví užitečnější.
+.It n
+Počet zobrazení. Zobrazí se tolikrát kolik určuje číslo a pak se zavře.
+.It b
+Dávkový mód. Užitečné pro posílání výstupu top do jiných programů
+nebo souboru. V tomto módu,
+.B top
+nebude akceptován vstup z příkazové řádky. Poběží dokud neproběhne
+počet zobrazení deklarovaný parametrem
+.B n
+nebo není zabit. Výstup je obyčejný text použitelný pro omezený
+terminál.
+.
+.SH "POPIS POLÍ"
+.B top
+zobrazuje mnoho informací o stavu procesoru.  
+Obrazovka je implicitně obnovována každých 5 vteřin, což
+lze změnit pomocí parametru
+.B d
+na příkazové řádce nebo interaktivním příkazem
+.BR s .
+.It "uptime"
+Tato řádka ukazuje čas, který systém běží a tři průměrná zatížení
+systému. Průměrná zatížení je průměrný počet běžících úloh během posledních
+1, 5 a 15 minut.  Tato řádka je vlastně výstup programu
+.BR uptime (1).
+Uptime může být přepínán interaktivním 
+.B l
+příkazem.
+.It processes
+Celkový počet úloh běžících v čase poslední aktualizace.
+Je dále rozdělena na počty úloh běžících, spících, zastavených
+nebo zombie. Úlohy a stavy zobrazované mohou být přepínány 
+.B t
+interaktivním příkazem.
+.It "CPU states"
+Ukazuje procenta procesorového času v uživatelském režimu, 
+systémovém režimu, nice úlohy na pozadí (niced task) a nečinné úlohy
+(nice úlohy jsou jen ty které mají hodnotu nice zápornou).
+Čas strávený v úlohách na pozadí je započítáván i do uživatelského nebo
+systémového času, takže součet bude vyšší než 100%.
+Úlohy a zobrazované stavy mohou být přepínány interaktivním příkazem
+.BR t .
+.It Mem
+Statistika použití paměti, celková paměť, volná paměť,
+použitá paměť, sdílená paměť, a paměť použitá pro fronty.
+Obrazovka informací o paměti může být přepínána
+.B m
+interaktivním příkazem.
+.It Swap
+Statistika odkládacího místa, celkový odkládací prostor, volné odkládací
+místo, a použité odkládací místo.  Toto a 
+.B Mem
+jsou vlastně výstupy programu
+.BR free (1).
+.It PID
+ID procesu u každé úlohy.
+.It PPID
+ID rodičovského procesu u každé úlohy.
+.It UID
+Uživatelské ID u vlastníka úlohy.
+.It USER
+Uživatelské jméno vlastníka úlohy.
+.It PRI
+Priorita úlohy.
+.It NI
+Nice je hodnota úlohy. Záporné hodnoty nice jsou vyšší priority.
+.It SIZE
+Velikost kódu úlohy, dat a zásobníku v kilobytech.
+.It TSIZE
+Velikost kódu úlohy. Dává podivné hodnoty pro procesy
+jádra a ELF procesy.
+.It DSIZE
+Velikost data + zásobníky. Dává špatné hodnoty o ELF procesech.
+.It TRS
+Text resident size.
+.It SWAP
+Velikost části úlohy odložená v odkládacím prostoru.
+.It D
+Velikost stránek paměti označených jako špinavé.
+.It LC
+Naposledy použitý procesor (Ten se čas od času mění a není to chyba;
+Linux úmyslně používá nízkou přesnost. Také si uvědomte, že samotný fakt, že
+spouštíte top sníží přesnost údajů a může způsobit, že procesy budou častěji
+měnit CPU, kvůli zvýšeným požadavkům na čas CPU).
+.It RSS
+Celkové množství fyzické paměti použité úlohou v kilobytech.
+Pro ELF procesy jsou zde započítány použité stránky knihoven,
+pro a.out procesy ne.
+.It SHARE
+Množství sdílené paměti použité úlohou.
+.It STAT
+Stav úlohy. Stav je buď
+.B S
+pro spící,
+.B D
+nepřerušitelně spící,
+.B R
+pro běžící,
+.B Z
+pro zombie, nebo
+.B T
+pro stopnuté nebo trasované. Tyto stavy jsou modifikovány uvozujícím znakem
+.B <
+pro procesy s negativní hodnotou nice,
+.B N
+pro procesy s positivní hodnotou nice,
+.B W
+pro procesy odložené (nefunguje správně pro procesy jádra).
+.It WCHAN
+Záleží na dostupnosti
+.I /boot/psdatabase
+nebo mapy jádra 
+.IR /boot/System.map .
+Ukazuje adresu nebo jméno funkce jádra ve které úloha spí.
+.It TIME
+Celkový čas procesoru spotřebovaný úlohou od jejího startu.  Pokud
+je nastaven sčítací mód, je to včetně potomků, kteří zemřeli.
+Můžete nastavit sčítací mód 
+.B S
+pomocí příkazové řádky nebo přepnutím interaktivním příkazem
+.BR S . 
+Záhlaví bude změněno na
+.BR CTIME .
+.It %CPU
+Podíl úlohy na procesorovém času od poslední obnovy obrazovky, vyjádřeno
+jako procenta z celkového procesorového času na každý procesor.
+.It %MEM
+Podíl na využití fyzické paměti v procentech.
+.It COMMAND
+Příkazové jméno úlohy, které bude ustřihnuto pokud se nevejde na 
+zobrazovaný řádek. Úlohy v paměti mají plné příkazové jméno,
+ale odložené úlohy mají pouze jméno programu v
+závorkách (například "[getty]").
+.It "A, WP"
+tyto políčka z kmem top nejsou podporována.
+.
+.SH "INTERAKTIVNÍ PŘÍKAZY"
+Za běhu programu 
+.B top
+lze použít několika funkčních kláves.
+Některé jsou nefunkční pokud byla při spuštění použita volba
+.BR \-s .
+.It space
+Okamžité obnovení obrazovky.
+.It ^L
+Vymaže a znovu vykreslí obrazovku.
+.It "h\fR or \fB?"
+Zobrazí nápovědu s výčtem příkazů, stavem zabezpečení a sčítacích módů.
+.It k
+Posílání signálů procesům. Budete dotázáni na PID úlohy a signál, který ji
+má být poslán. Pro ukončení úlohy pošlete signál 15 (SIGTERM), nejsilnější
+je signál 9 (SIGKILL). Implicitní je stejně jako pro příkaz
+.BR kill (1),
+signál 15 (SIGTERM). Tento příkaz není k dispozici v zabezpečeném režimu.
+.It i
+Přepínání zobrazení všech nebo jen běžících procesů.
+.It I
+Přepínání mezi Solaris (CPU procenta rozdělená celkovým počtem procesorů)
+a Irix (CPU procenta počítaná jen množstvím času) pohledy.
+Tento přepínač funguje pouze na SMP systémech.
+.It "n\fR or \fB#"
+Počet procesů k zobrazení. Vložená hodnota určuje maximální počet
+zobrazených procesů na obrazovce, který je závislý také na velikosti okna.
+Pokud vložíte hodnotu nula (0), top ukáže tolik procesů, kolik se jich
+vejde na obrazovku (výchozí nastavení).
+.It q
+Ukončení programu 
+.BR top .
+.It r
+Změna hodnoty nice. Budete dotázáni na PID úlohy a novou hodnotu.
+Vložení kladného čísla způsobí, že proces dostane zápornou hodnotu
+a ztratí prioritu. Pokud je program
+.B top
+spuštěn uživatelem root, mohou být vložena i záporná čísla, která slouží
+ke zvýšení priority. Implicitní hodnota je 10. Tento příkaz
+není dostupný v bezpečnostním režimu.
+.It S
+Přepíná sčítací módy, je to ekvivalent příkazu
+.BR "ps -S" ,
+který způsobí, že čas CPU bude včetně nefunkčních potomků procesu. Pro
+některé programy (jako jsou kompilátory, které pracují rozdělením do
+mnoha oddělených úloh) normální mód ukáže, že jsou méně náročné než
+doopravdy jsou. Pro ostatní programy (například shelly nebo
+.BR init ,
+je implicitní chování správné. Zkuste sčítací mód pro
+alternativní pohled na využití CPU.
+.It s
+Změna prodlevy mezi obnovením výpisu procesů (ve vteřinách).
+Zlomkové hodnoty budou zaokrouhleny dolů na mikrosekundy. 
+Hodnota 0 znamená neustálé obnovování.
+Výchozí hodnota je 5 sekund. Mějte na paměti, že nízké hodnoty
+způsobí nečitelnost údajů a způsobí velké zatížení počítače.
+Tento příkaz není dostupný v bezpečnostním režimu.
+.It "f\fR or \fBF"
+Přidání polí nebo odebrání polí z obrazovky (viz dále).
+.It "o\fR or \fBO"
+Změní pořadí zobrazovaných polí (viz dále).
+.It l
+Zobrazí nebo skryje informace o průměrném zatížení a délce běhu systému.
+.It m
+Zobrazí nebo skryje informace o paměti.
+.It t
+Zobrazí nebo skryje informace o procesech a stavu procesoru.
+.It c
+Zobrazí nebo skryje celý příkazovém řádek.
+.It N
+Seřadí úlohy podle čísla PID.
+.It A
+Seřadí úlohy podle stáří (nejmladší napřed).
+.It P
+Seřadí úlohy podle zatěžování procesoru (default).
+.It M
+Seřadí úlohy podle velikosti obsazené paměti.
+.It T
+Seřadí úlohy podle času / sčítaného času.
+.It W
+Zapíše aktuální nastavení do 
+.IR ~/.toprc .
+Toto je doporučený způsob ukládání konfiguračního souboru.
+.
+.SH POLE A POŘADÍ OBRAZOVKY
+Po zmáčknutí 
+.BR f ,
+.BR F ,
+.B o
+nebo
+.B O
+uvidíte obrazovku ukazující pořadí políček na první řádce a krátký
+popis obsahu pole. Pořadí polí v řetězci používá následující
+syntaxi: když je písmeno v poli řetězců korespondující k polem velké,
+pole bude zobrazeno. To je navíc indikován hvězdičkou v popředí popisu
+pole. Pořadí polí souhlasí s pořadím písmen v řetězci. 
+Z obrazovky výběru polí můžete změnit zobrazení polí stiskem příslušného
+tlačítka. Z další obrazovky můžete přesunout pole doleva stiskem
+příslušného velkého písmena resp. doprava stiskem malého písmena.
+.
+.SH Konfigurační soubory
+Top čte svou výchozí konfiguraci ze dvou souborů,
+.I /etc/toprc
+a
+.IR ~/.toprc .
+Globální konfigurační soubor může být použit k omezení použití
+bezpečnostního režimu neprivilegovaným uživatelům. Pokud je potřeba,
+soubor může obsahovat 's' ke specifikování bezpečnostního režimu a
+číslo d (2<=d<=9) pro výchozí prodlevu v sekundách na jednom řádku.
+.
+Osobní konfigurační soubor obsahuje dvě řádky. První řádek
+pojímá malá a velká písmena ke specifikování polí a v jakém
+pořadí budou zobrazena. Tato písmena odpovídají písmenům pro výběr polí
+a výběr pořadí, která se používají v top. Protože to není příliš názorné,
+je doporučeno vybrat pole a pořadí v běžícím top procesech a uložit stav
+pomocí interaktivního příkazu
+.IR W .
+Druhý řádek je mnohem zajímavější (a důležitější). Obsahuje
+další nastavení. Pokud jste uložili konfiguraci v bezpečnostním režimu,
+je nutné odstranit písmeno malé 's' z druhého řádku souboru
+.IR ~/.toprc ,
+jinak se bezpečnostní režim vždy znovu zapne.
+Čísla určují prodlevu mezi obnoveními, velké 'S'
+sčítací mód, malé 'i' pouze aktivní procesy, velké 'I' Irix pohled.
+Jako v interaktivnímu režimu, malé 'm', 'l', a 't' potlačí výpis
+paměti, délky běhu systému resp. procesů a stavech procesoru.
+Změna třídícího pořadí (podle zatížení CPU) není v současnosti 
+podporována.
+.SH POZNÁMKY
+Příkaz
+.IR top
+získává informace o procesech ze systému souborů
+.BR proc ,
+pomocí kterého jádro zveřejňuje důležité informace. Tento
+systém souborů musí být připojen do adresáře
+.IR /proc ,
+jinak příkaz
+.IR top
+nebude pracovat.
+.PP
+.B %CPU
+ukazuje cpu čas/skutečný čas v procentech v periodě času mezi
+obnoveními. Pro první aktualizaci je použita krátká prodleva a sám
+.B top
+obsadí celý procesor. Při dalších aktualizacích již bude
+.B top
+ukazovat mnohem přesnější odhady využití CPU.
+.PP
+.B SIZE
+a
+.B RSS 
+pole nepočítá stránky tabulek a
+.B task_struct
+procesu, což je nejméně 12K paměti která je vždy rezidentní.
+.B SIZE
+je virtuální velikost procesu (kód+data+zásobník).
+.PP
+Pamatujte, že proces musí skončit, aby jeho čas byl ve sčítacím módu
+připočten rodiči. Přesnější údaje by se daly získat následování každého
+procesu směrem nahoru a sčítáním časů, ale bylo by to náročnější a
+možná i neproveditelné. V každém případě by to byla nekompatibilita
+s příkazu
+.BR top
+s příkazem
+.BR ps .
+.SH SOUBORY
+.I /etc/toprc 
+ - globální konfigurační soubor.
+
+.I ~/.toprc
+ - uživatelský konfigurační soubor.
+
+.SH "VIZ TAKÉ"
+.BR ps (1),
+.BR free (1),
+.BR uptime (1),
+.BR kill (1),
+.BR renice (1).
+.
+.SH CHYBY
+Pokud je okno menší než 70x7, nebude příkaz
+.B top
+zobrazovat informace správně. Mnoho polí má stále problémy s ELF procesy.
+Obrazovka nápovědy není optimalizována pro okna s méně než 25 řádky.
+.SH AUTOR
+.B top
+byl původně napsán Rogerem Binnsem, založeném na Brankově Lankesterově
+<lankeste@fwi.uva.nl> programu
+.BR ps .
+Robert Nation <nation@rocket.sanders.lockheed.com> přepsal
+.B top
+tak, aby používal souborový systém
+.BR proc .
+Vycházel z proc-based ps programu Michaela
+K. Johnsona <johnsonm@redhat.com>.
+Michael Shields <mjshield@nyx.cs.du.edu> udělal mnoho změn, včetně
+zabezpečení a sčítacích módů a vyčistil kód.
+Tim Janik <timj@gtk.org> přidal seřazování podle stáří procesů a schopnost
+sledovat určité procesy před id.
+
+Helmut Geyer <Helmut.Geyer@iwr.uni-heidelberg.de> provedl mnoho změn
+včetně podpory pro konfigurovatelná pole a další
+nové volby. Dále vyčistil kód a použil nový readproc interface.
+
+Volby "b" a "n" pocházejí od George Bonsera <george@captech.com> 
+pro CapTech IT služby.
+
+Současným maintainerem je Michael K. Johnson <johnsonm@redhat.com>.
+
+Chyby hlaste na adresu <procps-bugs@redhat.com>.
+.SH PŘEKLAD
+Tomáš Řezáč <tomas.rezac@pslib.cz>, alespoň trochu do české češtiny
+upravil Milan Keršláger <kerslage@linux.cz>.
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

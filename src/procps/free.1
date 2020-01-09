@@ -1,0 +1,46 @@
+.\"             -*-Nroff-*-
+.\"  This page Copyright (C) 1993 Matt Welsh, mdw@sunsite.unc.edu.
+.\"  Freely distributable under the terms of the GPL
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH FREE 1 "20.březen 1993 " "Cohesive Systems" "Linux \- Příručka uživatele"
+.SH JMÉNO
+free \- zobrazuje podíl volné a používané paměti v systému
+.SH POUŽITÍ
+\fBfree \fP[\fB\-b\fP | \fB\-k\fP | \fB\-m\fP] [\fB\-o\fP] [\fB\-s\fP \fIprodleva\fP ] [\fB\-t\fP] [\fB\-V\fP]
+.SH POPIS
+\fBfree\fP zobrazuje celkový podíl volné a používané fyzické a swapové
+paměti v systém, stejně jako buffery používané jádrem.  Sloupec
+"shared" je ignorován kvůli neplatnosti.
+.SS VOLBY
+Přepínač \fB\-b\fP zobrazuje paměť v bajtech; \fB\-k\fP v kilobajtech
+(implicitní hodnota); \fB\-m\fP v megabajtech.
+.PP
+Přepínač \fB\-t\fP zobrazuje řádek "celkem".
+.PP
+Přepínač \fB\-o\fP vypíná zobrazení řádky s buffery. Pokud není uveden
+přepínač \-o, \fBfree\fP odebírá paměť v bufferech z používané paměti
+a zobrazuje ji jako volnou.
+.PP
+Přepínač \fB\-s\fP aktivuje opakující se spouštění \fBfree\fP s časovým
+rozestupem \fIprodleva\fP (v sekundách), kde \fIprodleva\fP je libovolné
+racionální číslo. Pro měření času je používán \fBusleep\fP(3)
+.PP
+Přepínač \fB\-V\fP vypíše číslo verze a skončí.
+.SH SOUBORY
+.ta 
+\fI/proc/meminfo\fP\-\- informace o paměti
+.fi
+
+.SH "DALŠÍ INFORMACE"
+\fBps\fP(1), \fBslabtop\fP(1), \fBvmstat\fP(8), \fBtop(1)\fP
+
+.SH AUTOŘI
+Program je dílem Briana Edmondse.
+
+Chyby týkající se programu prosím zasílejte na
+<albert@users.sf.net>
+

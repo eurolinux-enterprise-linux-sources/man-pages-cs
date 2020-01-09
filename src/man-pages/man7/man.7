@@ -1,0 +1,390 @@
+.\" (C) Copyright 1992-1999 Rickard E. Faith and David A. Wheeler
+.\" (faith@cs.unc.edu and dwheeler@ida.org)
+.\"
+.\" Permission is granted to make and distribute verbatim copies of this
+.\" manual provided the copyright notice and this permission notice are
+.\" preserved on all copies.
+.\"
+.\" Permission is granted to copy and distribute modified versions of this
+.\" manual under the conditions for verbatim copying, provided that the
+.\" entire resulting derived work is distributed under the terms of a
+.\" permission notice identical to this one.
+.\"
+.\" Since the Linux kernel and libraries are constantly changing, this
+.\" manual page may be incorrect or out-of-date.  The author(s) assume no
+.\" responsibility for errors or omissions, or for damages resulting from
+.\" the use of the information contained herein.  The author(s) may not
+.\" have taken the same level of care in the production of this manual,
+.\" which is licensed free of charge, as they might when working
+.\" professionally.
+.\"
+.\" Formatted or processed versions of this manual, if unaccompanied by
+.\" the source, must acknowledge the copyright and authors of this work.
+.\"
+.\" Modified Sun Jul 25 11:06:05 1993 by Rik Faith (faith@cs.unc.edu)
+.\" Modified Sat Jun  8 00:39:52 1996 by aeb
+.\" Modified Wed Jun 16 23:00:00 1999 by David A. Wheeler (dwheeler@ida.org)
+.\" Modified Thu Jul 15 12:43:28 1999 by aeb
+.\" Modified Sun Jan  6 18:26:25 2002 by Martin Schulze <joey@infodrom.org>
+.\" Modified Tue Jul 27 20:12:02 2004 by Colin Watson <cjwatson@debian.org>
+.\" 2007-05-30, mtk: various rewrites and moved much text to new man-pages.7.
+.\"
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH MAN 7 2007\-05\-30 Linux "Linux \- příručka programátora"
+.SH JMÉNO
+man \- makra pro formátování manuálových stránek.
+.SH POUŽITÍ
+\fBgroff \-Tascii \-man\fP \fIfile\fP \&...
+.LP
+\fBgroff \-Tps \-man\fP \fIfile\fP \&...
+.LP
+\fBman\fP [\fIsekce\fP] \fInázev\fP
+.SH POPIS
+Tato manuálová stránka popisuje makro balík \fBgroff an.tmac\fP (často
+nazývaný jako makro balík \fBman\fP).  Tento balík maker by měli
+používat vývojáři při psaní nebo přenosu manuálových stránek pro
+Linux. Je celkem kompatibilní s ostatními verzemi tohoto makro balíku, a
+proto by přenos manuálových stránek z jiných systémů neměl být
+problémem (výjimkou je NET\-2 BSD, který používá úplně jiný makro
+balík zvaný mdoc; viz \fBmdoc\fP(7)).
+.PP
+NET\-2 BSD manuálové stránky mohou být používány programem \fBgroff\fP
+jednoduše, pokud použijeme volbu \fB\-mdoc\fP místo standardní volby
+\fB\-man\fP.  Doporučujeme ale používat volbu \fB\-mandoc\fP, protože ta
+automaticky rozezná, který makro balík má použít.
+.PP
+Konvence, které by měly být použity při psaní manuálových stránek v
+balíku \fIman\-pages\fP, jsou uvedeny v \fBman\-pages\fP(7).
+.SS "Titulní řádka"
+První příkaz manuálové stránky (po komentářích, tj.  řádcích
+začínajících na \fB.\e"\fP) by měl být
+.RS
+.sp
+\fB\&.TH\fP \fItitulek sekce datum zdroj manuál\fP
+.sp
+.RE
+Více informací o parametrech, které mohou být předány příkazu \fBTH\fP,
+je uvedeno v \fBman\-pages\fP(7).
+.PP
+Pozor, BSD manuálové stránky formátované mdoc začínají příkazem
+\fBDd\fP, nikoliv příkazem \fBTH\fP.
+.SS Sekce
+.\" The following doesn't seem to be required (see Debian bug 411303),
+.\" If the name contains spaces and appears
+.\" on the same line as
+.\" .BR \&.SH ,
+.\" then place the heading in double quotes.
+Sekce začínají příkazem \fB\&.SH\fP následovaným názvem dané sekce.
+
+Jediná povinná sekce je JMÉNO, měla by být první a za ní by měl
+následovat jednořádkový popis programu:
+.RS
+.sp
+\&.SH JMÉNO
+.br
+.sp
+.RE
+Je velmi důležité dodržet tento formát, zejména uvádění zpětného
+lomítka před pomlčkou, za níž je uvedeno jméno příkazu, protože
+tato syntaxe je použita programem \fBmakewhatis\fP(8)  k vytvoření databáze
+zkrácených popisů příkazů pro příkazy \fBwhatis\fP(1)  a \fBapropos\fP(1).
+.PP
+Seznam dalších sekcí, které se mohou v manuálové stránce vyskytnout,
+je uveden v \fBman\-pages\fP(7).
+.SS Fonty
+Příkazy pro nastavení řezu písma:
+.TP  4
+\fB\&.B\fP
+Tučné
+.TP 
+\fB\&.BI\fP
+Tučné střídající se s kurzívou (zvláště užitečné pro
+specifikace funkcí)
+.TP 
+\fB\&.BR\fP
+Tučné střídající se s normálním (zvláště užitečné pro odkazy
+na ostatní manuálové stránky)
+.TP 
+\fB\&.I\fP
+Kurzíva
+.TP 
+\fB\&.IB\fP
+Italika střídající se s tučným
+.TP 
+\fB\&.IR\fP
+Italika střídající se s normálním
+.TP 
+\fB\&.RB\fP
+Normální střídající se s tučným
+.TP 
+\fB\&.RI\fP
+Normální střídající se s kurzívou
+.TP 
+\fB\&.SB\fP
+Malé střídající se s tučným
+.TP 
+\fB\&.SM\fP
+Malé (užitečné pro zkratky)
+.LP
+[přibližně] Tradicí bylo, že každý příkaz mohl mít až šest
+argumentů, ale GNU verze odstranila toto omezení. Argumenty jsou odděleny
+mezerami. Uvozovky použijeme chceme\-li specifikovat argument, který
+obsahuje mezery.  Všechny argumenty budou vytištěny bez mezer hned za
+sebe, a proto může být příkaz \fB\&.BR\fP použit pro vytištění
+tučného slova následovaného interpunkční značkou v normálním
+písmu.  Pokud není uveden žádný argument, aplikuje se příkaz na
+následující řádek textu.
+.SS "Další makra a řetězce"
+.PP
+Níže jsou uvedena další související makra a předdefinované
+řetězce.  Pokud není uvedeno jinak, všechna makra způsobují zlom
+(konec aktuální rádky textu).  Mnoho z těchto maker nastavuje nebo
+užívá "obecné odsazení".  Hodnota "obecné odsazení" je nastavena
+makrem s parametrem \fIi\fP níže; makro může \fIi\fP vypustit, v tom
+případě bude užito aktuální obecné odsazení.  Výsledkem je, že po
+sobě jdoucí odsazené odstavce mohou používat stejné odsazení bez
+nutnosti jeho hodnotu opakovaně nastavovat.  Obyčejný (neodsazený)
+odstavec obnoví hodnotu obecného odsazení na výchozí hodnotu (0.5
+palce)  Jako výchozí jednotka odsazení je použito en; jako jednotky
+používejte nejlépe en nebo em, protože se automaticky přizpůsobují
+změně velikosti fontu.  Další základní makra jsou:
+.SS "Normální odstavce"
+.TP  9m
+\fB\&.LP\fP
+Stejné jako \fB\&.PP\fP (začni odstavec).
+.TP 
+\fB\&.P\fP
+Stejné jako \fB\&.PP\fP (začni odstavec).
+.TP 
+\fB\&.PP\fP
+Začni odstavec a obnov obecné odsazení.
+.SS "Relativní hranice odsazení"
+.TP  9m
+\fB\&.RS\fP\fI i\fP
+Začátek relativní hranice odsazení: posune levý okraj \fIi\fP doprava
+(pokud je \fIi\fP vynecháno, použije se hodnota obecného odsazení).  Nové
+obecné odsazení je nastaveno na 0.5 palce.  Výsledkem je, že všechny
+následující odstavce budou odsazeny až do odpovídajícího \fB\&.RE\fP.
+.TP 
+\fB\&.RE\fP
+Ukončí relativní hranici odsazení a obnoví předchozí hodnotu
+obecného odsazení.
+.SS "Makra pro odsazené odstavce"
+.TP  9m
+\fB\&.HP\fP\fI i\fP
+Začne odstavec s visícím odsazením (první řádek začíná vlevo
+stejně jako normální odstavce, ostatní řádky jsou odsazeny).
+.TP 
+\fB\&.IP\fP\fI x i\fP
+Odsazený odstavec s volitelnou visící značkou.  Pokud je značka \fIx\fP
+vynechána, je celý následující odstavec odsazen o \fIi\fP.  Pokud je
+značka \fIx\fP přítomna, je pověšena na levém okraji před
+následujícím odsazeným odstavcem (je to stejné jako \fB\&.TP\fP, akorát
+je značka uvedena s příkazem, místo aby byla na následující
+řádce).  Pokud je značka příliš dlouhá, je text, který po ní
+následuje, posunut dolů na další řádku (text nezmizí ani se
+nezkomolí).  Pro seznamy s odrážkami se toto makro používá se
+značkami \e(bu (bullet)  nebo \e(em (em dash), pro číslované seznamy je
+pak značkou číslo nebo písmeno následované tečkou; to zjednodušuje
+převod do jiných formátů.
+.TP 
+\fB\&.TP\fP\fI i\fP
+Začne odstavec s visící značkou. Značka je uvedena na následující
+řádce, ale výsledek je stejný jako u příkazu \fB\&.IP\fP.
+.SS "Makra hypertextových odkazů"
+(Vlastnost podporovaná pouze programem \fBgroff\fP.)  Aby bylo možné
+používat makra hypertextových odkazů, je nutné nahrát balíček maker
+\fBwww.tmac\fP.  Použijte k tomu volání \fB.mso www.tmac\fP
+.TP  9m
+\fB\&.URL\fP\fI url odkaz trailer\fP
+.\" The following is a kludge to get a paragraph into the listing.
+Vloží hypertextový odkaz na URI (URL)  \fIurl\fP, s \fIodkazem\fP jako textem
+odkazu.  Bezprostředně za ním bude vytištěn \fItrailer\fP.  Při tvorbě
+HTML by se to mělo přeložit do HTML příkazu \fB<A
+HREF="\fP\fIurl\fP\fB">\fP\fIodkaz\fP\fB</A>\fP\fItrailer\fP\fB.\fP
+.TP 
+\fB\& \&\fR
+.\" The following is a kludge to get a paragraph into the listing.
+Toto a další makra jsou nové a mnoho nástrojů je neumí použít, ale
+protože nedefinovaná makra většinou ignorují (nebo je přinejhorším
+vloží jako text), je možné jej bezpečně použít.
+.TP 
+\fB\& \&\fR
+.\" The following is a kludge to get a paragraph into the listing.
+Může být užitečné definovat vlastní makro \fBURL\fP v manuálových
+stránkách pro blaho těch, kde je prohlížejí jiným prohlížečem
+roff, než je \fBgroff\fP.  Tak budou URL, text odkazu a text traileru (pokud
+je) stále viditelné.
+.TP 
+\fB\& \&\fR
+Příklad:
+.RS 1.5i
+\&.de URL
+.br
+\e\e$2 \e(laURL: \e\e$1 \e(ra\e\e$3
+.br
+\&..
+.br
+\&.if \en[.g] .mso www.tmac
+.br
+\&.TH \fI...\fP
+.br
+\fI(later in the page)\fP
+.br
+This software comes from the
+.br
+\&.URL "http://www.gnu.org/" "GNU Project" " of the"
+.br
+\&.URL "http://www.fsf.org/" "Free Software Foundation" .
+.RE
+.\" The following is a kludge to get a paragraph into the listing.
+.TP 
+\fB\& \&\fR
+V uvedeném příkladu, pokud je použit \fBgroff\fP, nahradí definice makra
+URL z balíčku \fBwww.tmac\fP definici definovanou lokálně.
+.PP
+K dispozici jsou i další makra pro odkazy. Viz \fBgroff_www\fP(7)  pro
+další podrobnosti.
+.SS "Různá makra"
+.TP  9m
+\fB\&.DT\fP
+Obnoví původní hodnoty tabulátorů (0.5 palce); nepůsobí zlom.
+.TP 
+\fB\&.PD\fP\fI d\fP
+Nastaví vertikální vzdálenost mezi odstavci na d (pokud je vynecháno,
+pak d=0.4v); nepůsobí zlom.
+.TP 
+\fB\&.SS\fP\fI t\fP
+Podkapitola \fIt\fP (jako \fB\&.SH\fP, ale užívá se pro podsekci uvnitř
+sekce).
+.SS "Předdefinované řetězce"
+Balíček \fBman\fP obsahuje následující předdefinované řetězce:
+.IP \e*R
+Symbol registrace: \*R
+.IP \e*S
+Změna výchozí velikosti fontu
+.IP \e*(Tm
+Ochranná známka: \*(Tm
+.IP \e*(lq
+Dvojité uvozovky směřující vlevo: \*(lq
+.IP \e*(rq
+Dvojité uvozovky směřující vpravo: \*(rq
+.SS "Bezpečná sada"
+Ačkoliv technicky je \fBman\fP makro balíčkem programu troff, ve
+skutečnosti zpracovává manuálové stránky velké množství dalších
+nástrojů, které neimplementují všechny možnosti programu troff. Proto
+je nejlepší vyhýbat se některým exotičtějším možnostem, aby mohly
+tyto nástroje pracovat správně.  Vyhněte se použití různých
+preprocesorů troffu (pokud ale musíte, klidně použijte \fBtbl\fP(1), ale
+pro dvousloupcové tabulky zkuste raději příkazy \fBIP\fP a \fBTP\fP).
+Vyhnětě se výpočtům; většina ostatních nástrojů je neumí
+zpracovat.  Používejte jednoduché příkazy, které se snadno
+převádějí do jiných formátů. Následující makra jsou obecně
+považována za bezpečná (i když v mnoha případech budou překladači
+ignorována): \fB\e"\fP, \fB.\fP, \fBad\fP, \fBbp\fP, \fBbr\fP, \fBce\fP, \fBde\fP, \fBds\fP, \fBel\fP,
+\fBie\fP, \fBif\fP, \fBfi\fP, \fBft\fP, \fBhy\fP, \fBig\fP, \fBin\fP, \fBna\fP, \fBne\fP, \fBnf\fP, \fBnh\fP,
+\fBps\fP, \fBso\fP, \fBsp\fP, \fBti\fP, \fBtr\fP.
+.PP
+Také můžete používat mnohé escape sekvence troffu (začínající na
+\e).  Pokud potřebujete uvést v textu zpětné lomítko, použijte \ee.
+Další sekvence, které je možné použít zahrnují (x je jakýkoliv znak
+a N je jakákoliv číslice): \fB\e'\fP, \fB\e`\fP, \fB\e\-\fP, \fB\e.\fP, \fB\e"\fP,
+\fB\e%\fP, \fB\e*x\fP, \fB\e*(xx\fP, \fB\e(xx\fP, \fB\e$N\fP, \fB\enx\fP, \fB\en(xx\fP, \fB\efx\fP,
+and \fB\ef(xx\fP.  Vyhněte se escape sekvencím pro kreslení.
+.PP
+Nepoužívejte volitelný parametr pro \fBbp\fP (break page).  Používejte
+pouze kladné hodnoty pro \fBsp\fP (vertical space).  Nedefinujte makro (\fBde\fP)
+se stejným jménem jako makro v tomto balíčku nebo v balíčku mdoc s
+jiným významem; je pravděpodobné, že takové redefinování bude
+ignorováno.  Každé kladné odszení (\fBin\fP)  by mělo mít
+odpovídající záporné odsazení (ačkoliv by měla být raději
+používána makra \fBRS\fP a \fBRE\fP). Testy (\fBif,ie\fP)  by měly mít jako
+podmínku jen "t" nebo "n".  Měly by být použity pouze překlady (\fBtr\fP)
+které je možné ignorovat.  Změny fontů (\fBft\fP a escape sekvence \fB\ef\fP
+)  by měly mít pouze hodnoty 1, 2, 3, 4, R, I, B, P nebo CW (příkaz ft
+nemusí mít žádný parametr).
+.PP
+Pokud využíváte pokročilejší možnosti, pečlivě vyzkoušejte
+výsledek s několika nástroji. Jestliže zjistíte, že tato
+pokročilejší možnost je bezpečná, dejte vědět udržovateli tohoto
+dokumentu, aby ji mohl přidat do seznamu.
+.SH SOUBORY
+\fI/usr/share/groff/\fP[*/]\fItmac/an.tmac\fP
+.br
+\fI/usr/man/whatis\fP
+.SH POZNÁMKY
+.PP
+Vždy uvádějte celé URL (nebo URI); některé nástroje, jako třeba
+\fBman2html\fP(1)  je mohou automaticky převézt na hypertextové odkazy.
+Také je možné použítnové makro \fBURL\fP k označení odkazů na
+související informace.  Pokud uvádíte URL, použijte jejich úplný tvar
+(např. <http://www.kernelnotes.org>), aby mohly být nalezeny
+automaticky.
+.PP
+Nástroje zpracovávající tyto soubory by měly otevřít soubor a
+prozkoumat první znam, který není prázdným místem. Tečka (.) nebo
+jednoduchá uvozovka(')  na začátku řádku označují soubor troffu (jako
+man nebo mdoc).  levá ostrá závorka (<) označuje soubor SGML/XML
+(jako HTML nebo Docbook).  Cokoliv jiného je prostý ASCII text
+(např. "catman").
+.PP
+Mnoho manuálových stránek začíná s \fB\'\e"\fP následovaným mezerou a
+řadou znaků, které určují, jak má být stránka zpracována.  Pro
+zachování přenositelnosti doporučujeme vyhnout se všemu, s výjimkou
+\fBtbl\fP(1), který Linux umí detekovat automaticky.  Nicméně můžete tuto
+informaci uvést, takže méně schopné systémy mohou vaši manuálovou
+stránku zpracovat.  Následují definice preprocesorů volaných těmito
+znaky:
+.TP  3
+\fBe\fP
+eqn(1)
+.TP 
+\fBg\fP
+grap(1)
+.TP 
+\fBp\fP
+pic(1)
+.TP 
+\fBr\fP
+refer(1)
+.TP 
+\fBt\fP
+tbl(1)
+.TP 
+\fBv\fP
+vgrind(1)
+.SH CHYBY
+.PP
+Většina maker popisuje formátování (např. druh fontu a rozteč)
+namísto značení sémantického obsahu (např. tento text je odkazem na
+jinou stránku), na rozdíl od formátů jako mdoc a DocBook (i HTML má
+sémantičtější značení).  Proto není jednoduché převést formát
+\fBman\fP na jiná média, udržet jeho konzistentnost a automaticky vkládat
+křížové odkazy.  Pokud se budete držet výše uvedené bezpečné sady,
+měl by být v budoucnu automatický převod do jiného formátu
+jednodušší.
+.LP
+.\" .SH AUTHORS
+.\" .IP \(em 3m
+.\" James Clark (jjc@jclark.com) wrote the implementation of the macro package.
+.\" .IP \(em
+.\" Rickard E. Faith (faith@cs.unc.edu) wrote the initial version of
+.\" this manual page.
+.\" .IP \(em
+.\" Jens Schweikhardt (schweikh@noc.fdn.de) wrote the Linux Man-Page Mini-HOWTO
+.\" (which influenced this manual page).
+.\" .IP \(em
+.\" David A. Wheeler (dwheeler@ida.org) heavily modified this
+.\" manual page, such as adding detailed information on sections and macros.
+Makro \fBTX\fP Sunu není implementováno.
+.SH "DALŠÍ INFORMACE"
+\fBapropos\fP(1), \fBgroff\fP(1), \fBman\fP(1), \fBman2html\fP(1), \fBwhatis\fP(1),
+\fBgroff_man\fP(7), \fBgroff_www\fP(7), \fBman\-pages\fP(7), \fBmdoc\fP(7),
+\fBmdoc.samples\fP(7)
+.SH TIRÁŽ
+Tato stránka je součástí projektu Linux \fIman\-pages\fP.  Popis projektu a
+informace o hlášení chyb najdete na http://www.kernel.org/doc/man\-pages/.

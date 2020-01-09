@@ -1,0 +1,864 @@
+.\"if n .pl +(135i-\n(.pu)
+.de Id
+.ds Rv \\$3
+.ds Dt \\$4
+..
+.Id $Id: procmailrc.man,v 1.85 2001/08/04 06:08:21 guenther Exp $
+.TH PROCMAILRC 5 \*(Dt BuGless
+.rn SH Sh
+.de SH
+.br
+.ne 11
+.Sh "\\$1"
+..
+.rn SS Ss
+.de SS
+.br
+.ne 10
+.Ss "\\$1"
+..
+.rn TP Tp
+.de TP
+.br
+.ne 9
+.Tp \\$1
+..
+.rn RS Rs
+.de RS
+.na
+.nf
+.Rs
+..
+.rn RE Re
+.de RE
+.Re
+.fi
+.ad
+..
+.de Sx
+.PP
+.ne \\$1
+.RS
+..
+.de Ex
+.RE
+.PP
+..
+.na
+.SH JMÉNO
+procmailrc \- konfigurační soubor programu procmail
+.SH POUŽITÍ
+\fB$HOME/.procmailrc\fP
+.ad
+.SH POPIS
+Chcete\-li rychle začít, podívejte se na \fBPOZNÁMKY\fP na konci manuálové
+stránky \fBprocmail\fP(1).
+.PP
+Tento konfigurační soubor může obsahovat směs přiřazení do
+proměnných prostředí (z nichž některé mohou mít pro procmail
+zvláštní význam) a předpisů.  V nejjednodušší podobě obsahují
+předpisy jednořádkové regulární výrazy vyhledávané v hlavičce
+přijaté e\-mailové zprávy. První předpis, který nalezne shodu s
+regulárním výrazem, potom určí kam se zpráva dále přesune (obvykle
+do souboru). Pokud se zpracování dostane až na konec rc souboru, procmail
+doručí e\-mailovou zprávu na \fB$DEFAULT\fP.
+.PP
+Existují dva druhy předpisů: doručující a nedoručující.  Pokud je
+nalezena shoda v \fIdoručujícím\fP \fIpředpisu\fP, procmail považuje zprávu
+(ano, uhádli jste) za doručenou a \fIukončí zpracování\fP
+konfiguračního souboru po úspěšném provedení akčního řádku
+předpisu.  Pokud je nalezena shoda v \fInedoručujícím předpisu\fP
+zpracování bude \fIpokračovat\fP i po provedení akčního řádku tohoto
+předpisu.
+.PP
+Doručující předpisy jsou ty, které způsobí, že hlavičky a/nebo
+tělo zprávy jsou zapsány do souboru, použity nějakým programem nebo
+přesměrovány na nějakou poštovní adresu.
+.PP
+Nedoručující předpisy jsou ty, které způsobí, že výstup nějakého
+programu nebo filtru je znovu zachycen procmail\-em, nebo předpisy, které
+otevírají vnořený blok.
+.PP
+Procmailu můžete říci, že má zpracovávat \fIdoručující předpis\fP
+jako nedoručující, když uvedete příznak 'c' v hlavičce předpisu. To
+přinutí procmail vytvořit \fIkopii\fP právě zpracovávané
+zprávy. Zpráva je tudíž doručena podle předpisu, ale zároveň se s
+její kopií pokračuje ve zpracování konfiguračního souboru.
+.PP
+Použitím libovolného počtu předpisů můžete svou příchozí poštu
+velmi přímočarým způsobem roztřídit do několika složek. Avšak
+mějte na paměti, že do těchto složek mohou přicházet současně
+různé zprávy (jestliže běží více instancí procmailu, což není
+neobvyklé při větším množství došlých zpráv).  Aby v tom
+případě ve složkách nevznikl zmatek, velmi doporučujeme vhodně
+používat zámků (angl. "lock files").
+.PP
+V konfiguračním souboru lze libovolně míchat \fBpřiřazení\fP do
+proměnných prostředí a \fBpředpisy\fP.  Proměnné, které mají v
+procmailu zvláštní význam, budou použity příslušným způsobem v
+momentě zpracování řádku kde se vyskytují (tzn. že můžete kdykoliv
+změnit pracovní adresář zadáním nové hodnoty \fBMAILDIR\fP, přepínat
+zámky přiřazením do \fBLOCKFILE\fP, kdykoliv změnit umask, atd.,
+možností je nekonečně mnoho :\-).
+.PP
+Přiřazování a substituce těchto proměnných se provádí přesně
+stejně jako v \fBsh\fP(1)  (včetně všech možností uvozování a escape
+sekvencí), ale kromě toho ještě poskytuje další výhody v tom, že
+prázdné znaky obklopující '=' jsou ignorovány.  Pokud se objeví jméno
+proměnné bez koncového '=', bude tato proměnná zrušena.  Jakýkoliv
+program uvedený ve zpětných apostrofech procmail spustí a předá mu
+celou zprávu na standardní vstup.
+.PP
+.SS Komentáře
+Slovo začínající znakem # a všechny následující znaky až do konce
+řádku jsou ignorovány. Toto neplatí pro řádky obsahující podmínku,
+ty nemohou být komentovány.
+.SS Předpisy
+.PP
+Řádek začínající znakem ':' označuje začátek předpisu. Má tento
+formát:
+.Sx 3
+:0 [\fIpříznaky\fP] [ : [\fIlokální_zámek\fP] ] <jedna nebo více
+podmínek (jedna na řádek)> <právě jeden akční řádek>
+.Ex
+Podmínkový řádek začíná znakem `*'. Zbytek řádku kromě
+uvozujících a koncových mezer je poslán \fBznak\fP \fBpo\fP \fBznaku\fP na vstup
+vnitřního egrep\-u.  Regulární výrazy vnitřního egrepu jsou
+\fBnaprosto\fP kompatibilní s rozšířenou syntaxí regulárních výrazů
+programu \fBegrep\fP(1).  Viz též \fBRozšířená syntaxe regulárních
+výrazů\fP.
+.PP
+Mezi podmínkami v jednom předpisu platí logický součin (AND).  Pokud
+předpis neobsahuje žádnou podmínku, výsledek testu bude vždycky
+pravdivý.
+.PP
+\fIPříznak\fP může být jeden z následujících znaků:
+.TP  0.5i
+\fBH\fP
+Do programu egrep se pošle záhlaví zprávy (standard).
+.TP 
+\fBB\fP
+[přibližně] Do egrepu se pošle tělo zprávy.
+.TP 
+\fBD\fP
+Sdělí egrepu, že má rozlišovat malá a velká písmena (standard je
+nerozlišovat).
+.TP 
+\fBA\fP
+Tento předpis bude závislý na posledním předcházejícím předpisu bez
+příznaku `A' nebo `a' (na aktuální úrovni vnoření). To vám
+umožňuje řetězit akce, které závisí na společné podmínce.
+.TP 
+\fBa\fP
+Má tentýž význam jako `A', ale bude zároveň záviset na
+\fIúspěšném\fP dokončení předchozího předpisu.
+.TP 
+\fBE\fP
+Tento předpis se provede pouze v případě, že bezprostředně
+předcházející předpis nebyl proveden. Jeho úspěšné provedení
+rovněž znemožní provedení bezprostředně následujících předpisů s
+`E'. To vám umožňuje definovat akce typu `else if'.
+.TP 
+\fBe\fP
+Předpis se provede pouze v případě, že bezprostředně
+předcházející předpis \fIselhal\fP.  To vám umožňuje definovat akce na
+zpracování chyb.
+.TP 
+\fBh\fP
+Záhlaví zprávy se pošle na vstup roury, do souboru nebo na místo
+určení zprávy (default).
+.TP 
+\fBb\fP
+Tělo zprávy se pošle na vstup roury, do souboru nebo na místo určení
+zprávy (default).
+.TP 
+\fBf\fP
+S rourou se má zacházet jako s filtrem.
+.TP 
+\fBc\fP
+Vytvoř \fBkopii\fP zpracovávané zprávy. Tento příznak má význam pouze v
+\fIdoručujících\fP předpisech. Jediný druh nedoručujícího předpisu v
+němž dojde tento příznak smysluplného použití je blok
+(vnoření). Aby mohla být zpracována kopie, příznak způsobí
+\fBrozdvojení\fP právě běžícího procesu (zámky se nedědí), přičemž
+nový proces pokračuje ve zpracování obvyklým způsobem, zatímco
+původní proces přeskočí blok a pokračuje za ním.
+.TP 
+\fBw\fP
+Čeká na ukončení spuštěného filtru nebo programu a otestuje
+návratovou hodnotu (standardně ji ignoruje). Pokud bude filtr
+neúspěšný, text nebude filtrován.
+.TP 
+\fBW\fP
+Stejný význam jako příznak `w', ale potlačí hlášky `Program
+failure'.
+.TP 
+\fBi\fP
+Ignoruje chyby zápisu v tomto předpisu (obvykle nastávají při
+předčasném uzavření roury).
+.TP 
+\fBr\fP
+`Hrubý' režim (raw). Nepokouší se ujistit jestli zpráva končí
+prázdným řádkem, zapíše ji tak jak je.
+.PP
+Můžete použít zvláštní podmínky, které nejsou přímo regulárními
+výrazy.  Takové podmínky musí začínat:
+.TP  0.5i
+\fB!\fP
+Negace podmínky následující po vykřičníku.
+.TP 
+\fB$\fP
+Zbytek podmínky vyhodnotí podle pravidel pro substituci uvnitř dvojitých
+uvozovek v \fBsh\fP(1)  , přeskočí úvodní mezery a potom znovu vyhodnotí.
+.TP 
+\fB?\fP
+Použije návratový kód uvedeného programu.
+.TP 
+\fB<\fP
+Otestuje, zda je celková délka zprávy menší než uvedený počet bajtů
+(decimálně).
+.TP 
+\fB>\fP
+Obdobně jako '<'.
+.TP 
+\fBjméno_proměnné \fP\fI??\fP
+Porovná zbytek podmínky s hodnotou této proměnné (nesmí se jednat o
+pseudoproměnnou). Zvláštním případem jsou `B', `H', `HB' a `BH',
+které pouze mění prohledávanou oblast záhlaví/těla zprávy,
+definovanou pro aktuální předpis.
+.TP 
+\fB\e\fP
+Použijte, chcete\-li použít kterýkoliv z výše uvedených znaků na
+začátku řádku v jeho normálním významu.
+.SS "Lokální zámek"
+.PP
+Pokud umístíte na konec prvního řádku předpisu druhou dvojtečku,
+procmail použije \fIlokální_zámek\fP (pouze pro aktuální
+předpis). Volitelně můžete za dvojtečku zadat jméno zámku, který
+chcete použít. Pokud tak ovšem neučiníte, procmail použije jméno
+výstupního souboru (nebo jméno za první '>>'), za které
+připojí hodnotu $LOCKEXT.
+.SS "Akční řádek předpisu"
+.PP
+Akční řádek může začínat jedním z následujících znaků:
+.TP 
+\fB!\fP
+Pošle poštu (forward) na všechny následující e\-mailové adresy.
+.TP 
+\fB|\fP
+Spustí určený program; pokud je nalezen kterýkoliv znak z $SHELLMETAS,
+pokusí se spustit program pomocí $SHELL\-u. Volitelně můžete před znak
+roury umístit \fIproměnná=\fP, což způsobí, že standardní výstup
+spuštěného programu bude uložen do \fIproměnné\fP prostředí (procmail v
+tomto místě \fBneukončí\fP zpracovávání konfiguračního souboru).
+Pokud zadáte pouze znak roury bez žádného názvu programu, procmail
+přesměruje obsah zprávy na standardní výstup.
+.TP 
+\fB{\fP
+Následována alespoň jednou mezerou, tabulátorem nebo znakem nový
+řádek označuje začátek vnořeného bloku. Všechno uvnitř bloku až po
+následující uzavírající závorku bude záviset na podmínce
+aktuálního předpisu.  Počet úrovní vnoření není omezen. Uzavírací
+závorka pouze ukončuje blok; v \fIžádném případě\fP nezpůsobuje
+ukončení procmailu. Když je dosaženo konce bloku, zpracování
+pokračuje obvyklým způsobem za blokem. Ve vnořeném bloku mají
+příznaky `B' a `H' vliv pouze na podmínky předcházející tento blok,
+příznaky `h' a `b' nemají vůbec žádný vliv.
+.PP
+Cokoliv jiného bude považováno za jméno poštovní schránky (buď
+jméno souboru nebo adresáře, absolutní nebo relativní k aktuálnímu
+adresáři (viz MAILDIR)). Pokud se jedná o jméno souboru (byť
+neexistujícího), zpráva bude přidána na jeho konec.
+.PP
+Pokud se jedná o jméno adresáře, zpráva bude doručena do souboru se
+zaručeně jedinečným názvem začínajícím $MSGPREFIX, nově
+vytvořeného v tomto adresáři.  Pokud název adresáře končí
+řetězcem "/.", předpokládá se, že se jedná o složku systému MH a
+procmail použije další volné číslo, které nalezne.  Pokud jméno
+schránky končí na "/", je tento adresář považován za složku maildir;
+tj. procmail doručí zprávu do souboru v podadresáři pojmenovaném "tmp"
+a přejmenuje jej, aby byl v podadresáři "new". Pokud je schránka určena
+jako složka MH nebo složka maildir, procmail vytvoří potřebné
+adresáře, pokud neexistují; nebude považovat schránku za neexistující
+jméno souboru. Pokud procmail doručuje do adresáře, můžete zadat
+několik adresářů do nichž chcete zprávu doručit (procmail k tomu
+používá hardlinky).
+.SS "Implicitní hodnoty proměnných"
+.TP  2.2i
+\fBLOGNAME, HOME a SHELL\fP
+Vaše (příjemcovy) standardní hodnoty
+.TP 
+\fBPATH\fP
+.na
+\&$HOME/bin\h'-\w' 'u' :/bin\h'-\w' 'u' :/usr/bin\h'-\w' 'u'
+:/usr/local/bin\h'-\w' 'u' :/usr/bin/X11 (Výjimkou
+.ad
+je doba zpracování souboru /etc/procmailrc, kdy je nastavena na
+.na
+`\&/bin\h'-\w' 'u' :/usr/bin\h'-\w' 'u' :/usr/local/bin\h'-\w' 'u'
+:/usr/bin/X11'.)
+.ad
+.TP 
+\fBSHELLMETAS\fP
+\&&\h'-\w' 'u' |<>~;?*[
+.TP 
+\fBSHELLFLAGS\fP
+\&\-c
+.TP 
+\fBORGMAIL\fP
+\&/var/spool/mail/$LOGNAME
+.br
+(V případě, že bylo zadáno \fB\-m\fP nedefinováno)
+.TP 
+\fBMAILDIR\fP
+\&$HOME/
+.br
+(Kromě případu, kdy jméno prvního úspěšně otevřeného rc souboru
+začíná `./' nebo bylo zadáno \fB\-m\fP; tehdy je implicitní hodnota `.')
+.TP 
+\fBDEFAULT\fP
+\&$ORGMAIL
+.TP 
+\fBMSGPREFIX\fP
+\&msg.
+.TP 
+\fBSENDMAIL\fP
+\&/bin/mail
+.TP 
+\fBSENDMAILFLAGS\fP
+\&
+.TP 
+\fBHOST\fP
+Aktuální jméno počítače (hostname)
+.TP 
+\fBCOMSAT\fP
+\&no
+.br
+(Pokud je jméno rc souboru určeno v příkazové řádce)
+.TP 
+\fBPROCMAIL_VERSION\fP
+\&3.22
+.TP 
+\fBLOCKEXT\fP
+\&.lock
+.na
+.PP
+Ostatní nulované nebo přednastavené proměnné jsou IFS, ENV a PWD.
+.ad
+.PP
+Z bezpečnostních důvodů vymaže procmail při startu všechny
+proměnné, které by které by mohly ovlivnit chování runtime linkeru.
+.SS PROSTŘEDÍ
+.PP
+Dříve než vás zahltí množství proměnných, mějte na paměti, že
+všechny mají rozumné implicitní hodnoty.
+.TP  1.2i
+\fBMAILDIR\fP
+Aktuální adresář za běhu procmailu (což znamená, že všechny cesty
+jsou relativní vzhledem k $MAILDIR).
+.TP 
+\fBDEFAULT\fP
+Standardní soubor \fBpoštovní schránky\fP (pokud není určeno jinak,
+procmail uloží zprávu do této schránky).  Před zápisem do této
+schránky použije procmail automaticky $DEFAULT$LOCKEXT jako zámek. Tuto
+proměnnou nemusíte nastavovat, neboť již obsahuje implicitní
+systémovou schránku.
+.TP 
+\fBLOGFILE\fP
+Tento soubor bude obsahovat jakákoliv chybová nebo diagnostická
+hlášení procmailu (za normálních okolností žádná :\-)
+příp. jiných programů spuštěných procmailem. Jestliže tento soubor
+není definován, veškerá diagnostická nebo chybová hlášení budou
+zaslána e\-mailem odesilateli zprávy.  Viz též \fBLOGABSTRACT\fP.
+.TP 
+\fBVERBOSE\fP
+Nastavením této proměnné na `yes' nebo `on' (ano, resp. zapnout; pozn.
+překl.) případně `no' či `off' (ne, vypnout) můžete zapínat
+respektive vypínat \fIrozšířenou diagnostiku\fP.
+.TP 
+\fBLOGABSTRACT\fP
+Těsně před svým ukončením zapíše procmail do souboru $LOGFILE
+shrnutí zprávy: záhlaví `From:' a `Subject:', do jaké složky
+(schránky) byla zpráva uložena a jaká byla její délka v
+bajtech. Nastavením této proměnné na `no' se výpis
+potlačí. Nastavením této proměnné na `all' (všechno) se zajistí
+výpis pro každý úspěšně dokončený \fIdoručující předpis\fP.
+.TP 
+\fBLOG\fP
+Cokoliv přiřazené této proměnné bude připojeno do souboru $LOGFILE.
+.TP 
+\fBORGMAIL\fP
+Obvykle systémová schránka (\fBOR\fPi\fBG\fPinal \fBMAIL\fPbox).  Pokud z
+nějakého tajemného důvodu (jako `\fBfilesystem full\fP') nemůže být
+zpráva doručena, tato schránka bude poslední možností. Pokud se
+procmailu nepodaří zprávu uložit ani sem (móc, moc špatný :\-) vrátí
+zprávu odesílateli.
+.TP 
+\fBLOCKFILE\fP
+Globální semafor. Pokud tento soubor již existuje, procmail před
+dalším zpracováním počká až zmizí; potom jej sám vytvoří (a
+samozřejmě také smaže, když skončí). Pokud je specifikován více
+než jeden \fIsemafor\fP bude ten předchozí smazán dříve než se zkusí
+vytvořit nový. Užívání globálního semaforu se nedoporučuje. Tam kde
+je to možné, použijte místo toho lokální zámky (na bázi
+jednotlivých předpisů).
+.TP 
+\fBLOCKEXT\fP
+Implicitní přípona, jejímž připojením ke jménu cílového souboru se
+získá jméno \fIlokálního zámku\fP (pokud jsou zapnuty, pro jednotlivé
+předpisy).
+.TP 
+\fBLOCKSLEEP\fP
+Počet sekund, které procmail vyčká než opět zkusí \fIzámek\fP (pokud
+již existoval); pokud není specifikováno, implicitní hodnota je 8
+sekund.
+.TP 
+\fBLOCKTIMEOUT\fP
+Počet sekund, které musí uplynout od času poslední
+modifikace/vytvoření \fIzámku\fP aby procmail usoudil, že se to musí být
+soubor pozůstalý v důsledku chyby, který nyní může být nuceně
+odstraněn. Pokud je nastavena nula, lhůta se nepoužije a procmail bude
+čekat navždy dokud se soubor neodstraní; pokud není specifikována
+žádná hodnota, implicitně 1024 sekund. Tato proměnná se hodí proti
+zacyklení \fBsendmailu\fP/procmailu.  Procmail je imunní vůči odchylkám
+hodin na různých počítačích.
+.TP 
+\fBTIMEOUT\fP
+Počet sekund, které musí uplynout než procmail usoudí, že některý z
+dceřiných procesů, které spustil, musel zamrznout. Dotyčný program
+obdrží od procmailu signál TERMINATE a zpracování konfiguračního
+souboru bude pokračovat. Pokud je nula, lhůta se nepoužije a procmail
+čeká dokud se neukončí dceřiný process; není\-li hodnota
+specifikována je implicitní hodnota 960 sekund.
+.TP 
+\fBMSGPREFIX\fP
+Předpona souboru, pokud se zpráva doručuje do adresáře (nepoužívá se
+při doručování do MH adresáře).
+.TP 
+\fBHOST\fP
+Pokud toto není totožné se jménem počítače, které vrací
+\fIhostname\fP, zpracování aktuálního \fIkonfiguračního souboru\fP se
+okamžitě ukončí. Pokud byly na příkazové řádce uvedeny další
+konfigurační soubory, zpracování bude pokračovat následujícím z
+nich. Pokud již byly všechny použity, program se ukončí, ale
+nezpůsobí chybu (tzn. že poštovnímu programu se bude zdát, že pošta
+byla doručena).
+.TP 
+\fBUMASK\fP
+Jméno říká vše (pokud ne, zapomeňte na něj :\-).  Jakákoliv hodnota
+přiřazená UMASK bude interpretována jako \fBosmičkové\fP
+číslo. Není\-li specifikováno, maska je implicitně 077. Pokud maska
+dovoluje o+x, všechny schránky do nichž procmail doručuje přímo
+prodělají změnu o+x.  To se dá použít ke kontrole zda přišla nová
+pošta.
+.TP 
+\fBSHELLMETAS\fP
+Pokud se kterýkoliv ze znaků řetězce SHELLMETAS objeví v řádku
+obsahujícím filtr nebo program, řádek bude poslán do $SHELL namísto
+přímého spuštění.
+.TP 
+\fBSHELLFLAGS\fP
+Jakékoliv volání $SHELL\-u bude uskutečněno ve tvaru
+.br
+"$SHELL" "$SHELLFLAGS" "$*";
+.TP 
+\fBSENDMAIL\fP
+Pokud nepoužíváte \fIpřesměrování (forwarding)\fP, nelamte si s tímhle
+hlavu. Určuje program, který bude forwardovat jakoukoliv poštu.
+.br
+Volá se jako: "$SENDMAIL" $SENDMAILFLAGS "$@";
+.TP 
+\fBNORESRETRY\fP
+Počet opakovaných pokusů pokud nastane některá z chyb `\fBprocess table
+full\fP' (zaplnění tabulky procesů), `\fBfile table full\fP' (zaplnění
+tabulky souborů), `\fBout of memory\fP' (nedostatek paměti) nebo `\fBout of
+swap space\fP' (zaplnění odkládacího prostoru). Pokud je toto číslo
+záporné, procmail to bude zkoušet donekonečna; pokud není
+specifikováno, implicitní hodnota je 4. Další pokusy o opakování akce
+nastávají v intervalu $SUSPEND sekund. Myšlenka tohoto uspořádání
+spočívá v tom, že pokud je např. vyčerpán \fIswapovací\fP \fIprostor\fP
+nebo se zaplnila \fItabulka\fP \fIprocesů\fP, obvykle to zjistí několik
+dalších programů, které buď skončí nebo zkolabují, čímž uvolní
+nedostávající se systémové \fIzdroje\fP procmailu.
+.TP 
+\fBSUSPEND\fP
+Čas v sekundách kdy bude procmail čekat na něco co momentálně není k
+dispozici (paměť, fork, atd.); není\-li specifikováno, implicitní
+hodnota je 16 sekund.  Viz též: \fBLOCKSLEEP\fP.
+.TP 
+\fBLINEBUF\fP
+Délka interní řádkové vyrovnávací paměti. Nelze nastavit menší
+než 128.  Délka žádného řádku v \fIkonfiguračním souboru\fP by neměla
+překročit $LINEBUF znaků před ani po provedení substitucí. Pokud není
+specifikováno, standard je 2048. Toto omezení samozřejmě \fIneplatí\fP na
+zprávu samotnou; ta může mít libovolné délky řádků nebo může být
+i binárním souborem. Viz též PROCMAIL_OVERFLOW.
+.TP 
+\fBDELIVERED\fP
+Pokud je nastavena na `yes', procmail bude předstírat (MTA), že zpráva
+byla doručena. Pokud při takovém nastavení nelze zprávu doručit,
+zpráva bude navždy ztracena (nebude odeslána na postmastera apod.).
+.TP 
+\fBTRAP\fP
+Při ukončení procmailu (neplatí, pokud bylo způsobeno přijatým
+signálem) se provede obsah této proměnné. Kopie zprávy je k dispozici
+na standardním vstupu.  Jakýkoliv výstup vytvořený tímto příkazem
+bude připojen do souboru $LOGFILE.  Možná použití TRAP\-u: odstranění
+dočasných souborů, na míru šité výtahy zpráv, atd. Viz též:
+\fBEXITCODE\fP a \fBLOGABSTRACT\fP.
+.TP 
+\fBEXITCODE\fP
+Implicitně je návratová hodnota procmailu nula (úspěch), pokud
+úspěšně doručil zprávu nebo byla proměnná \fBHOST\fP špatně nastavena
+a na příkazové řádce nebyly žádné další konfigurační soubory;
+jinak je vráceno selhání. Ještě předtím ale procmail prozkoumá
+hodnotu této proměnné. Pokud byla této proměnné přiřazena kladná
+hodnota, použije se jako návratová hodnota při ukončení
+procmailu. Pokud je tato proměnná nastavena, ale prázdná, procmail
+použije návratovou hodnotu vrácenou programem \fBTRAP\fP Pokud tato
+proměnná není nastavena, procmail ji nastaví krátce před vyvoláním
+programu \fBTRAP\fP.
+.TP 
+\fBLASTFOLDER\fP
+Tuto proměnnou nastaví procmail, kdykoliv doručí nějakou zprávu do
+složky nebo do programu. Vždy obsahuje jméno souboru (nebo programu) kam
+procmail doručil zprávu. Pokud byla zpráva doručena do více složek
+najednou, bude $LASTFOLDER obsahovat hardlinkovaná jména souborů
+oddělěná mezerami.
+.TP 
+\fBMATCH\fP
+Procmail přiřadí této proměnné hodnotu, kdykoliv má uložit text z
+úspěšně porovnaného regulárního výrazu. Obsahuje veškerý text
+vyhovující regulárnímu výrazu za speciálním znakem `\fB\e/\fP'.
+.TP 
+\fBSHIFT\fP
+Přiřazení kladné hodnoty této proměnné má stejný efekt jako
+příkaz `shift' v \fBsh\fP(1).  Tento příkaz má největší využití při
+získání dalších argumentů předaných procmailu, když je použit jako
+generický filtr e\-mailových zpráv.
+.TP 
+\fBINCLUDERC\fP
+Jméno konfiguračního souboru (relativní vzhledem k aktuálnímu
+adresáři), který bude zařazen do zpracování, jako by byl součástí
+aktuálního konfiguračního souboru. Vnořování je povoleno a je
+limitováno pouze systémovými zdroji (paměť a deskriptory
+souborů). Protože nejsou prováděny žádné kontroly přístupových
+práv nebo vlastníka konfiguračního souboru, měli by se uživatelé
+\fBINCLUDERC\fP ujistit, že právo zapisovat do něj nebo do jeho adresáře
+mají jen důvěryhodní uživatelé. Přiřazení \fBINCLUDERC\fP na
+příkazové řádce nemá žádný efekt.
+.TP 
+\fBSWITCHRC\fP
+Určuje konfigurační soubor (relativně k aktuálnímu adresáři), na
+který se při zpracovávání přejde. Pokud tento soubor neexistuje nebo
+se nejedná o normální soubor či /dev/null, zapíše se do logu chyba a
+zpracovávání bude pokračovat v aktuálním konfiguračním souboru. V
+opačném případě se zpracovávání aktuálního konfiguračního
+souboru ukončí a začne se s určeným konfiguračním souborem.
+Odnastavení (unsetting)  \fBSWITCHRC\fP způsobí ukončení zpracovávání
+aktuálního konfiguračního souboru, jako kdyby normálně
+skončil. Stejně jako u \fBINCLUDERC\fP se ani zde neprovádí žádné
+kontroly přístupových práv a vlastníka konfiguračního souboru a
+přiřazení na příkazové řádce nemají žádný vliv.
+.TP 
+\fBPROCMAIL_VERSION\fP
+Číslo verze spuštěného programu procmail.
+.TP 
+\fBPROCMAIL_OVERFLOW\fP
+Tato proměnná bude nastavena na neprázdnou hodnotu pokud procmail zjistí
+přetečení bufferu. Viz sekce \fBCHYBY\fP, kde je uvedeno více o chování
+při výskytu přetečení.
+.TP 
+\fBCOMSAT\fP
+Implicitně je notifikace \fBComsat\fP(8)/\fBbiff\fP(1)  zapnutá. Dá se vypnout
+nastavením této proměnné na `no'.  Alternativně lze službu biff
+upravit nastavením této proměnné buď na `služba@', `@hostname' nebo
+`služba@hostname'. Není\-li specifikováno, použije se biff@localhost.
+.TP 
+\fBDROPPRIVS\fP
+Nastaví\-li se na `yes', procmail `shodí' všechna práva, kterých
+eventuálně mohl nabýt (suid, sgid). Toto se hodí pouze v případě, že
+chcete, aby se zbylá část souboru /etc/procmailrc provedla jménem
+příjemce.
+.SS "Rozšířené regulární výrazy"
+Následující speciální konstrukce používá jak interní egrep v
+procmailu, tak standardní \fBegrep\fP(1):
+.TP  1.0i
+\fB^\fP
+Začátek řádku.
+.TP 
+\fB$\fP
+Konec řádku.
+.TP 
+\&\fB.\fP
+Jakýkoliv znak kromě konce řádku.
+.TP 
+\fBa*\fP
+Posloupnost libovolného, i nulového počtu áček.
+.TP 
+\fBa+\fP
+Posloupnost jednoho nebo více áček.
+.TP 
+\fBa?\fP
+Jedno nebo žádné a.
+.TP 
+\fB[^\-a\-d]\fP
+Jakýkoliv znak, který \fBnení\fP pomlčka, a, b, c, d nebo konec řádku.
+.TP 
+\fBde|abc\fP
+Buď posloupnost `de' nebo `abc'.
+.TP 
+\fB(abc)*\fP
+Žádný výskyt nebo libovolný počet opakování posloupnosti `abc'.
+.TP 
+\fB\e.\fP
+Jediná tečka; \e se používá k uvození všech znaků se zvláštním
+významem. Viz také použití $\e u proměnných.
+.PP
+Tohle byly samozřejmě pouze příklady. Jakákoliv složitější
+kombinace je rovněž přípustná.
+.PP
+Následující speciální konstrukce používá specifická rozšíření
+procmailu:
+.TP  1.0i
+\fB^\fP nebo \fB$\fP
+Odpovídá novému řádku (u víceřádkových porovnání).
+.TP 
+\fB^^\fP
+Zakotví výraz na úplném začátku porovnávané oblasti, resp. na jejím
+úplném konci je\-li tato kombinace nalezena na konci výrazu.
+.TP 
+\fB\e<\fP nebo \fB\e>\fP
+Porovnání se shoduje se znakem před anebo za slovem. Tyto speciální
+výrazy jsou pouhým synonymem pro `[^a\-zA\-Z0\-9_]', ale shoda nastane i pro
+znak `nový řádek'.  Jelikož tyto symboly se shodují se skutečnými
+znaky, lze je použít pouze k oddělení slov, nikoli pro odlišení mezer
+mezi slovy.
+.TP 
+\fB\e/\fP
+Rozděluje výraz na dvě části. Všechno co se shoduje v pravé části
+se přiřadí proměnné MATCH.
+.SH PŘÍKLADY
+Viz manuálová stránka \fBprocmailex\fP(5).
+.SH NÁSTRAHY
+Akční řádek, který pokračuje na dalším řádku musí vždycky
+končit obráceným lomítkem, dokonce ani kdyby spouštěný shell
+nepotřeboval nebo nechtěl, aby obrácené lomítko takový řádek
+označovalo.  Důvod spočívá v dvoufázovém procesu analýzy řádku
+(nejdřív procmail, potom shell (nebo také ne, v závislosti na
+\fBSHELLMETAS\fP)).
+.PP
+Nedávejte na podmínkové řádky s regulárními výrazy žádné
+komentáře, protože celý řádek je \fIkompletně\fP předán internímu
+egrepu (kromě pokračovacích obrácených lomítek na konci řádku).
+.PP
+Úvodní mezera na řádku na němž pokračuje regulární výraz je
+obvykle ignorována (takže můžete pokračování odsadit), ale \fBnikoliv\fP
+na pokračovacích podmínkových řádcích, které jsou vyhodnocovány
+podle pravidel \fBsh\fP(1)  pro substituce uvnitř dvojitých závorek.
+.PP
+Dávejte si pozor na zacyklení při provádění nezdravých věcí, jako
+třeba odeslání zprávy (forward) na svůj vlastní účet.  Zacyklení
+může být přerušeno správným použitím \fBLOCKTIMEOUT\fP.
+.PP
+Jakékoliv implicitní (standardní) hodnoty, které má procmail pro
+některé proměnné \fBvždycky\fP přepíší už definované hodnoty. Pokud
+chcete implicitní hodnoty s jistotou změnit, musíte nové hodnoty
+definovat v \fBkonfiguračním\fP \fBsouboru\fP, nebo jako parametr na
+příkazovém řádku.
+.PP
+Soubor /etc/procmailrc nemůže změnit nastavení PATH v uživatelských
+konfiguračních souborech, protože když procmail projde soubor
+/etc/procmailrc, je tato hodnota je resetována. I když v této oblasti
+dojde v budoucnu ke zlepšení, jediným správným řešením je v
+současné době překompilování procmailu s požadovanou hodnotou.
+.PP
+Proměnné nastavené \fBuvnitř\fP akce typu `|' spouštěné shellem si
+\fBnezachovávají\fP své hodnoty po ukončení předpisu jelikož jsou
+nastaveny v podřízeném shellu spuštěném procmailem.  Chcete\-li mít
+jistotu, že si proměnná podrží svou hodnotu, musíte provést
+přiřazení ještě před uvozujícím `|' předpisu.
+.PP
+Pokud definujete v doručujícím předpisu příznak `h' nebo `b' a dojde
+ke shodě podmínky, pak, pokud jste nedefinovali zároveň příznak `c',
+tělo zprávy resp. záhlaví bude bez varování ztraceno.
+.SH "DALŠÍ INFORMACE"
+.na
+.nh
+\fBprocmail\fP(1), \fBprocmailsc\fP(5), \fBprocmailex\fP(5), \fBsh\fP(1), \fBcsh\fP(1),
+\fBmail\fP(1), \fBmailx\fP(1), \fBbinmail\fP(1), \fBuucp\fP(1), \fBaliases\fP(5),
+\fBsendmail\fP(8), \fBegrep\fP(1), \fBregexp\fP(5), \fBgrep\fP(1), \fBbiff\fP(1),
+\fBcomsat\fP(8), \fBlockfile\fP(1), \fBformail\fP(1)
+.hy
+.ad
+.SH CHYBY
+[přibližně] Procmail je schopen sám o sobě provádět substituce
+proměnných pouze tohoto typu: $jméno, ${jméno}, ${jméno:\-text},
+${jméno:+text}, ${jméno\-text}, ${jméno+text}, $\ejméno, $#, $n, $$, $?,
+$_, $\- a $=; přičemž za $\ename bude dosazen ekvivalent $jméno bez
+speciálních významů zvláštních znaků; za $_ bude dosazeno jméno
+aktuálního konfiguračního souboru, za $\- $LASTFOLDER a $= bude obsahovat
+výsledek posledního předpisu.  Výsledek substituce $\ejméno navíc
+nebude rozdělen podle prázdných znaků.  Když jsou použity volby \fB\-a\fP
+nebo \fB\-m\fP za $# se dosadí počet parametrů a za "$@" (uvozovky jsou
+povinné) se dosadí příslušné parametry. Ovšem pouze je\-li předáván
+v seznamu parametrů nějakému programu a v tom případě je substituován
+pouze jeden výskyt "$@".
+.PP
+Substituce proměnných neohraničené uvozovkami jsou vždycky rozděleny
+podle mozer, tabulátorů a znaků konce řádku; proměnná IFS se interně
+nepoužívá.
+.PP
+Procmail nepodporuje substituci `~'.
+.PP
+Při zpracovávání \fIkonfiguračního\fP \fIsouboru\fP se používá řádková
+vyrovnávací paměť (řádkový buffer) o délce $LINEBUF.  Jakékoliv
+rozšíření zpracovávaného řádku při substitucích nad tento limit
+bude oříznuto a bude nastavena proměnná PROCMAIL_OVERFLOW. Pokud je
+řádek, na kterém došlo k přetečení podmínkový nebo akční řádek,
+bude vyhodnocen jako selhání a procmail bude pokračovat ve
+zpracovávání. Pokud je to přiřazení proměnné nebo počáteční
+řádek předpisu, ukončí procmail zpracovávání konfiguračního
+souboru.
+.PP
+Pokud má globální semafor (zámek)  \fIrelativní\fP cestu, a aktuální
+adresář není ten, v němž byl semafor vytvořen, potom semafor nebude
+odstraněn, pokud procmail v tomto místě skončí (řešení: pro
+globální semafor používejte \fIabsolutní\fP cestu).
+.PP
+Pokud má konfigurační soubor \fIrelativní\fP cestu a v okamžiku jeho
+prvního otevření obsahuje \fBMAILDIR\fP relativní cestu a pokud je procmail
+přinucen rozdvojit se a aktuální adresář byl změněn od doby, kdy byl
+konfigurační soubor otevřen, nebude se procmail moci rozdvojit
+(řešení: použít \fIabsolutní\fP cestu k určení konfiguračního souboru
+nebo zajistit, aby MAILDIR obsahoval absolutní cestu, když je
+konfigurační soubor otevírán).
+.PP
+Lokální semafor v předpisu, který otevírá neforkující vnořený blok
+nebude fungovat tak, jak čekáte.
+.PP
+Při uložení obsahu standardního výstupu předpisu do proměnné bude
+odstraněn právě jeden koncový znak `nový řádek'.
+.PP
+Nekteré nevhodné a nejasné regulární výrazy způsobí nastavení MATCH
+na nesprávnou hodnotu. Regulární výraz může být opraven odstraněním
+jednoho nebo více nepotřebných operátorů '*', '+', nebo '?' na levé
+straně speciální konstrukce \e/ .
+'*', '+', or '?' operator on the left-hand side of the \e/ token.
+.SH RŮZNÉ
+Pokud regulární výraz obsahuje `\fB^TO_\fP', bude tento řetězec nahrazen
+výrazem
+.na
+.nh
+`\fB(^((Original\-)?(Resent\-)?(To\h'-\w' 'u' |Cc\h'-\w' 'u' |Bcc)\h'-\w' 'u'
+|(X\-Envelope\h'-\w' 'u' |Apparently(\-Resent)?)\-To)\h'-\w' 'u'
+:(.*[^\-a\-zA\-Z0\-9_.])?)\fP', což by mělo zachytit všechny možné
+specifikace adresáta obsahující určitou \fIadresu\fP.
+.hy
+.ad
+.PP
+Pokud regulární výraz obsahuje `\fB^TO\fP', bude tento řetězec nahrazen
+výrazem
+.na
+.nh
+`\fB(^((Original\-)?(Resent\-)?(To\h'-\w' 'u' |Cc\h'-\w' 'u' |Bcc)\h'-\w' 'u'
+|(X\-Envelope\h'-\w' 'u' |Apparently(\-Resent)?)\-To)\h'-\w' 'u'
+:(.*[^a\-zA\-Z])?)\fP', což by mělo zachytit všechny možné specifikace
+adresáta obsahující určité \fIslovo\fP.
+.hy
+.ad
+.PP
+Pokud regulární výraz obsahuje `\fB^FROM_DAEMON\fP', bude to nahrazeno
+výrazem
+.na
+.nh
+[přibližně] `\fB(^(Mailing\-List\h'-\w' 'u' :\h'-\w' 'u' |Precedence\h'-\w'
+\&'u' :.*(junk\h'-\w' 'u' |bulk\h'-\w' 'u' |list)\h'-\w' 'u' |To\h'-\w' 'u' :
+Multiple recipients of |(((Resent\-)?(From\h'-\w' 'u' |Sender)\h'-\w' 'u'
+|X\-Envelope\-From)\h'-\w' 'u' :\h'-\w' 'u' |>?From
+)([^>]*[^(.%@a\-z0\-9])?(Post(ma?(st(e?r)?\h'-\w' 'u' |n)\h'-\w' 'u'
+|office)\h'-\w' 'u' |(send)?Mail(er)?\h'-\w' 'u' |daemon\h'-\w' 'u'
+|m(mdf\h'-\w' 'u' |ajordomo)\h'-\w' 'u' |n?uucp\h'-\w' 'u' |LIST(SERV\h'-\w'
+\&'u' |proc)\h'-\w' 'u' |NETSERV\h'-\w' 'u' |o(wner\h'-\w' 'u' |ps)\h'-\w' 'u'
+|r(e(quest\h'-\w' 'u' |sponse)\h'-\w' 'u' |oot)\h'-\w' 'u' |b(ounce\h'-\w'
+\&'u' |bs\e.smtp)\h'-\w' 'u' |echo\h'-\w' 'u' |mirror\h'-\w' 'u'
+|s(erv(ices?\h'-\w' 'u' |er)\h'-\w' 'u' |mtp(error)?\h'-\w' 'u'
+|ystem)\h'-\w' 'u' |A(dmin(istrator)?\h'-\w' 'u' |MMGR\h'-\w' 'u'
+|utoanswer))(([^).!\h'-\w' 'u' :a\-z0\-9][\-_a\-z0\-9]*)?[%@>\et
+][^<)]*(\e(.*\e).*)?)?$([^>]\h'-\w' 'u' |$)))\fP', což by mělo
+zachytit zprávy odeslané většinou démonů.
+.hy
+.ad
+.PP
+[přibližně] Pokud regulární výraz obsahuje `\fB^FROM_MAILER\fP', bude to
+nahrazeno výrazem
+.na
+.nh
+[přibližně] `\fB(^(((Resent\-)?(From\h'-\w' 'u' |Sender)\h'-\w' 'u'
+|X\-Envelope\-From)\h'-\w' 'u' :\h'-\w' 'u' |>?From
+)([^>]*[^(.%@a\-z0\-9])?(Post(ma(st(er)?\h'-\w' 'u' |n)\h'-\w' 'u'
+|office)\h'-\w' 'u' |(send)?Mail(er)?\h'-\w' 'u' |daemon\h'-\w' 'u'
+|mmdf\h'-\w' 'u' |n?uucp\h'-\w' 'u' |ops\h'-\w' 'u' |r(esponse\h'-\w' 'u'
+|oot)\h'-\w' 'u' |(bbs\e.)?smtp(error)?\h'-\w' 'u' |s(erv(ices?\h'-\w' 'u'
+|er)\h'-\w' 'u' |ystem)\h'-\w' 'u' |A(dmin(istrator)?\h'-\w' 'u'
+|MMGR))(([^).!\h'-\w' 'u' :a\-z0\-9][\-_a\-z0\-9]*)?[%@>\et
+][^<)]*(\e(.*\e).*)?)?$([^>]\h'-\w' 'u' |$))\fP' (ořezaná verze
+`\fB^FROM_DAEMON\fP'), což by mělo zachytit zprávy od většiny poštovních
+démonů.
+.hy
+.ad
+.PP
+[přibližně] Pro přiřazení logických hodnot proměnným jako VERBOSE,
+DELIVERED nebo COMSAT procmail akceptuje jako logickou jedničku každý
+řetězec, který začíná: nenulovou hodnotou, slovem `on', `y', `t' nebo
+`e'. Nepravda (logická 0) je jakýkoliv řetězec začínající nulovou
+hodnotou, `off', `n', `f' nebo `d'.
+.PP
+Pokud akční řádek předpisu specifikuje program, pak řádek
+skládající se z pouhé dvojice zpětné lomítko\-nový řádek na jinak
+prázdném řádku bude převeden na znak nový řádek.
+.PP
+Zpracování regulárních výrazů, zabudované v procmailu, nepodporuje
+pojmenované třídy znaků (named character classes).
+.SH POZNÁMKY
+Jelikož v konfiguračním souboru se všeobecně ignorují úvodní bílé
+znaky bez uvozovek, můžete je využít zcela dle své chuti k odsazování
+textu.
+.PP
+Úvodní `|' na začátku akčního řádku, které specifikuje program nebo
+filtr se odřeže ještě před testováním řádku na přítomnost
+$SHELLMETAS.
+.PP
+Soubory zahrnuté direktivou INCLUDERC a obsahující pouze přiřazení do
+proměnných mohou být sdíleny s sh.
+.PP
+Současné chování přiřazení \fBINCLUDERC\fP a \fBSWITCHRC\fP na
+příkazovém řádku nemůže být zaručeno. V minulosti se již změnilo
+a v dalších verzích může být změněno znovu nebo úplně vypuštěno.
+.PP
+Chcete\-li \fIopravdu\fP komplikované zpracování, můžete zvážit dokonce
+rekurzivní volání \fBprocmailu\fP.
+.PP
+Za starých časů muselo být ':0' značící začátek nového předpisu
+změněno na
+ ':n', kde 'n' představuje počet podmínek, které následují.
+.SH AUTOŘI
+Stephen R. van den Berg
+.RS
+<srb@cuci.nl>
+.RE
+Philip A. Guenther
+.RS
+<guenther@sendmail.com>
+.RE
+.\".if n .pl -(\n(.tu-1i)
+.rm SH
+.rn Sh SH
+.rm SS
+.rn Ss SS
+.rm TP
+.rn Tp TP
+.rm RS
+.rn Rs RS
+.rm RE
+.rn Re RE

@@ -1,0 +1,82 @@
+.TH GETSERVENT 3  "31. března 1997" "BSD" "Linux - příručka programátora"
+.do hla cs
+.do hpf hyphen.cs
+.SH JMÉNO
+getservent, getservbyname, getservbyport, setservent, endservent \-
+funkce pro práci s databází služeb
+.SH SYNTAXE
+.nf
+.B #include <netdb.h>
+.sp
+.B struct servent *getservent(void);
+.sp
+.BI "struct servent *getservbyname(const char *" name ", const char *" proto );
+.sp
+.BI "struct servent *getservbyport(int " port ", const char *" proto );
+.sp
+.BI "void setservent(int " stayopen );
+.sp
+.B void endservent(void);
+.fi
+.SH POPIS
+Funkce \fBgetservent()\fP čte další řádek ze souboru
+\fI/etc/services\fP a vrací strukturu \fIservent\fP obsahující pole tohoto
+záznamu. Soubor \fI/etc/services\fP je otevřen, je-li potřeba.
+.PP
+Funkce \fBgetservbyname()\fP vrací strukturu \fIservent\fP ze souboru
+\fI/etc/services\fP, která vyhovuje službě \fIname\fP používající protokol
+\fIproto\fP.
+.PP
+Funkce \fBgetservbyport()\fP vrací ukazatel na strukturu \fIservent\fP
+pro záznam, který vyhovuje portu \fIport\fP zadanému v síťovém pořadí bajtů
+a protokolu \fIproto\fP. 
+.PP
+Funkce \fBsetservent()\fP otevře soubor \fI/etc/services\fP a nastaví
+ukazovátko na jeho začátek.  Je-li \fIstayopen\fP nenulové (1), potom soubor
+nebude mezi voláními \fBgetservbyname()\fP a \fBgetservbyport()\fP uzavřen.
+.PP
+Funkce \fBendservent()\fP uzavře soubor \fI/etc/services\fP.
+.PP
+Struktura \fIservent\fP je definována v \fI<netdb.h>\fP následovně:
+.sp
+.RS
+.nf
+.ne 6
+.ta 8n 16n 32n
+struct servent {
+	char	*s_name;		/* official service name */
+	char	**s_aliases;		/* alias list */
+	int	s_port;			/* port number */
+	char	*s_proto;		/* protocol to use */
+}
+.ta
+.fi
+.RE
+.PP
+Prvky struktury \fIservent\fP jsou:
+.TP
+.I s_name
+Oficiální jméno služby.
+.TP
+.I s_aliases
+Nulou ukončený seznam aliasů pro službu.
+.TP
+.I s_port
+Číslo portu pro tuto službu. Je reprezentováno v síťovém pořadí bajtů.
+.TP
+.I s_proto
+Jméno protokolu spojeného s touto službou.
+.SH NÁVRATOVÁ HODNOTA
+Funkce \fBgetservent()\fP, \fBgetservbyname()\fP a \fBgetservbyport()\fP
+vrací strukturu \fIservent\fP, nebo NULL, nastala-li chyba nebo konec
+souboru.
+.SH SOUBORY
+.TP
+.I /etc/services
+databáze služeb
+.SH SPLŇUJE STANDARDY
+BSD 4.3
+.SH DALŠÍ INFORMACE
+.BR getprotoent "(3), " getnetent "(3), " services (5)
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

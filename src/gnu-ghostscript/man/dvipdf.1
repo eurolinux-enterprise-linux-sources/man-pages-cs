@@ -1,0 +1,29 @@
+.\" -*- nroff -*-
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH DVIPDF 1 "9. květen 2005" 8.16 Ghostscript
+.\" $Id: dvipdf.1,v 1.4 2005/05/09 22:04:37 Arabidopsis Exp $
+.SH JMÉNO
+dvipdf \- Převede soubor z formátu TeX DVI na PDF za použití programů
+ghostscript a dvips
+.SH POUŽITÍ
+\fBdvipdf\fP [ \fIvolby\fP ] \fIvstup.dvi\fP [ \fIvýstup.pdf\fP ] ...
+.SH POPIS
+Tento skript vyvolá program \fBdvips\fP(1)  s volbou \fB\-q\fP a jeho výstup
+pošle přes rouru do programu \fBgs\fP(1)  s následujícími parametry:
+
+.ce
+\fB\-q \-dNOPAUSE \-dBATCH \-sDEVICE=pdfwrite\fP
+
+a také s \fB\-sOutputFile\fP a s argumenty zadanými na příkazové řádce.
+.SH "DALŠÍ INFORMACE"
+gs(1), dvips(1)
+.SH VERZE
+Tento dokument byl naposledy revidován pro Ghostscript verze 8.16.
+.SH AUTOR
+artofcode LLC a Artifex Software, bug\-gs at ghostscript.com, jsou hlavními
+udržovateli programu Ghostscript.  Tuto manuálovou stránku napsal George
+Ferguson.

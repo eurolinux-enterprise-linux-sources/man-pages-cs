@@ -1,0 +1,250 @@
+.\" Copyright Andries Brouwer, 2000
+.\"
+.\" This page is distributed under GPL.
+.\" Some fragments of text came from the time-1.7 info file.
+.\" Inspired by kromJx@crosswinds.net.
+.\"
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH TIME 1 2008\-11\-14 "" "Linux \- Příručka uživatele"
+.SH JMÉNO
+time \- změří čas vykonání příkazu nebo vypíše využití zdrojů
+.SH POUŽITÍ
+\fBtime [\fP\fIvolby\fP\fB] \fP\fIpříkaz\fP\fB [\fP\fIargumenty...\fP\fB] \fP
+.SH POPIS
+Příkaz \fBtime\fP spustí zadaný program \fIpříkaz\fP s uvedenými
+argumenty.  Když \fIpříkaz\fP skončí, \fBtime\fP vypíše na standardní
+chybový vystup zprávu se časovými statistikami o běhu programu.  Tyto
+statistiky se skládají z (i) skutečného uběhnutého času od
+spuštění do ukončení, (ii) CPU času uživatele (součet hodnot
+\fItms_utime\fP a \fItms_cutime\fP ze \fIstruct tms\fP, navrácené voláním
+\fBtimes\fP(2)), a (iii) CPU času systému (součet hodnot \fItms_stime\fP a
+\fItms_cstime\fP ze \fIstruct tms\fP navrácené voláním \fBtimes\fP(2)).
+
+Pozn: Některé shelly (např. \fBbash\fP(1)) mají zabudovaný příkaz
+\fBtime\fP, který poskytuje méně funkcí než zde popisovaný program. Pro
+použití pravého programu může být potřeba uvedení celé cesty
+(obvykle \fI/usr/bin/time\fP).
+.SH VOLBY
+.TP 
+\fB\-p\fP
+Pokud je locale nastaveno na POSIX, použije tradiční přesný formát
+.IP
+.in +4n
+"real %f\enuser %f\ensys %f\en"
+.in
+.IP
+(s čísly v sekundách)  kde počet desetinných míst ve výstupu pro %f
+není určen, ale dostačuje k vyjádření přesnosti systému (clock tick
+accuracy) a je nejméně jedno.
+.SH "NÁVRATOVÁ HODNOTA"
+Pokud byl \fIpříkaz\fP spuštěn, je návratovou hodnotou návratová hodnota
+\fIpříkazu\fP. V opačném případě je to 127, pokud \fIpříkaz\fP nebyl
+nalezen, 126, pokud byl nalezen, ale nemohl být spuštěn a další
+nenulová hodnota (1\-125), pokud se pokazilo něco jiného.
+.SH PROSTŘEDÍ
+Jsou použity proměnné \fBLANG\fP, \fBLC_ALL\fP, \fBLC_CTYPE\fP, \fBLC_MESSAGES\fP,
+\fBLC_NUMERIC\fP, \fBNLSPATH\fP, a \fBPATH\fP.  Ta poslední slouží k nalezení
+\fIpříkazu\fP.  Ostatní slouží k nastavení textu a formátování
+výstupu.
+.SH "VERZE GNU"
+Následuje popis GNU verze 1.7 programu \fBtime\fP. Bez ohledu na název
+utility obsahuje její výstup spoustu užitečných informací, nejen o
+využitém času, ale i o dalších zdrojích jako pamět, I/O a IPC
+volání (kde je to možné). Výstup je formátován pomocí
+formátovacího řetězce, který může být určen volbou \fI\-f\fP nebo
+proměnnou prostředí \fBTIME .\fP
+.LP
+Výchozí hodnota formátovacího řetězce je
+.PP
+.in +4n
+%Uuser %Ssystem %Eelapsed %PCPU (%Xtext+%Ddata %Mmax)k
+.br
+%Iinputs+%Ooutputs (%Fmajor+%Rminor)pagefaults %Wswaps
+.br
+.in
+.LP
+Pokud je použita volba \fI\-p\fP, je použit (přenositelný) výstupní
+formát:
+.PP
+.in +4n
+real %e
+.br
+user %U
+.br
+sys %S
+.br
+.in
+.PP
+\h
+.SS "Formátovací řetězec"
+Formát je interpretován způsobem obvyklým z printf.  Obyčejné znaky
+jsou použity přímo, tabulátor, nový řádek a zpětné lomítko jsou
+escapovány pomocí \et, \en a \e\e, znak % je reprezentován jako %%,
+samostatně označuje převod.  Program \fBtime\fP vždy sám přidá
+závěrečný konec řádku.  The conversions follow. Jsou podporovány
+všechny, které používá \fBtcsh\fP(1).
+.LP
+\fBČas\fP
+.TP 
+\fB%E\fP
+Skutečný uplynulý čas ([hodiny:]minuty:sekundy).
+.TP 
+\fB%e\fP
+(Není v tcsh.) Skutečný uplynulý čas (v sekundách).
+.TP 
+\fB%S\fP
+Celkový počet sekund CPU, které proces strávil v módu jádra.
+.TP 
+\fB%U\fP
+Celkový počet sekund CPU, které proces strávil v uživatelském módu.
+.TP 
+\fB%P\fP
+Procentní podíl z CPU, který proces dostal, spočtený jako (%U + %S) /
+%E.
+.LP
+\fBPaměť\fP
+.TP 
+\fB%M\fP
+Maximální velikost fyzické paměti využité procesem, dosažená za jeho
+běhu, v kilobajtech.
+.TP 
+\fB%t\fP
+(Není v tcsh.) Průměrná fyzické paměti využité procesem, v
+kilobajtech.
+.TP 
+\fB%K\fP
+Průměrné celkové (data+zásobník+text) využití paměti procesem, v
+kilobajtech.
+.TP 
+\fB%D\fP
+Průměrná velikost odsdíleného prostoru dat procesu, v kilobajtech.
+.TP 
+\fB%p\fP
+(Není v tcsh.) Průměrná velikost odsdíleného prostoru zásobníku
+procesu, v kilobajtech.
+.TP 
+\fB%X\fP
+Průměrná velikost odsdíleného prostoru textu, v kilobajtech.
+.TP 
+\fB%Z\fP
+(Není v tcsh.) Velikost stránky systému, v bajtech.  Toto je systémová
+konstanta, která se mezi systémy liší.
+.TP 
+\fB%F\fP
+Počet závažných stránkovacích chyb, ke kterým došlo při běhu
+procesu.  To jsou případy, kdy musela být stránka načtena z disku.
+.TP 
+\fB%R\fP
+Počet podružných stránkovacích chyb.  To jsou chyby stránek, které
+nejsou platné, ale ještě nebyly zabrány jinými virtuálními
+stránkami. Tudíž data ve stránce jsou stále platná, ale tabulky
+systému musejí být aktualizovány.
+.TP 
+\fB%W\fP
+Kolikrát byl proces odstránkován z paměti.
+.TP 
+\fB%c\fP
+Kolikrát proces nedobrovolně změnil kontext (protože vypršel
+přidělený čas).
+.TP 
+\fB%w\fP
+Počet čekání: kolikrát program dobrovolně změnil kontext, např. při
+čekání na dokončení I/O operace.
+.LP
+\fBI/O\fP
+.TP 
+\fB%I\fP
+Number of file system inputs by the process.
+.TP 
+\fB%O\fP
+Number of file system outputs by the process.
+.TP 
+\fB%r\fP
+Počet zpráv socketů přijatých procesem.
+.TP 
+\fB%s\fP
+Počet zpráv socketů odeslaných procesem.
+.TP 
+\fB%k\fP
+Počet signálů doručených procesu.
+.TP 
+\fB%C\fP
+(Není v tcsh.) Jméno a argumenty příkazové řádky časovaného
+příkazu.
+.TP 
+\fB%x\fP
+(Není v tcsh.) Návratová hodnota příkazu.
+.SS "Volby GNU"
+.TP 
+\fB\-f \fP\fIFORMÁT\fP\fB, \-\-format=\fP\fIFORMÁT\fP
+Určuje výstupní formát, má přednost před určením formátu
+proměnnou prostředí TIME.
+.TP 
+\fB\-p, \-\-portability\fP
+Použije přenositený výstupní formát.
+.TP 
+\fB\-o \fP\fISOUBOR\fP\fB, \-\-output=\fP\fISOUBOR\fP
+Neposílá výsledek na \fIstderr\fP, ale přepíše určený soubor.
+.TP 
+\fB\-a, \-\-append\fP
+(Použito společně s \-o.) Nepřepíše soubor, připojí výsledek k
+němu.
+.TP 
+\fB\-v, \-\-verbose\fP
+Ukecaný výstup obsahující vše, o čem program ví.
+.SS "Standardní volby GNU"
+.TP 
+\fB\-\-help\fP
+Vypíše návod k použití na standardní výstup a bezchybně skončí.
+.TP 
+\fB\-V, \-\-version\fP
+Vypíše číslo verze na standardní výstup a bezchybně skončí.
+.TP 
+\fB\-\-\fP
+Konec seznamu voleb.
+.SH CHYBY
+Některé zdroje nejsou v některých verzích Unixu měřeny, takže
+některé hodnoty mohou být nahlášeny jako nuly.  Současný výběr byl
+z velké části inspirován daty, které poskytují verze 4.2 nebo 4.3BSD.
+.LP
+GNU time ve verzi 1.7 ještě není lokalizován.  Tudíž neimplementuje
+požadavky POSIX.
+.LP
+Proměnná prostředí \fBTIME\fP byla vybrána špatně.  Není nezvyklé, že
+systémy jako \fBautoconf\fP(1)  nebo \fBmake\fP(1)  používají proměnnou
+prostředí s názvem programu k určení utility, která má být
+použita.  Použití proměnných jako MORE nebo TIME pro volby programů
+(namísto úplných cest k programům) často způsobuje potíže.
+.LP
+To, že \fI\-o\fP přepisuje namísto připojení se zdá být jako nepříliš
+štastné řešení.  (Tj. volba \fI\-a\fP by měla být výchozí.)
+.LP
+Nápady a hlášení chyb v GNU \fBtime\fP posílejte na
+.br
+\fIbug\-utils@prep.ai.mit.edu\fP
+.br
+Prosím uvedte verzi programu \fBtime\fP, kterou získáte spuštěním
+.br
+\fItime \-\-version\fP
+.br
+.\" .SH AUTHORS
+.\" .TP
+.\" .IP "David Keppel"
+.\" Original version
+.\" .IP "David MacKenzie"
+.\" POSIXization, autoconfiscation, GNU getoptization,
+.\" documentation, other bug fixes and improvements.
+.\" .IP "Arne Henrik Juul"
+.\" Helped with portability
+.\" .IP "Francois Pinard"
+.\" Helped with portability
+a operační systém a použitý překladač C.
+.SH "DALŠÍ INFORMACE"
+\fBtcsh\fP(1), \fBtimes\fP(2), \fBwait3\fP(2)
+.SH TIRÁŽ
+Tato stránka je součástí projektu Linux \fIman\-pages\fP.  Popis projektu a
+informace o hlášení chyb najdete na http://www.kernel.org/doc/man\-pages/.

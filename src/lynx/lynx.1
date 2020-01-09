@@ -1,0 +1,965 @@
+.nr N -1
+.nr D 5
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH LYNX 1 local  
+.SH JMÉNO
+lynx \- prohlížeč pro World Wide Web
+.SH POUŽITÍ
+\fBlynx\fP [volby] [cesta nebo URL]
+.PP
+"lynx \-help" zobrazí úplný seznam dostupných voleb.
+.SH POPIS
+.\" This defines appropriate quote strings for nroff and troff
+.ds lq "
+.ds rq "
+.if t .ds lq ``
+.if t .ds rq ''
+.\" Just in case these number registers aren't set yet...
+.if \nN==0 .nr N 10
+.if \nD==0 .nr D 5
+.hy 0
+\fILynx\fP je plnohodnotný klient pro World Wide Web (WWW) pro uživatele
+používající textová zobrazovací zařízení s adresovatelným kurzorem
+(například terminály vt100, jejich emulátory pro PC či Mac, nebo
+cokoliv
+jiného "curses\-orientovaného"). Zobrazuje dokumenty ve formátu HTML s
+odkazy
+na soubory na lokálním systému, stejně jako soubory na vzdálených
+systémech
+s Gopher, HTTP, FTP, WAIS nebo NNTP serverem. Současné verze \fILynxu\fP
+existují pro Unix, VMS, Windows 95/NT, 386DOS a OS/2 EMX.
+.PP
+\fILynx\fP může být používán k přístupu k informacím na WWW nebo
+k vytváření informačních systémů zaměřených na lokální
+provoz. \fILynx\fP byl například použit k vybudování několika
+univerzitních informačních systémů
+(CWIS \- Campus Wide Information Systems). \fILynx\fP může být použit na
+vybudování systémů izolovaných na samostatné lokální síti.
+.SH VOLBY
+Po spuštění \fILynx\fP načte lokální soubor nebo vzdálené URL zadané
+na příkazové řádce. Nápovědu v používání URL získáte takto:
+stiskněte \fB"?"\fP nebo \fB"H"\fP když máte \fILynx\fP spuštěný. Pak
+následujte link s názvem "Help on URLs."
+
+\fILynx\fP používá pouze dlouhé názvy voleb. Názvy voleb mohou začínat
+i dvěmi pomlčkami, případně lze zaměnit pomlčku za podtržítko
+(níže uvádíme volby s jednou pomlčkou a podtržítky)
+.PP
+.TP 
+\fB\-\fP
+Pokud je '\-' zadáno jako jediný argument, Lynx očekává volby na
+standardním vstupu. To dovoluje použít potenciálně velmi dlouhý
+příkaz, který se
+využije například s volbami \fB\-get_data\fP nebo \fB\-post_data\fP (viz
+níže). Také se to používá, aby nebyly citlivé informace na
+příkazovém řádku (tj. na většině systémů viditelné ostatními
+procesy), zvlášť pokud jsou použíty volby \fB\-auth\fP nebo \fB\-pauth\fP.
+.TP 
+\fB\-accept_all_cookies\fP
+akceptuje všechny cookies
+.TP 
+\fB\-anonymous\fP
+aplikuje omezení pro anonymní účet; viz též \fB\-restrictions\fP.
+.TP 
+\fB\-assume_charset\fP=\fInázevMIME\fP
+znaková sada pro dokumenty, které ji nespecifikují.
+.TP 
+\fB\-assume_local_charset\fP=\fInázevMIME\fP
+znaková sada pro lokální soubory.
+.TP 
+\fB\-assume_unrec_charset\fP=\fInázevMIME\fP
+znaková sada pro dokumenty, kde nebyla rozpoznána.
+.TP 
+\fB\-auth\fP=\fIID\fP:\fIHESLO\fP
+nastavuje ověřovací identitu a heslo pro chráněné dokumenty
+načítané při spuštění. Dobře zabezpečte skripty používající
+tuto volbu.
+.TP 
+\fB\-base\fP
+Na začátek HTML výstupů při použití volby \fB\-source\fP přidá
+komentář o požadovaném URL a BASE tag.
+.TP 
+\fB\-bibp\fP=\fIURL\fP
+adresa lokálního bibp serveru (výchozí hodnota http://bibhost/).
+.TP 
+\fB\-blink\fP
+v barevném režimu, je\-li dostupný a podporovaný terminálem, vynutí
+intenzivní barvy pozadí. Platí pro knihovnu \fBslang\fP (tj. pro nové
+emulátory terminálů) nebo pro OS/2 EMX s \fBncurses\fP.
+.TP 
+\fB\-book\fP
+použije stránku se záložkami jako počáteční. Implicitní
+počáteční stránka nebo stránka uvedená na příkazovém řádku je
+stále nastavena jako hlavní stránka (pro příkaz "na hlavní stránku")
+a bude použita, pokud je stránka se záložkami nepřístupná nebo
+prázdná.
+.TP 
+\fB\-buried_news\fP
+zapíná prohledávání článků v diskusních skupinách pro skryté
+odkazy a mění je na odkazy v diskusní skupině. Tato volba není
+doporučena, protože e\-mailové adresy uzavřené do lomených závorek
+budou převedeny na falešné odkazy ve skupině a zprávy kódované
+pomocí uuencode mohou být zničeny.
+.TP 
+\fB\-cache\fP=\fIPOČET\fP
+nastavuje POČET dokumentů udržovaných v cache (výchozí hodnota je 10).
+.TP 
+\fB\-case\fP
+prohledávání řetězců rozlišuje malá a velká písmena.
+.TP 
+\fB\-center\fP
+Zapne zarovnání na střed pro HTML TABLE.
+.TP 
+\fB\-cfg\fP=\fISOUBOR\fP
+použije konfigurační SOUBOR místo implicitního lynx.cfg.
+.TP 
+\fB\-child\fP
+skončí při stisku levé šipky na počátečním souboru a zakáže
+ukládání na disk.
+.TP 
+\fB\-cmd_log\fP=\fISOUBOR\fP
+zapisuje stisknuté klávesy a související informace do určeného
+souboru.
+.TP 
+\fB\-cmd_script\fP=\fIFILENAME\fP
+read keystroke commands from the specified file.  You can use the data
+written using the \fB\-cmd_log\fP option.  Lynx will ignore other information
+which the command\-logging may have written to the logfile.  Each line of the
+command script contains either a comment beginning with "#", or a keyword:
+.RS 5
+.TP  5
+exit
+causes the script to stop, and forces lynx to exit immediately.
+.TP  5
+key
+the character value, in printable form.  Cursor and other special keys are
+given as names, e.g., "Down Arrow".  Printable 7\-bit ASCII codes are given
+as\-is, and hexadecimal values represent other 8\-bit codes.
+.TP  5
+set
+followed by a "name=value" allows one to override values set in the lynx.cfg
+file.
+.RE
+.TP 
+\fB\-color\fP
+forces color mode on, if available.  Default color control sequences which
+work for many terminal types are assumed if the terminal capability
+description does not specify how to handle color.  Lynx needs to be compiled
+with the \fBslang\fP library for this flag, it is equivalent to setting the
+\fBCOLORTERM\fP environment variable.  (If color support is instead provided by
+a color\-capable curses library like \fBncurses\fP, Lynx relies completely on
+the terminal description to determine whether color mode is possible, and
+this flag is not needed and thus unavailable.)  A saved show_color=always
+setting found in a .lynxrc file at startup has the same effect.  A saved
+show_color=never found in .lynxrc on startup is overridden by this flag.
+.TP 
+\fB\-connect_timeout\fP=\fIN\fP
+Sets the connection timeout, where N is given in seconds.
+.TP 
+\fB\-cookie_file\fP=\fIFILENAME\fP
+specifies a file to use to read cookies.  If none is specified, the default
+value is ~/.lynx_cookies for most systems, but ~/cookies for MS\-DOS.
+.TP 
+\fB\-cookie_save_file\fP=\fIFILENAME\fP
+specifies a file to use to store cookies.  If none is specified, the value
+given by \fB\-cookie_file\fP is used.
+.TP 
+\fB\-cookies\fP
+zapíná reakci na hlavičky Set\-Cookie.
+.TP 
+\fB\-core\fP
+toggles forced core dumps on fatal errors.  Turn this option off to ask lynx
+to force a core dump if a fatal error occurs.
+.TP 
+\fB\-crawl\fP
+pokud je navíc zadáno \fB\-traversal\fP , uloží každou stránku do
+souboru. Spolu s  \fB\-dump\fP formátuje výstup jako \fB\-traversal\fP, ale na
+standardní výstup.
+.TP 
+\fB\-curses_pads\fP
+toggles the use of curses "pad" feature which supports left/right scrolling
+of the display.
+.TP 
+\fB\-debug_partial\fP
+separate incremental display stages with MessageSecs delay
+.TP 
+\fB\-delay\fP
+add DebugSecs delay after each progress\-message
+.TP 
+\fB\-display\fP=\fIDISPLAY\fP
+nastaví proměnnou DISPLAY pro vzdáleně spouštěné X programy.
+.TP 
+\fB\-display_charset\fP=\fIMIMEname\fP
+set the charset for the terminal output.
+.TP 
+\fB\-dont_wrap_pre\fP
+inhibit wrapping of text in <pre> when \fB\-dump\fP'ing and
+\fB\-crawl\fP'ing, mark wrapped lines in interactive session.
+.TP 
+\fB\-dump\fP
+vypíše formátovaný výstup implicitního nebo zadaného dokumentu na
+standardní výstup. Používá se tímto způsobem:
+.sp
+lynx \fB\-dump\fP http://www.subir.com/lynx.html
+.TP 
+\fB\-editor\fP=\fIEDITOR\fP
+povolí externí EDITOR (vi, ed, emacs, atd.)
+.TP 
+\fB\-emacskeys\fP
+zapíná pohyb klávesami jako v editoru emacs.
+.TP 
+\fB\-enable_scrollback\fP
+zapíná chování kompatibilní se scrollovacími klávesami
+komunikačních programů (může být nekompatibilní s některými verzemi
+curses).
+.TP 
+\fB\-error_file\fP=\fISOUBOR\fP
+specifikuje SOUBOR, kam bude Lynx ukládat přístupové kódy HTTP.
+.TP 
+\fB\-exec\fP
+enable local program execution (normally not configured).
+.TP 
+\fB\-fileversions\fP
+zahrne všechny verze souborů ve výpisu adresáře lokálního systému
+VMS.
+.TP 
+\fB\-find_leaks\fP
+toggle memory leak\-checking.  Normally this is not compiled\-into your
+executable, but when it is, it can be disabled for a session.
+.TP 
+\fB\-force_empty_hrefless_a\fP
+force HREF\-less 'A' elements to be empty (close them as soon as they are
+seen).
+.TP 
+\fB\-force_html\fP
+počáteční soubor bude interpretován jako HTML dokument.
+.TP 
+\fB\-force_secure\fP
+toggles forcing of the secure flag for SSL cookies.
+.TP 
+\fB\-forms_options\fP
+toggles whether the Options Menu is key\-based or form\-based.
+.TP 
+\fB\-from\fP
+zapíná přenos hlaviček From.
+.TP 
+\fB\-ftp\fP
+zakazuje přístup k ftp.
+.TP 
+\fB\-get_data\fP
+korektně formátovaná data pro formulář get jsou čtena ze standardního
+vstupu a předávána formuláři. Vstup je ukončen řádkou začínající
+na  '\-\-\-'.
+.TP 
+\fB\-head\fP
+posílá požadavek HEAD pro získání hlaviček MIME.
+.TP 
+\fB\-help\fP
+vypíše hlášení o syntaxi příkazu Lynx.
+.TP 
+\fB\-hiddenlinks=[option]\fP
+control the display of hidden links.
+
+\fImerge\fP hidden links show up as bracketed numbers and are numbered together
+with other links in the sequence of their occurrence in the document.
+
+\fIlistonly\fP hidden links are shown only on L)ist screens and listings
+generated by \fI\-dump\fP or from the P)rint menu, but appear separately at the
+end of those lists.  This is the default behavior.
+
+\fIignore\fP hidden links do not appear even in listings.
+.TP 
+\fB\-historical\fP
+přepíná používání '>' a '\-\->' jako zakončení komentářů.
+.TP 
+\fB\-homepage\fP=\fIURL\fP
+nastaví domovskou stránku různou od počáteční stránky.
+.TP 
+\fB\-image_links\fP
+zapíná vložení odkazů pro všechny obrázky.
+.TP 
+\fB\-index\fP=\fIURL\fP
+nastavuje uvedené URL jako implicitní indexový soubor.
+.TP 
+\fB\-ismap\fP
+toggles inclusion of ISMAP links when client\-side MAPs are present.
+.TP 
+\fB\-justify\fP
+do justification of text.
+.TP 
+\fB\-link\fP=\fIČÍSLO\fP
+udává první ČÍSLO, které bude použito pro soubory lnk#.dat z výstupu
+volby \fB\-crawl\fP.
+.TP 
+\fB\-localhost\fP
+zneplatní URL, která ukazují na vzdálené počítače.
+.TP 
+\fB\-locexec\fP
+povolí pouze provádění programů z lokálních souborů (pokud bylo
+povoleno při kompilaci).
+.TP 
+\fB\-lss\fP=\fIFILENAME\fP
+specify filename containing color\-style information.  The default is
+lynx.lss.
+.TP 
+\fB\-mime_header\fP
+zobrazí MIME hlavičku  stahovaného dokumentu spolu s jeho zdrojovým
+textem.
+.TP 
+\fB\-minimal\fP
+přepíná parsing minimálních/platných komentářů.
+.TP 
+\fB\-nested_tables\fP
+toggles nested\-tables logic (for debugging).
+.TP 
+\fB\-newschunksize\fP=\fIPOČET\fP
+počet hlaviček článků ve výpisu diskusních skupin.
+.TP 
+\fB\-newsmaxchunk\fP=\fIPOČET\fP
+maximální počet článků ve výpisech před shluknutím.
+.TP 
+\fB\-nobold\fP
+disable bold video\-attribute.
+.TP 
+\fB\-nobrowse\fP
+zakáže prohlížení adresářů.
+.TP 
+\fB\-nocc\fP
+disable Cc: prompts for self copies of mailings.  Note that this does not
+disable any CCs which are incorporated within a mailto URL or form ACTION.
+.TP 
+\fB\-nocolor\fP
+force color mode off, overriding terminal capabilities and any \-color flags,
+COLORTERM variable, and saved .lynxrc settings.
+.TP 
+\fB\-noexec\fP
+zakáže provádění lokálních programů. (Implicitně zapnuto)
+.TP 
+\fB\-nofilereferer\fP
+vypne přenos Referer hlaviček pro souborová URL.
+.TP 
+\fB\-nolist\fP
+vypíná seznam linků v dumpech.
+.TP 
+\fB\-nolog\fP
+zakáže posílání chybových zpráv vlastníkům dokumentů.
+.TP 
+\fB\-nonrestarting_sigwinch\fP
+This flag is not available on all systems, Lynx needs to be compiled with
+HAVE_SIGACTION defined.  If available, this flag \fImay\fP cause Lynx to react
+more immediately to window changes when run within an \fBxterm\fP.
+.TP 
+\fB\-nopause\fP
+vypíná vynucená čekání na hlášení na stavové řádce.
+.TP 
+\fB\-noprint\fP
+zakáže tiskové funkce.
+.TP 
+\fB\-noredir\fP
+chrání před automatickým přesměrováním prohlížeče;  místo něj
+vypíše hlášení s odkazem na nové URL.
+.TP 
+\fB\-noreferer\fP
+vypne přenos Referer hlaviček.
+.TP 
+\fB\-noreverse\fP
+disable reverse video\-attribute.
+.TP 
+\fB\-nosocks\fP
+vypíná používání SOCKS proxy u Lynxu s podporou SOCKS.
+.TP 
+\fB\-nostatus\fP
+zakáže stahování hlášení o stavu.
+.TP 
+\fB\-nounderline\fP
+disable underline video\-attribute.
+.TP 
+\fB\-number_fields\fP
+force numbering of links as well as form input fields
+.TP 
+\fB\-number_links\fP
+zapíná číslování řádek.
+.TP 
+\fB\-partial\fP
+toggles display partial pages while loading.
+.TP 
+\fB\-partial_thres\fP=\fINUMBER\fP
+number of lines to render before repainting display with partial\-display
+logic
+.TP 
+\fB\-pauth\fP=\fIID\fP:\fIPASSWD\fP
+set authorization ID and password for a protected proxy server at startup.
+Be sure to protect any script files which use this switch.
+.TP 
+\fB\-popup\fP
+přepíná zobrazování jednovýběrových voleb SELECT \- buď jako  popup
+okna, nebo jako sady rádiových knoflíků.
+.TP 
+\fB\-post_data\fP
+korektně formátovaná data pro formulář post jsou čtena ze
+standardního vstupu a předávána formuláři. Vstup je ukončen řádkou
+začínající na  '\-\-\-'.
+.TP 
+\fB\-preparsed\fP
+show HTML source preparsed and reformatted when used with \fB\-source\fP or in
+source view.
+.TP 
+\fB\-prettysrc\fP
+show HTML source view with lexical elements and tags in color.
+.TP 
+\fB\-print\fP
+zapíná funkce pro tisk (standardně zapnuto).
+.TP 
+\fB\-pseudo_inlines\fP
+zobrazuje pseudo\-popisy pro vložené obrázky bez popisu (ALT).
+.TP 
+\fB\-raw\fP
+zapíná implicitní nastavení přenosu 8\-bitových znaků nebo módu CJK
+pro kódování počátečního dokumentu.
+.TP 
+\fB\-realm\fP
+povoluje přístup jen k URL uvedeným na příkazovém řádku.
+.TP 
+\fB\-reload\fP
+při načítání (pouze prvního) dokumentu nepoužije proxy server.
+.TP 
+\fB\-restrictions\fP=\fI[volba][,volba][,volba]...\fP
+nastavuje seznam omezení služeb. Následující seznam se vypíše,
+pokud nejsou zadány žádné volby.
+
+\fIall\fP \- omezuje všechny níže uvedené volby.
+
+\fIbookmark\fP \- zakazuje měnit umístění souboru s bookmarky.
+
+\fIbookmark_exec\fP \- zakazuje spouštět programy přes soubor s bookmarky.
+
+\fIchange_exec_perms\fP \- zakazuje měnit přístupová práva pro spouštění
+souborů ( u adresářů je však stále povoleno ), pokud je povolena
+správa lokálních souborů.
+
+\fIdefault\fP \- stejné jako volba \fB\-anonymous\fP na příkazovém
+řádku. Zakazuje implicitní služby pro anonymní uživatele. Nyní
+nastaveno na vše kromě: inside_telnet, outside_telnet, inside_ftp,
+outside_ftp, inside_rlogin, outside_rlogin, inside_news, outside_news,
+telnet_port, jump, mail, print, exec a goto. Implicitní hodnoty
+se dají nastavit v userdefs.h.
+
+\fIdired_support\fP \- zakazuje správu lokálních souborů.
+
+\fIdisk_save\fP \- zakazuje stahování binárních souborů na disk v menu
+Download a print.
+
+\fIdotfiles\fP \- disallow access to, or creation of, hidden (dot) files.
+
+\fIdownload\fP \- zakazuje stahování souborů v menu Download.
+
+\fIeditor\fP \- zakazuje editaci externím editorem.
+
+\fIexec\fP \- zakazuje provádění skriptů.
+
+\fIexec_frozen\fP \- nedovoluje uživateli změny ve volbě local execution.
+
+\fIexternals\fP \- disallow some "EXTERNAL" configuration lines if support for
+passing URLs to external applications (with the EXTERN command) is compiled
+in.
+
+\fIfile_url\fP \- zakazuje používání G)oto , bookmarků, nebo odkazů ze
+vzdálených dokumentů pro lokální soubory.
+
+\fIgoto\fP \- zakáže používat příkaz "g" (goto = jdi na).
+
+\fIinside_ftp\fP \- zakáže používat ftp pro uživatele přistupující z
+vaší domény (potřebuje utmp pro rozlišování).
+
+\fIinside_news\fP \- zakáže posílat příspěvky do USENETu (news) pro
+uživatele přistupující z vaší domény (potřebuje utmp pro
+rozlišování).
+
+\fIinside_rlogin\fP \- zakáže rlogin pro uživatele přistupující z vaší
+domény (potřebuje utmp pro rozlišování).
+
+\fIinside_telnet\fP \- zakáže telnet pro uživatele přistupující z vaší
+domény (potřebuje utmp pro rozlišování).
+
+\fIjump\fP \- zakáže používat příkaz "j" (jump = skok).
+
+\fImultibook\fP \- nedovolí používat více bookmarkových souborů.
+
+\fImail\fP \- zakáže posílání mailů.
+
+\fInews_post\fP \- zakáže posílat příspěvky do USENETu (news).
+
+\fIoptions_save\fP \- znemožní ukládat nastavení do souboru .lynxrc.
+
+\fIoutside_ftp\fP \- zakáže používat ftp pro uživatele přistupující z
+vnějších domén (potřebuje utmp pro rozlišování).
+
+\fIoutside_news\fP \- zakáže posílat příspěvky do USENETu (news) pro
+uživatele přistupující z vnějších domén (potřebuje utmp pro
+rozlišování). Toto omezení platí pro adresy "news", "nntp", "newspost"
+a "newsreply", ale nikoliv pro "snews", "snewspost" nebo "snewsreply",
+jsou\-li podporovány.
+
+\fIoutside_rlogin\fP \- zakáže rlogin pro uživatele přistupující z
+vnějších domén (potřebuje utmp pro rozlišování).
+
+\fIoutside_telnet\fP \- zakáže telnet pro uživatele přistupující z
+vnějších domén (potřebuje utmp pro rozlišování).
+
+\fIprint\fP \- zakáže většinu tiskových funkcí.
+
+\fIshell\fP \- zakáže shellové escape sekvence a spouštění programů
+(lynxexec, lynxprog ) .
+
+\fIsuspend\fP \- zakáže pozastavení (pomocí CTRL\-Z) a následný návrat do
+shellu.
+
+\fItelnet_port\fP \- nedovolí uvést port u telnetu.
+
+\fIuseragent\fP \- zakáže modifikaci hlavičky User\-Agent.
+
+.TP 
+\fB\-resubmit_posts\fP
+přinutí znovuodeslat formulář metodou POST, pokud dokument, který byl
+navrácen je požadován příkazem PREV_DOC, nebo pomocí seznamu historie.
+.TP 
+\fB\-rlogin\fP
+vypíná rozpoznávání rlogin příkazů.
+.TP 
+\fB\-scrollbar\fP
+toggles showing scrollbar.
+.TP 
+\fB\-scrollbar_arrow\fP
+toggles showing arrows at ends of the scrollbar.
+.TP 
+\fB\-selective\fP
+vyžaduje .www_browsable soubor pro prohlížení adresářů.
+.TP 
+\fB\-short_url\fP
+show very long URLs in the status line with "..." to represent the portion
+which cannot be displayed.  The beginning and end of the URL are displayed,
+rather than suppressing the end.
+.TP 
+\fB\-show_cursor\fP
+Pokud je povoleno, kurzor nebude skryt v pravém horním rohu, namísto toho
+bude umístěn na počátku právě vybraného odkazu. show_cursor je
+standardní nastavení pro systémy, které nemají FANCY_CURSES, toto
+může být změněno v userdefs.h nebo v lynx.cfg. Přepínač na
+příkazové řádce přepíná implicitní
+nastavení.
+.TP 
+\fB\-show_rate\fP
+If enabled the transfer rate is shown in bytes/second.  If disabled, no
+transfer rate is shown.  Use lynx.cfg or the options menu to select
+KB/second and/or ETA.
+.TP 
+\fB\-soft_dquotes\fP
+toggles emulation of the old Netscape and Mosaic bug which treated '>'
+as a co\-terminator for double\-quotes and tags.
+.TP 
+\fB\-source\fP
+chová se stejně jako dump, ale výstup je zdrojový HTML text namísto
+formátovaného textu.
+.TP 
+\fB\-stack_dump\fP
+disable SIGINT cleanup handler
+.TP 
+\fB\-startfile_ok\fP
+počáteční soubor nemusí být stahován přes HTTP (i při použití
+volby
+\fB\-validate\fP).
+.TP 
+\fB\-stdin\fP
+read the startfile from standard input (UNIX only).
+.TP 
+\fB\-syslog\fP=\fItext\fP
+information for syslog call.
+.TP 
+\fB\-tagsoup\fP
+initialize parser, using Tag Soup DTD rather than SortaSGML.
+.TP 
+\fB\-telnet\fP
+vypne rozpoznávání příkazů pro telnet.
+.TP 
+\fB\-term\fP=\fITERM\fP
+řekne Lynxu, jaký typ terminálu má používat. (Může se hodit, pokud
+se Lynx například připojí ke vzdálenému TCP/IP portu, který spustí
+skript, který spustí další Lynx).
+.TP 
+\fB\-timeout\fP=\fIN\fP
+For win32, sets the network read\-timeout, where N is given in seconds.
+.TP 
+\fB\-tlog\fP
+toggles between using a Lynx Trace Log and stderr for trace output from the
+session.
+.TP 
+\fB\-tna\fP
+turns on "Textfields Need Activation" mode.
+.TP 
+\fB\-trace\fP
+zapíná WWW trasování. \-tlog určí, kam je výstup ukládán.
+.TP 
+\fB\-trace_mask\fP=\fIvalue\fP
+turn on optional traces, which may result in very large trace files.
+Logically OR the values to combine options:
+.br
+1=SGML character parsing states
+.br
+2=color\-style
+.br
+4=TRST (table layout)
+.br
+8=config (lynx.cfg and .lynxrc contents)
+.br
+16=binary string copy/append, used in form data construction.
+.TP 
+\fB\-traversal\fP
+prolézá všechny HTTP odkazy odvozené z počátečního souboru. Pokud je
+použito společně s \-crawl, každý odkaz, který začíná stejným
+řetězcem jako počáteční soubor, je zapsán do souboru, který se
+může použít jako index. Více informací viz CRAWL.announce.
+.TP 
+\fBtrim_input_fields\fP
+trim input text/textarea fields in forms.
+.TP 
+\fB\-underline_links\fP
+toggles use of underline/bold attribute for links.
+.TP 
+\fB\-underscore\fP
+zapíná používání _podtržítkového_ formátu ve výpisu.
+.TP 
+\fB\-use_mouse\fP
+turn on mouse support, if available.  Clicking the left mouse button on a
+link traverses it.  Clicking the right mouse button pops back.  Click on the
+top line to scroll up.  Click on the bottom line to scroll down.  The first
+few positions in the top and bottom line may invoke additional functions.
+Lynx must be compiled with \fBncurses\fP or \fBslang\fP to support this feature.
+If \fBncurses\fP is used, clicking the middle mouse button pops up a simple
+menu.  Mouse clicks may only work reliably while Lynx is idle waiting for
+input.
+.TP 
+\fB\-useragent=Name\fP
+set alternate Lynx User\-Agent header.
+.TP 
+\fB\-validate\fP
+přijímá pouze HTTP URL (pro ověřování platnosti). Kompletní
+bezpečnostní omezení jsou také implementovány.
+.TP 
+\fB\-verbose\fP
+toggle [LINK], [IMAGE] and [INLINE] comments with filenames of these images.
+.TP 
+\fB\-version\fP
+vytiskne číslo verze.
+.TP 
+\fB\-vikeys\fP
+zapíná pohyb klávesami jako v editoru vi.
+.TP 
+\fB\-wdebug\fP
+enable Waterloo tcp/ip packet debug (print to watt debugfile).  This applies
+only to DOS versions compiled with WATTCP or WATT\-32.
+.TP 
+\fB\-width\fP=\fINUMBER\fP
+number of columns for formatting of dumps, default is 80.
+.TP 
+\fB\-with_backspaces\fP
+emit backspaces in output if \fB\-dump\fP'ing or \fB\-crawl\fP'ing (like 'man' does)
+.SH PŘÍKAZY
+o Klávesy \fBŠipka nahoru\fP a \fBŠipka dolů\fP skáčí po hypertextových
+odkazech.
+.br
+o Klávesy \fBŠipka vpravo\fP nebo \fBEnter\fP sledují vybraný hypertextový
+odkaz.
+.br
+o Klávesa \fBŠipka vlevo\fP vrací o dokument zpět.
+.br
+o Nápovědu a popis kláves získáte po stisknutí \fB"h"\fP nebo \fB"?"\fP.
+.br
+o Type \fB"K"\fP for a complete list of the current key\-stroke command
+mappings.
+.SH PROSTŘEDÍ
+In addition to various "standard" environment variables such as \fBHOME\fP,
+\fBPATH\fP, \fBUSER\fP, \fBDISPLAY\fP, \fBTMPDIR\fP, \fBetc\fP, \fILynx\fP utilizes several
+Lynx\-specific environment variables, if they exist.
+.PP
+Others may be created or modified by \fILynx\fP to pass data to an external
+program, or for other reasons.  These are listed separately below.
+.PP
+See also the sections on \fBSIMULATED CGI SUPPORT\fP and \fBNATIVE LANGUAGE
+SUPPORT\fP, below.
+.PP
+Note: Not all environment variables apply to all types of platforms
+supported by \fILynx\fP, though most do.  Feedback on platform dependencies is
+solicited.
+.PP
+Environment Variables Used By \fILynx\fP:
+.TP  20
+\fBCOLORTERM\fP
+If set, color capability for the terminal is forced on at startup time.  The
+actual value assigned to the variable is ignored.  This variable is only
+meaningful if \fILynx\fP was built using the \fBslang\fP screen\-handling library.
+.TP  20
+\fBLYNX_CFG\fP
+This variable, if set, will override the default location and name of the
+global configuration file (normally, \fBlynx.cfg\fP) that was defined by the
+LYNX_CFG_FILE constant in the userdefs.h file, during installation.  See the
+userdefs.h file for more information.
+.TP  20
+\fBLYNX_LOCALEDIR\fP
+If set, this variable overrides the compiled\-in location of the locale
+directory which contains native language (NLS) message text.
+.TP  20
+\fBLYNX_LSS\fP
+This variable, if set, specifies the location of the default \fILynx\fP
+character style sheet file.  [Currently only meaningful if \fILynx\fP was built
+using experimental color style support.]
+.TP  20
+\fBLYNX_SAVE_SPACE\fP
+This variable, if set, will override the default path prefix for files saved
+to disk that is defined in the \fBlynx.cfg SAVE_SPACE:\fP statement.  See the
+\fBlynx.cfg\fP file for more information.
+.TP  20
+\fBLYNX_TEMP_SPACE\fP
+This variable, if set, will override the default path prefix for temporary
+files that was defined during installation, as well as any value that may be
+assigned to the \fBTMPDIR\fP variable.
+.TP  20
+\fBMAIL\fP
+This variable specifies the default inbox \fILynx\fP will check for new mail,
+if such checking is enabled in the \fBlynx.cfg\fP file.
+.TP  20
+\fBNEWS_ORGANIZATION\fP
+This variable, if set, provides the string used in the \fBOrganization:\fP
+header of \fBUSENET\fP news postings.  It will override the setting of the
+ORGANIZATION environment variable, if it is also set (and, on \fBUNIX\fP, the
+contents of an /etc/organization file, if present).
+.TP  20
+\fBNNTPSERVER\fP
+If set, this variable specifies the default NNTP server that will be used
+for \fBUSENET\fP news reading and posting with \fILynx\fP, via news: URL's.
+.TP  20
+\fBORGANIZATION\fP
+This variable, if set, provides the string used in the \fBOrganization:\fP
+header of \fBUSENET\fP news postings.  On \fBUNIX\fP, it will override the
+contents of an /etc/organization file, if present.
+.TP  20
+\fBPROTOCOL_proxy\fP
+\fILynx\fP supports the use of proxy servers that can act as firewall gateways
+and caching servers.  They are preferable to the older gateway servers (see
+WWW_access_GATEWAY, below).  Each protocol used by \fILynx\fP, (http, ftp,
+gopher, etc), can be mapped separately by setting environment variables of
+the form PROTOCOL_proxy (literally: http_proxy, ftp_proxy, gopher_proxy,
+etc), to "http://some.server.dom:port/".  See \fBLynx Users Guide\fP for
+additional details and examples.
+.TP  20
+\fBSSL_CERT_DIR\fP
+Set to the directory containing trusted certificates.
+.TP  20
+\fBSSL_CERT_FILE\fP
+Set to the full path and filename for your file of trusted certificates.
+.TP  20
+\fBWWW_access_GATEWAY\fP
+\fILynx\fP still supports use of gateway servers, with the servers specified
+via "WWW_access_GATEWAY" variables (where "access" is lower case and can be
+"http", "ftp", "gopher" or "wais"), however most gateway servers have been
+discontinued.  Note that you do not include a terminal '/' for gateways, but
+do for proxies specified by PROTOCOL_proxy environment variables.  See
+\fBLynx Users Guide\fP for details.
+.TP  20
+\fBWWW_HOME\fP
+This variable, if set, will override the default startup URL specified in
+any of the \fILynx\fP configuration files.
+.PP
+Environment Variables \fBSet\fP or \fBModified\fP By \fILynx\fP:
+.TP  20
+\fBLYNX_PRINT_DATE\fP
+This variable is set by the \fILynx\fP p(rint) function, to the \fBDate:\fP string
+seen in the document's "\fBInformation about\fP" page (= cmd), if any.  It is
+created for use by an external program, as defined in a \fBlynx.cfg PRINTER:\fP
+definition statement.  If the field does not exist for the document, the
+variable is set to a null string under \fBUNIX\fP, or "No Date" under \fBVMS\fP.
+.TP  20
+\fBLYNX_PRINT_LASTMOD\fP
+This variable is set by the \fILynx\fP p(rint) function, to the \fBLast Mod:\fP
+string seen in the document's "\fBInformation about\fP" page (= cmd), if any.
+It is created for use by an external program, as defined in a \fBlynx.cfg
+PRINTER:\fP definition statement.  If the field does not exist for the
+document, the variable is set to a null string under \fBUNIX\fP, or "No
+LastMod" under \fBVMS\fP.
+.TP  20
+\fBLYNX_PRINT_TITLE\fP
+This variable is set by the \fILynx\fP p(rint) function, to the \fBLinkname:\fP
+string seen in the document's "\fBInformation about\fP" page (= cmd), if any.
+It is created for use by an external program, as defined in a \fBlynx.cfg
+PRINTER:\fP definition statement.  If the field does not exist for the
+document, the variable is set to a null string under \fBUNIX\fP, or "No Title"
+under \fBVMS\fP.
+.TP  20
+\fBLYNX_PRINT_URL\fP
+This variable is set by the \fILynx\fP p(rint) function, to the \fBURL:\fP string
+seen in the document's "\fBInformation about\fP" page (= cmd), if any.  It is
+created for use by an external program, as defined in a \fBlynx.cfg PRINTER:\fP
+definition statement.  If the field does not exist for the document, the
+variable is set to a null string under \fBUNIX\fP, or "No URL" under \fBVMS\fP.
+.TP  20
+\fBLYNX_TRACE\fP
+If set, causes \fILynx\fP to write a trace file as if the \fB\-trace\fP option were
+supplied.
+.TP  20
+\fBLYNX_TRACE_FILE\fP
+If set, overrides the compiled\-in name of the trace file, which is either
+Lynx.trace or LY\-TRACE.LOG (the latter on the DOS platform).  The trace file
+is in either case relative to the home directory.
+.TP  20
+\fBLYNX_VERSION\fP
+This variable is always set by \fILynx\fP, and may be used by an external
+program to determine if it was invoked by \fILynx\fP.  See also the comments in
+the distribution's sample \fBmailcap\fP file, for notes on usage in such a
+file.
+.TP  20
+\fBTERM\fP
+Normally, this variable is used by \fILynx\fP to determine the terminal type
+being used to invoke \fILynx\fP.  If, however, it is unset at startup time (or
+has the value "unknown"), or if the \fB\-term\fP command\-line option is used
+(see \fBOPTIONS\fP section above), \fILynx\fP will set or modify its value to the
+user specified terminal type (for the \fILynx\fP execution environment).  Note:
+If set/modified by \fILynx\fP, the values of the \fBLINES\fP and/or \fBCOLUMNS\fP
+environment variables may also be changed.
+.SH "SIMULATED CGI SUPPORT"
+If built with the \fBcgi\-links\fP option enabled, \fILynx\fP allows access to a
+cgi script directly without the need for an http daemon.
+.PP
+When executing such "lynxcgi scripts" (if enabled), the following variables
+may be set for simulating a CGI environment:
+.PP
+\fBCONTENT_LENGTH\fP
+.PP
+\fBCONTENT_TYPE\fP
+.PP
+\fBDOCUMENT_ROOT\fP
+.PP
+\fBHTTP_ACCEPT_CHARSET\fP
+.PP
+\fBHTTP_ACCEPT_LANGUAGE\fP
+.PP
+\fBHTTP_USER_AGENT\fP
+.PP
+\fBPATH_INFO\fP
+.PP
+\fBPATH_TRANSLATED\fP
+.PP
+\fBQUERY_STRING\fP
+.PP
+\fBREMOTE_ADDR\fP
+.PP
+\fBREMOTE_HOST\fP
+.PP
+\fBREQUEST_METHOD\fP
+.PP
+\fBSERVER_SOFTWARE\fP
+.PP
+Other environment variables are not inherited by the script, unless they are
+provided via a LYNXCGI_ENVIRONMENT statement in the configuration file.  See
+the \fBlynx.cfg\fP file, and the (draft) CGI 1.1 Specification
+<http://Web.Golux.Com/coar/cgi/draft\-coar\-cgi\-v11\-00.txt> for the
+definition and usage of these variables.
+.PP
+The CGI Specification, and other associated documentation, should be
+consulted for general information on CGI script programming.
+.SH "NATIVE LANGUAGE SUPPORT"
+If configured and installed with \fBNative Language Support\fP, \fILynx\fP will
+display status and other messages in your local language.  See the file
+\fBABOUT_NLS\fP in the source distribution, or at your local \fBGNU\fP site, for
+more information about internationalization.
+.PP
+The following environment variables may be used to alter default settings:
+.TP  20
+\fBLANG\fP
+This variable, if set, will override the default message language.  It is an
+\fBISO 639\fP two\-letter code identifying the language.  Language codes are
+\fBNOT\fP the same as the country codes given in \fBISO 3166\fP.
+.TP  20
+\fBLANGUAGE\fP
+This variable, if set, will override the default message language.  This is
+a \fBGNU\fP extension that has higher priority for setting the message catalog
+than \fBLANG\fP or \fBLC_ALL\fP.
+.TP  20
+\fBLC_ALL\fP
+and
+.TP  20
+\fBLC_MESSAGES\fP
+These variables, if set, specify the notion of native language formatting
+style.  They are \fBPOSIXly\fP correct.
+.TP  20
+\fBLINGUAS\fP
+This variable, if set prior to configuration, limits the installed languages
+to specific values.  It is a space\-separated list of two\-letter codes.
+Currently, it is hard\-coded to a wish list.
+.TP  20
+\fBNLSPATH\fP
+This variable, if set, is used as the path prefix for message catalogs.
+.SH POZNÁMKY
+Tohle je Lynx verze 2.8.4
+.PP
+Pokud chcete přispět k dalšímu vývoji \fILynx\fPu, přihlašte se do
+naší konference. Pošlete dopis na e\-mailovou adresu
+<majordomo@sig.net> s jedinou řádkou "subscribe lynx\-dev" v těle
+dopisu.
+.PP
+Zašlete hlášení o chybách, vaše připomínky, poznámky a návrhy na
+adresu <lynx\-dev@sig.net> (po přihlášení).
+.PP
+Odhlásíte se posláním e\-mailu na adresu <majordomo@sig.net> with
+"unsubscribe lynx\-dev" s jedinou řádkou "unsubscribe lynx\-dev" v těle
+dopisu. Neposílejte odhlašovací dopisy do vlastní konference (lynx\-dev).
+.SH "DALŠÍ INFORMACE"
+.hy 0
+\fIcatgets\fP(3), \fIcurses\fP(3), \fIenviron\fP(7), \fIexecve\fP(2), \fIftp\fP(1),
+\fIgettext\fP(GNU), \fIlocaleconv\fP(3), \fIncurses\fP(3), \fIsetlocale\fP(3),
+\fIslang\fP(?), \fItermcap\fP(5), \fIterminfo\fP(5), \fIwget\fP(GNU)
+.hy 1
+.PP
+Note that man page availability and section numbering is somewhat platform
+dependent, and may vary from the above references.
+.PP
+A section shown as (GNU), is intended to denote that the topic may be
+available via an info page, instead of a man page (i.e., try "info subject",
+rather than "man subject").
+.PP
+A section shown as (?) denotes that documentation on the topic exists, but
+is not part of an established documentation retrieval system (see the
+distribution files associated with the topic, or contact your System
+Administrator for further information).
+.SH PODĚKOVÁNÍ
+Lynx používá kód z mnoha zdrojů. Nejpůvodnější verze Lynxu
+používala kód Earla Fogela z Computing Services z Univerzity v
+Saskatchewan, který
+implementoval HYPERREZ v prostředí UNIXu. HYPERREZ byl vyvinut Nielem
+Larsonem z think.com a sloužil jako vzor pro rané verze Lynxu. Tyto verze
+také používaly knihovny z UNIXových gopher klientů vyvinutých na
+Univerzitě v Minnesotě, a pozdější verze Lynxu závisejí na kódu z
+knihovny WWW klienta vyvinutého Timem Bernes\-Lee a WWW
+komunitou. Zvláštní dík patří také Foteovi Macridovi, který je
+autorem portu Lynxu na VMS, a který z větší části vyvíjel nebo vývoj
+organizoval od odchodu Lou Montulliho a Garreta Blytheho z Kansaské
+Univerzity v létě 1994 až do současného vydání verze 2.7.2, a
+každému na síti, kdo přispěl k vývoji Lynxu buď přímo (pomocí
+patchů, komentářů, nebo hlášení chyb) nebo nepřímo (inspirací a
+vývojem jiných systémů).
+.SH AUTOŘI
+Lou Montulli, Garrett Blythe, Craig Lavender, Michael Grobe, Charles Rezac
+.br
+Academic Computing Services
+.br
+University of Kansas
+.br
+Lawrence, Kansas 66047
+.PP
+Foteos Macrides
+.br
+Worcester Foundation for Biomedical Research
+.br
+Shrewsbury, Massachusetts 01545

@@ -1,0 +1,40 @@
+.TH BYTEORDER 3  "31. března 1997" "BSD" "Linux - příručka programátora"
+.do hla cs
+.do hpf hyphen.cs
+.SH JMÉNO
+htonl, htons, ntohl, ntohs \- konverze pořadí bajtů mezi počítačovým a
+síťovým
+.SH SYNTAXE
+.nf
+.B #include <netinet/in.h>
+.sp
+.BI "unsigned long int htonl(unsigned long int " hostlong );
+.sp
+.BI "unsigned short int htons(unsigned short int " hostshort );
+.sp
+.BI "unsigned long int ntohl(unsigned long int " netlong );
+.sp
+.BI "unsigned short int ntohs(unsigned short int " netshort );
+.fi
+.SH POPIS
+Funkce \fBhtonl()\fP konvertuje long integer \fIhostlong\fP z počítačového
+pořadí bajtů na síťové.
+.PP
+Funkce \fBhtons()\fP konvertuje short integer \fIhostshort\fP z počítačového
+pořadí bajtů na síťové.
+.PP
+Funkce \fBntohl()\fP konvertuje long integer \fInetlong\fP ze síťového
+pořadí bajtů na počítačové.
+.PP
+Funkce \fBntohs()\fP konvertuje short integer \fInetshort\fP ze síťového
+pořadí bajtů na počítačové.
+.PP
+Na architektuře i80x86 je počítačové pořadí bajtů little endian (Least
+Significant Byte), ale síťové pořadí dat je opačné - MSB (
+Most Significant Byte).
+.SH SPLŇUJE STANDARDY
+BSD 4.3
+.SH DALŠÍ INFORMACE
+.BR gethostbyname "(3), " getservent (3)
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

@@ -1,0 +1,51 @@
+.Id $Id$
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH ATD 8 "březen 1997" local "Linux \- příručka programátora"
+.SH JMÉNO
+atd \- spouští úlohy, které čekají ve frontě na pozdější provedení
+.SH POUŽITÍ
+\fBatd\fP [\fB\-l\fP \fIprům_zátěž\fP] [\fB\-b\fP \fIinterval_dávek\fP] [\fB\-d\fP] [\fB\-s\fP]
+.SH POPIS
+\fBatd\fP spouští úlohy vložené do fronty programem \fBat\fP(1).
+.PP
+.SH VOLBY
+.TP  8
+\fB\-l\fP
+Určuje omezující faktor zátěže, při jehož překročení se nemají
+provádět dávkové úlohy, na jinou hodnotu, než je přednastavená
+0.8. Pro SMP systém s \fIn\fP procesory budete pravděpodobně chtít nastavit
+tuto hodnotu výše než \fIn\-1.\fP
+.TP  8
+\fB\-b\fP
+Určuje minimální interval v sekundách mezi spuštěním dvou dávkových
+úloh (přednastaveno 60).
+.TP  8
+\fB\-d\fP
+Debug; vypisuje chybové zprávy na standardní chybový výstup namísto
+použití \fBsyslog\fP(3).
+.TP  8
+\fB\-s\fP
+Zpracuje frontu programů at/batch pouze jednou.  Toto je hlavně pro
+kompatibilitu se starými verzemi programu \fBat\fP; \fBatd \-s\fP je ekvivalentní
+se starým příkazem \fBatrun\fP.  Skript vyvolávající \fBatd \-s\fP je
+nainstalován jako \fB/usr/sbin/atrun\fP pro zpětnou kompatibilitu.
+.SH VAROVÁNÍ
+\fBatd\fP nebude fungovat, pokud je jeho spool adresář připojen pomocí NFS,
+a to i v případě, že je nastaveno \fIno_root_squash.\fP
+.SH SOUBORY
+\fI/var/spool/cron/atjobs\fP Adresář pro ukládání úloh; měl by mít
+práva 700, vlastník daemon.
+.PP
+\fI/var/spool/cron/atspool\fP Adresář pro ukládání výstupu; měl by mít
+práva 700, vlastník daemon.
+.PP
+\fI/etc/at.allow\fP, \fI/etc/at.deny\fP určují, kdo může používat \fBat\fP.
+.SH "DALŠÍ INFORMACE"
+\fBat\fP(1), \fBatrun\fP(1), \fBcron\fP(8), \fBcrontab\fP(1), \fBsyslog\fP(3),
+\fBat.deny\fP(5), \fBat.allow(5).\fP
+.SH CHYBY
+Funkce \fBatd\fP by měly být zahrnuty do programu \fBcron\fP(8).

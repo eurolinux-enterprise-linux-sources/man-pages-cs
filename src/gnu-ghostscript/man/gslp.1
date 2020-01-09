@@ -1,0 +1,109 @@
+.\" -*- nroff -*-
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH GSLP 1 "9. květen 2005" 8.16 Ghostscript
+.\" $Id: gslp.1,v 1.4 2005/05/09 22:04:37 Arabidopsis Exp $
+.SH JMÉNO
+\fBgslp\fP \- Formátuje a tiskne text za použití ghostscriptu
+.br
+\fBgsbj\fP \- Formátuje a tiskne text pro tiskárnu BubbleJet za použití
+ghostscriptu
+.br
+\fBgsdj\fP \- Formátuje a tiskne text pro tiskárnu DeskJet za použití
+ghostscriptu
+.br
+\fBgsdj500\fP \- Formátuje a tiskne text pro tiskárnu DeskJet 500 za použití
+ghostscriptu
+.br
+\fBgslj\fP \- Formátuje a tiskne text pro tiskárnu LaserJet za použití
+ghostscriptu
+.SH POUŽITÍ
+.na
+\fBgslp \-12BclqRr \-b<hlavička> \-f<font> \-F<hfont>
+\-L<řádky> \-p<výstupní_soubor> \-T<n>
+\-\-add\-to\-space\ <jednotky> \-\-add\-to\-width\ <jednotky>
+\-\-columns\ <n> \-\-detect \-\-first\-page\ <n> \-\-kern\
+<soubor.afm> \-\-last\-page\ <n>
+\-\-(heading|footing)\-(left|center|right)\ <řetězec>
+\-\-margin\-(top|bottom|left|right)\ <palce> \-\-no\-eject\-(file|formfeed)
+\-\-spacing\ <n> [gs\ volby] [soubory]\fP
+.ad
+.br
+\fBgsbj\fP [volby] [soubory]
+.br
+\fBgsdj\fP [volby] [soubory]
+.br
+\fBgsdj500\fP [volby] [soubory]
+.br
+\fBgslj\fP [volby] [soubory]
+.SH POPIS
+Tento nástroj nabízí funkčnost obdobnou k Unixovému programu
+\fBenscript\fP(1).  Vytiskne soubory prostého textu za použití jediného
+fontu.  Momentálně je schopen zpracovat tabelátory a přechody na novou
+stránku (formfeeds), ale neovládá zpětné vymazání znaků
+(backspaces).  Pokud se používá font s pevnou šířkou, provádí
+zalamování řádek.  Provádí také kerning a úpravu šířky (width
+adjustment).
+.PP
+Přednastavená zařízení (\-sDEVICE=) a rozlišení (\-r) jsou:
+.nf
+.na
+            gslp      epson      180
+      gsbj      bj10e      180
+      gsdj      deskjet    300
+      gsdj500   djet500    300
+      gslj      laserjet   300
+
+.ad
+.fi
+Předvoleno je také, že se v hlavičce objeví aktuální datum zarovnané
+na střed.
+.SH VOLBY
+.IP "Standartní implementované přepínače:"
+\-12BclqRr \-b<hlavička> \-f<font> \-F<hfont>
+\-L<řádky> \-p<výstupní_soubor>
+.IP "Implementované přepínače na platformě Sun:"
+\-T<n>	nastavení šířky tabelátoru
+.IP "Ignorované přepínače:"
+\-GghKkmow \-# \-C \-d \-J \-n \-P \-S \-s \-t \-v
+.IP "Přidané přepínače:"
+.RS
+.IP "\-\-add\-to\-space <jednotky>"
+přidá daný počet 1/72" jednotek k šířce každé mezery (může být i
+záporný)
+.IP "\-\-add\-to\-width <jednotky>"
+přidá daný počet 1/72" jednotek k šířce každého znaku (může být
+i záporný)
+.IP "\-\-columns <n>"
+tiskne v <n> sloupcích
+.IP \-\-detect
+pokud soubor začíná na "%!", zachází se s ním jako se souborem typu
+PostScript
+.IP "\-\-first\-page <n>"
+začne tisknout na straně <n>
+.IP "\-\-kern <soubor.afm>"
+pro kerning se použije informací z daného souboru .AFM
+.IP "\-\-last\-page <n>"
+tisk se ukončí za stranou <n>
+.IP "\-\-(heading|footing)\-(left|center|right) <řetězec>"
+nastavení položek záhlaví/zápatí; nejprve použijte \-B k smazání
+položek
+.IP "\-\-margin\-(top|bottom|left|right) <palce>"
+nastaví odsazení od okrajů
+.IP \-\-no\-eject\-(file|formfeed)
+konec souboru/FF začne pouze nový sloupec, nikoli nový list
+.IP "\-\-spacing <n>"
+použije se dvojité (n=2), trojité (n=3), atd. velikosti mezer
+.RE
+Řetězec %# v záhlaví nebo zápatí bude nahrazen číslem stránky.
+.SH "DALŠÍ INFORMACE"
+gs(1)
+.SH VERZE
+Tento dokument byl naposledy revidován pro Ghostscript verze 8.16.
+.SH AUTOR
+artofcode LLC a Artifex Software, bug\-gs at ghostscript.com, jsou hlavními
+udržovateli programu Ghostscript.  Tuto manuálovou stránku napsal George
+Ferguson.

@@ -1,0 +1,162 @@
+.\" Copyright (c) 1993 Michael Haardt (michael@moria.de),
+.\"   Fri Apr  2 11:32:09 MET DST 1993
+.\" and Andries Brouwer (aeb@cwi.nl), Fri Feb 14 21:47:50 1997.
+.\"
+.\" This is free documentation; you can redistribute it and/or
+.\" modify it under the terms of the GNU General Public License as
+.\" published by the Free Software Foundation; either version 2 of
+.\" the License, or (at your option) any later version.
+.\"
+.\" The GNU General Public License's references to "object code"
+.\" and "executables" are to be interpreted as the output of any
+.\" document formatting or typesetting system, including
+.\" intermediate and printed output.
+.\"
+.\" This manual is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public
+.\" License along with this manual; if not, write to the Free
+.\" Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111,
+.\" USA.
+.\"
+.\" Modified Sun Jul 25 10:45:30 1993 by Rik Faith (faith@cs.unc.edu)
+.\" Modified Sun Jul 21 21:25:26 1996 by Andries Brouwer (aeb@cwi.nl)
+.\" Modified Mon Oct 21 17:47:19 1996 by Eric S. Raymond (esr@thyrsus.com)
+.\" Modified Wed Aug 27 20:28:58 1997 by Nicolás Lichtmaier (nick@debian.org)
+.\" Modified Mon Sep 21 00:00:26 1998 by Andries Brouwer (aeb@cwi.nl)
+.\" Modified Wed Jan 24 06:37:24 2001 by Eric S. Raymond (esr@thyrsus.com)
+.\" Modified Thu Dec 13 23:53:27 2001 by Martin Schulze <joey@infodrom.org>
+.\"
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH ENVIRON 7 2001\-12\-14 Linux "Linux \- příručka programátora"
+.SH JMÉNO
+environ \- uživatelské prostředí
+.SH POUŽITÍ
+.nf
+\fBextern char **\fP\fIenviron\fP\fB;\fP
+.br
+.fi
+.SH POPIS
+Proměnná \fIenviron\fP odkazuje na pole řetězců nazývané "prostředí"
+(environment).  (Tato proměnná musí být deklarována v uživatelském
+programu.  Pouze v případě, že hlavičkové soubory pocházejí z libc4
+nebo libc5, anebo pocházejí z glibc a zároveň je definováno
+\fB_GNU_SOURCE\fP , je proměnná deklarována v hlavičkovém souboru
+\fI<unistd.h>\fP).  Toto pole řetězců je zpřístupněno procesu
+voláním \fBexec\fP(3)  , které spustilo proces. Podle konvence mají tyto
+řetězce tvar "\fIjméno\fP\fB=\fP\fIhodnota\fP". Obvyklé případy:
+.TP 
+\fBUSER\fP
+Jméno přihlášeného uživatele (je používáno některými programy
+odvozenými z BSD).
+.TP 
+\fBLOGNAME\fP
+Jméno přihlášeného uživatele (je používáno některými programy
+odvozenými z System\-V).
+.TP 
+\fBHOME\fP
+Uživatelův domovský adresář, který je nastaven při přihlášení
+programem \fBlogin\fP(1)  ze souboru hesel \fBpasswd\fP(5).
+.TP 
+\fBLANG\fP
+Název locale které má být použito pro kategorie locale, pokud není
+nastaveno \fBLC_ALL\fP nebo konkrétnější proměnné prostředí jako
+\fBLC_COLLATE\fP, \fBLC_CTYPE\fP, \fBLC_MESSAGES\fP, \fBLC_MONETARY\fP, \fBLC_NUMERIC\fP,
+\fBLC_TIME\fP, viz \fBlocale\fP(5).
+.TP 
+\fBPATH\fP
+Seznam adresářů, které \fBsh\fP(1)  a mnoho dalších programů používá
+při hledání souboru u něhož není známa kompletní cesta. Jednotlivé
+adresáře jsou odděleny \(aq\fB:\fP\(aq. (Podobně se \fBCDPATH\fP používá v
+některých shellech k nalezení cíle pro příkaz změny adresáře,
+\fBman\fP(1) používá \fBMANPATH\fP k nalezení manuálových stránek, atd.)
+.TP 
+\fBPWD\fP
+Aktuální pracovní adresář. Nastavují jej některé shelly.
+.TP 
+\fBSHELL\fP
+Cesta k login shellu uživatele.
+.TP 
+\fBTERM\fP
+Typ terminálu, pro který má být připraven výstup.
+.TP 
+\fBPAGER\fP
+Uživatelem preferovaná utilita pro zobrazení textových souborů.
+.TP 
+\fBEDITOR\fP/\fBVISUAL\fP
+.\" .TP
+.\" .B BROWSER
+.\" The user's preferred utility to browse URLs. Sequence of colon-separated
+.\" browser commands. See http://www.catb.org/~esr/BROWSER/ .
+Uživatelem preferovaná utilita pro editování textových souborů.
+.PP
+Další jména mohou být do prostředí umístěna příkazem \fIexport\fP a
+"jméno=hodnota" v \fBsh\fP(1)  nebo příkazem \fIsetenv\fP v \fBcsh\fP(1).
+Argumenty mohou být umístěny do prostředí i při volání funkce
+\fBexec\fP(3).  Program v C může manipulovat svým prostředím pomocí
+funkcí \fBgetenv\fP(3), \fBputenv\fP(3), \fBsetenv\fP(3), a \fBunsetenv\fP(3).
+
+Chování mnoha programů a knihovních rutin je ovlivněno přítomností
+nebo hodnotou určitých proměnných prostředí.  Náhodný výběr:
+.LP
+Proměnné \fBLANG\fP, \fBLANGUAGE\fP, \fBNLSPATH\fP, \fBLOCPATH\fP, \fBLC_ALL\fP,
+\fBLC_MESSAGES\fP, atd. ovlivňují použití locale, srov.  \fBlocale\fP(5).
+.LP
+\fBTMPDIR\fP ovlivňuje prefix cesty u názvů, které vytváří \fBtmpnam\fP(3)
+a jiné rutiny, dočasný adresář, který používá \fBsort\fP(1)  a jiné
+programy, atd.
+.LP
+\fBLD_LIBRARY_PATH\fP, \fBLD_PRELOAD\fP a další LD_* proměnné ovlivňují
+chování dynamického loaderu/linkeru.
+.LP
+\fBPOSIXLY_CORRECT\fP způsobí, že se určité programy a knihovní rutiny
+drží předpisů POSIX.
+.LP
+Chování \fBmalloc\fP(3)  je ovlivněno proměnnými \fBMALLOC_*\fP.
+.LP
+Proměnná \fBHOSTALIASES\fP obsahuje název souboru, který obsahuje aliasy
+pro použití s \fBgethostbyname\fP(3).
+.LP
+\fBTZ\fP a \fBTZDIR\fP obsahují informaci o časové zóně, kterou používá
+\fBtzset\fP(3)  a tím pádem i funkce jako \fBctime\fP(3), \fBlocaltime\fP(3),
+\fBmktime\fP(3), \fBstrftime\fP(3).  Viz též \fBtzselect\fP(8).
+.LP
+\fBTERMCAP\fP obsahuje informaci o možnostech terminálu (nebo název souboru
+obsahujícího tuto informaci).
+.LP
+\fBCOLUMNS\fP a \fBLINES\fP sdělují aplikacím velikost okna, bez ohledu na jeho
+skutečnou velikost.
+.LP
+\fBPRINTER\fP nebo \fBLPDEST\fP mohou určit tiskárnu, která má být
+použita. Viz \fBlpr\fP(1).
+.LP
+Atd.
+.SH CHYBY
+Je zde jasné bezpečností riziko. Mnoho systémových příkazů může
+být svedeno k páchání škody uživatelem, který zadal zvláštní
+hodnoty pro \fBIFS\fP nebo \fBLD_LIBRARY_PATH\fP.
+
+Existuje také riziko kontaminace jmenného prostoru.  Programy jako \fImake\fP
+a \fIautoconf\fP umožňují upřednostnit výchozí názvy utilit prostředí
+podobně pojmenovanými proměnnými zapsanými velkými písmeny.  Takže
+se používá \fBCC\fP pro výběr požadovaného překladače C (a podobně i
+\fBMAKE\fP, \fBAR\fP, \fBAS\fP, \fBFC\fP, \fBLD\fP, \fBLEX\fP, \fBRM\fP, \fBYACC\fP, atd.).
+Nicméně při klasickém použití předává takováto proměnná
+prostředí programu volbu, nikoliv název soboru.  Takže se používá
+\fBMORE\fP, \fBLESS\fP, a \fBGZIP\fP.  Takovéto použití se pokládá za chybu a
+nové programy by se mu měly vyhýbat.  Autoži programu \fIgzip\fP by měli
+zvážit přejmenování volby na \fBGZIP_OPT\fP.
+.SH "DALŠÍ INFORMACE"
+\fBbash\fP(1), \fBcsh\fP(1), \fBlogin\fP(1), \fBsh\fP(1), \fBtcsh\fP(1), \fBexecve\fP(2),
+\fBclearenv\fP(3), \fBexec\fP(3), \fBgetenv\fP(3), \fBputenv\fP(3), \fBsetenv\fP(3),
+\fBunsetenv\fP(3), \fBlocale\fP(5)
+.SH TIRÁŽ
+Tato stránka je součástí projektu Linux \fIman\-pages\fP.  Popis projektu a
+informace o hlášení chyb najdete na http://www.kernel.org/doc/man\-pages/.

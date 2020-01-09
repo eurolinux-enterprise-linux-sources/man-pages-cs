@@ -1,0 +1,220 @@
+.\" Copyright (c) 2002 Andries Brouwer <aeb@cwi.nl>
+.\"
+.\" Permission is granted to make and distribute verbatim copies of this
+.\" manual provided the copyright notice and this permission notice are
+.\" preserved on all copies.
+.\"
+.\" Permission is granted to copy and distribute modified versions of this
+.\" manual under the conditions for verbatim copying, provided that the
+.\" entire resulting derived work is distributed under the terms of a
+.\" permission notice identical to this one.
+.\"
+.\" Since the Linux kernel and libraries are constantly changing, this
+.\" manual page may be incorrect or out-of-date.  The author(s) assume no
+.\" responsibility for errors or omissions, or for damages resulting from
+.\" the use of the information contained herein.  The author(s) may not
+.\" have taken the same level of care in the production of this manual,
+.\" which is licensed free of charge, as they might when working
+.\" professionally.
+.\"
+.\" Formatted or processed versions of this manual, if unaccompanied by
+.\" the source, must acknowledge the copyright and authors of this work.
+.\"
+.\" 2007-10-23 mtk Added intro paragraph about section, plus a paragraph
+.\"     about exit status values.
+.\"
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH INTRO 1 2007\-11\-15 Linux "Linux \- Příručka uživatele"
+.SH JMÉNO
+intro \- Úvod do uživatelských příkazů
+.SH POPIS
+Sekce 1 popisuje uživatelské příkazy a nástroje, např. nástroje pro
+manipulaci se soubory, shelly, kompilátory, webové prohlížeče,
+prohlížeče a editory obrázků a souborů, atd.
+
+Všechny příkazy navracejí při ukončení návratovou hodnotu. Tuto
+hodnotu lze testovat (např. ve většině shellů obsahuje proměnná \fI$?\fP
+návratovou hodnotu naposledy vykonaného příkazu)  a zjistit tak, zda
+příkaz skončil úspěchem.  Je konvencí, že návratová hodnota 0
+znamená úspěch, zatímco nenulová návratová hodnota znamená, že
+příkaz byl neúspěšný.  (Podrobnosti jsou uvedeny v \fBwait\fP(2).)
+nenulová návratová hodnota může být v rozsahu 1 až 255 a některé
+příkazy používají různé hodnoty pro uvedení důvodu selhání
+příkazu.
+.SH POZNÁMKY
+Linux je druh Unixu a všechny uživatelské příkazy na první pohled
+pracují v Unixu stejně jako v Linuxu (a FreeBSD a mnoha dalších
+Unix\-like systémech).
+.LP
+Linux má GUI (graphical user interfaces; grafické uživatelské
+rozhraní), kde se dá ukazovat, klikat a přetahovat a snad i něco udělat
+bez přečtení spousty dokumentace. Tradičním Unixovým prostředím je
+CLI (command line interface; příkazová řádka), kde se vypisují
+příkazy, které říkají počítači, co má dělat. To je rychlejší a
+účinnější, ale nejprve je nutné zjistit, jaké příkazy jsou k
+dispozici.  Níže je uvedeno nezbytné minimum pro začátek.
+.SS Login
+Abyste mohl pracovat, pravděpodobně se nejprve musíte přihlásit
+(login), tj. zadat své uživatelské jméno a heslo. Viz též
+\fBlogin\fP(1).  Program \fIlogin\fP potom spustí \fIshell\fP (interpret
+příkazů).  V případě přihlašování v grafice se objeví obrazovka s
+nabídkami nebo ikonami a shell v okně lze spustit kliknutím myši. Viz
+též \fBxterm\fP(1).
+.SS Shell
+Příkazy se píší \fIshellu\fP, interpretu příkazů. Ten není
+zabudovaný, je to jen program a je možné si zvolit jiný shell. Každý
+má svůj oblíbený.  Standardním shellem je \fIsh\fP.  Viz též \fBash\fP(1),
+\fBbash\fP(1), \fBcsh\fP(1), \fBzsh\fP(1), \fBchsh\fP(1).
+.LP
+Typická relace může vypadat takto:
+
+.RS
+.nf
+\fBknuth login: \fP\fIaeb\fP
+\fBPassword: \fP\fI********\fP
+\fB% \fP\fIdate\fP
+Út Srp  6 23:50:44 CEST 2002
+\fB% \fP\fIcal\fP
+     Srpen 2002
+Ne Po Út St Čt Pá So
+             1  2  3
+ 4  5  6  7  8  9 10
+11 12 13 14 15 16 17
+18 19 20 21 22 23 24
+25 26 27 28 29 30 31
+
+
+\fB% \fP\fIls\fP
+bin  tel
+\fB% \fP\fIls \-l\fP
+celkem 2
+drwxrwxr\-x   2 aeb       1024 srp  6 23:51 bin
+\-rw\-rw\-r\-\-   1 aeb         37 srp  6 23:52 tel
+\fB% \fP\fIcat tel\fP
+maja    0501\-1136285
+peter   0136\-7399214
+\fB% \fP\fIcp tel tel2\fP
+\fB% \fP\fIls \-l\fP
+celkem 3
+drwxr\-xr\-x   2 aeb       1024 srp  6 23:51 bin
+\-rw\-r\-\-r\-\-   1 aeb         37 srp  6 23:52 tel
+\-rw\-r\-\-r\-\-   1 aeb         37 srp  6 23:53 tel2
+\fB% \fP\fImv tel tel1\fP
+\fB% \fP\fIls \-l\fP
+celkem 3
+drwxr\-xr\-x   2 aeb       1024 srp  6 23:51 bin
+\-rw\-r\-\-r\-\-   1 aeb         37 srp  6 23:52 tel1
+\-rw\-r\-\-r\-\-   1 aeb         37 srp  6 23:53 tel2
+\fB% \fP\fIdiff tel1 tel2\fP
+\fB% \fP\fIrm tel1\fP
+\fB% \fP\fIgrep maja tel2\fP
+maja    0501\-1136285
+\fB% \fP
+
+.fi
+.RE
+a tady stisknutí CTRL\-D relaci ukončilo.  \fB% \fP zde znamená výzvu
+příkazové řádky (prompt) \(em shell tak říká, že je připraven
+vykonat další příkaz. Prompt může být různě upraven a může
+napříkald obsahovat uživatelské jméno, aktuální adresář, čas,
+apod. Přiřazení PS1="Co dál, pane?" změní prompt na zadaný tvar.
+.LP
+Viděli jsme, že existují příkazy \fIdate\fP (zobrazí datum a čas) a
+\fIcal\fP (zobrazí kalendář).
+.LP
+Příkaz \fIls\fP vypíše obsah aktuálního adresáře \(em řekne jaké
+soubory tam jsou.  S volbou \fI\-l\fP bude výpis dlouhý, bude obsahovat
+vlastníka, velikost, datum a práva, která mají lidé pro čtení a/nebo
+zápis do souboru.  Například soubor "tel" je velké 37 bajtů, jeho
+vlastníkem je aeb, vlastník jej může číst i zapisovat, ostatní pouze
+číst.  Vlastník a práva mohou být změněni příkazy \fIchown\fP a
+\fIchmod\fP.
+.LP
+Příkaz \fIcat\fP zobrazí obsah souboru.  (Jméno je odvozeno z "concatenate
+and print" ("spoj a vytiskni"): všechny soubory zadané jako parametry jsou
+spojeny a poslány na "standardní výstup", kterým je zde obrazovka
+terminálu.)
+.LP
+Příkaz \fIcp\fP ("copy" \- "kopírovat") zkopíruje soubor.  Naopak příkaz
+\fImv\fP ("move" \- "přesunout") jej jen přejmenuje.
+.LP
+Příkaz \fIdiff\fP vypíše rozdíly mezi dvěma soubory.  V uvedeném
+případě nevypsal nic, protože žádné rozdíly nebyly.
+.LP
+Příkaz \fIrm\fP ("remove" \(em "odstranit") smaže soubor \(em buďte
+opatrní! je pryč.  Není tu žádný koš apod. Smazaný znamená
+ztracený.
+.LP
+Příkaz \fIgrep\fP ("g/re/p") najde výskyt řetězce v jednom nebo více
+souborech.  Zde našel Majovo telefonní číslo.
+.SS "Cesty a aktuální adresář"
+Soubory jsou uspořádány ve stromové struktuře, hierarchii souborů.
+Každý má svou \fIcestu\fP("pathname")\fI,\fP která popisuje cestu od kořene
+stromu (který se jmenuje /)  k souboru. Taková úplná cesta může být
+např. /home/aeb/tel.  Používat stále úplné cesty by bylo nepohodlné a
+jméno souboru v aktuálním adresáři lze určit i jen pomocí poslední
+složky cesty.  Proto "/home/aeb/tel" lze zkrátit na "tel", pokud je
+aktuálním adresářem "/home/aeb".
+.LP
+Příkaz \fIpwd\fP vypíše aktuální adresář (Pozn.překl.: zkratka z
+"print working directory").
+.LP
+Příkaz \fIcd\fP změní aktuální adresář.  Zkuste "cd /" a "pwd" a "cd" a
+"pwd".
+.SS Adresáře
+Příkaz \fImkdir\fP vytvoří nový adresář.
+.LP
+Příkaz \fIrmdir\fP odstraní prázdný adresář. Pokud adresář není
+prázdný, postěžuje si.
+.LP
+Příkaz \fIfind\fP (s poněkud košatou syntaxí) najde soubory se zadaným
+jménem nebo jinými vlastnostmi. Např. "find . \-name tel" bude hledat
+soubor "tel" a začne v aktuálním adresáři (který se nazývá ".").  A
+"find / \-name tel" udělá to samé, ale začne v kořenovém adresáři.
+Rozsáhlé prohledávání několikagigabajtového disku je časově
+náročné a tak může být lepší použít \fBlocate\fP(1).
+.SS "Disky a souborové systémy"
+Příkaz \fImount\fP připojí souborový systém, který se nachází na
+nějakém disku (nebo disketě, CD\-ROMu apod.)  do hierarchie souborů. A
+\fIumount\fP jej zase odpojí.  Příkaz \fIdf\fP řekne, kolik zbývá na disku
+volného místa.
+.SS Procesy
+V Unixových systémech běží najednou mnoho uživatelských i
+systémových procesů. Ten, se kterým právě pracujete běží v
+\fIpopředí\fP, ostatní v \fIpozadí\fP.  Příkaz \fIps\fP ukáže, které procesy
+jsou aktivní a jaká mají čísla.  Příkazem \fIkill\fP se jich lze
+zbavit. Bez žádné volby je to přátelský požadavek: prosím jdi
+pryč. Ale "kill \-9" následovaný číslem procesu znamená okamžité
+zabití. Procesy běžící v popředí mohou být často ukončeny stiskem
+CTRL\-C.
+.SS "Získávání informací"
+Existují tisíce příkazů a každý z nich má mnoho voleb.  Je zvykem,
+že příkazy jsou dokumentovány v \fImanuálových stránkách\fP, (jako je
+tato), takže příkaz "man kill" vypíše dokumentaci příkazu "kill" (a
+"man man" vypíše dokumentaci příkazu "man").  Příkaz \fIman\fP posílá
+text přes \fIpager\fP, kterým je obvykle \fIless\fP.  Pro přesun na další
+stránku stiskněte mezerník, pro ukončení stiskněte q.
+.LP
+V dokumnetaci se obvykle na manuálové stránky odkazuje jménem a číslem
+sekce, např.  \fBman\fP(1).  Manuálové stránky jsou hutné a s jejich
+pomocí snadno zjistíte zapomenuté podrobnosti. Pro začátečníky jsou
+vhodnější jednodušší texty s více příklady.
+.LP
+Spousta GNU/FSF software je provázena info soubory. Napište "info info"
+pro úvod do používání programu "info".
+.LP
+.\"
+.\" Actual examples? Separate section for each of cat, cp, ...?
+.\" gzip, bzip2, tar, rpm
+Speciální témata jsou často rozebrána v HOWTO. Podívejte se do
+\fI/usr/share/doc/howto/en\fP a pokud tam najdete HTML soubory, použijte
+prohlížeč.
+.SH "DALŠÍ INFORMACE"
+\fBstandards\fP(7)
+.SH TIRÁŽ
+Tato stránka je součástí projektu Linux \fIman\-pages\fP.  Popis projektu a
+informace o hlášení chyb najdete na http://www.kernel.org/doc/man\-pages/.

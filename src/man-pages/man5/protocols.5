@@ -1,0 +1,81 @@
+.\" Copyright (c) 1995 Martin Schulze <joey@infodrom.north.de>
+.\"
+.\" This is free documentation; you can redistribute it and/or
+.\" modify it under the terms of the GNU General Public License as
+.\" published by the Free Software Foundation; either version 2 of
+.\" the License, or (at your option) any later version.
+.\"
+.\" The GNU General Public License's references to "object code"
+.\" and "executables" are to be interpreted as the output of any
+.\" document formatting or typesetting system, including
+.\" intermediate and printed output.
+.\"
+.\" This manual is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public
+.\" License along with this manual; if not, write to the Free
+.\" Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111,
+.\" USA.
+.\"
+.\" 1995-10-18  Martin Schulze  <joey@infodrom.north.de>
+.\"	* first released
+.\" 2002-09-22  Seth W. Klein  <sk@sethwklein.net>
+.\"     * protocol numbers are now assigned by the IANA
+.\"
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH PROTOCOLS 5 2008\-09\-23 Linux "Linux \- příručka programátora"
+.SH JMÉNO
+protocols \- soubor s definicemi protokolů
+.SH POPIS
+Tento čistě ASCII soubor popisuje různé Internetové protokoly DARPA,
+které jsou k dispozici v TCP/IP subsystému. Tento soubor by měl být
+konzultován při zkoumání čísla protokolu, namísto používání
+čísel v include souborech ARPA nebo jejich pouhým odhadováním. Tato
+čísla se vyskytují v protokolovém poli každé IP hlavičky.
+
+.\" .. by the DDN Network Information Center.
+Raději ponechte tento soubor beze změn, protože jinak by mohlo dojít k
+výskytu chybných IP paketů. Čísla protokolů jsou specifikována
+organizací IANA (Internet Assigned Numbers Authority).
+
+Každá řádka má následující formát:
+
+.RS
+\fIprotokol číslo aliasy ...\fP
+.RE
+
+kde jsou pole oddělena buď mezerami nebo tabulátorem. Prázdné řádky
+jsou ignorovány. Pokud řádek obsahuje znak #, je tento znak a zbytek
+řádku, který po něm následuje, také ignorován.
+
+Popis jednotlivých polí:
+.TP 
+\fIprotocol\fP
+jméno protokolu. Např. \fIip\fP, \fItcp\fP nebo \fIudp\fP.
+.TP 
+\fIčíslo\fP
+oficiální číslo protokolu, tak jak je uvedeno v IP hlavičce.
+.TP 
+\fIaliases\fP
+volitelné přezdívky pro tento protokol.
+.LP
+Tento soubor může být distribuován po síti přes jmenné služby jako
+Yellow Pages/NIS nebo BIND/Hesiod.
+.SH SOUBORY
+.TP 
+\fI/etc/protocols\fP
+soubor s definicemi protokolů
+.SH "DALŠÍ INFORMACE"
+\fBgetprotoent\fP(3)
+
+http://www.iana.org/assignments/protocol\-numbers
+.SH TIRÁŽ
+Tato stránka je součástí projektu Linux \fIman\-pages\fP.  Popis projektu a
+informace o hlášení chyb najdete na http://www.kernel.org/doc/man\-pages/.

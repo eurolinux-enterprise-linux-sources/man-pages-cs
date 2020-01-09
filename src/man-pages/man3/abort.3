@@ -1,0 +1,28 @@
+.TH ABORT 3  "26.prosince 1996" "GNU" "Linux - příručka programátora"
+.do hla cs
+.do hpf hyphen.cs
+.SH JMÉNO
+abort \- abnormální ukončení procesu
+.SH SYNTAXE
+.nf
+.B #include <stdlib.h>
+.sp
+.B void abort(void);
+.fi
+.SH POPIS
+Funkce \fBabort()\fP způsobí abnormální ukončení procesu, pouze je-li
+signál SIGABORT zachycen a ovladač tohoto signálu se nevrátí, nedojde k jeho
+ukončení.
+Jestliže funkce \fBabort()\fP způsobí ukončení programu, všechny otevřené
+proudy jsou vyprázdněny a uzavřeny.
+.PP
+Je-li signál SIGABORT blokován nebo ignorován, funkce \fBabort()\fP
+jej i přesto překryje.
+.SH NÁVRATOVÁ HODNOTA
+Funkce \fBabort()\fP se nikdy nevrací.
+.SH SPLŇUJE STANDARDY
+SVID 3, POSIX, BSD 4.3, ISO 9899
+.SH DALŠÍ INFORMACE
+.BR sigaction "(2), " exit (3)
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

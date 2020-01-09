@@ -1,0 +1,25 @@
+.TH ATAN2 3  "5.ledna 1997" "" "Linux - příručka programátora"
+.do hla cs
+.do hpf hyphen.cs
+.SH JMÉNO
+atan2 \- arcus tangens dvou proměnných
+.SH SYNTAXE
+.nf
+.B #include <math.h>
+.sp
+.BI "double atan2(double " y ", double " x );
+.fi
+.SH POPIS
+Funkce \fBatan2()\fP počítá arcus tangens dvou proměnných 
+\fIx\fP a \fIy\fP. Výpočet je podobný výpočtu arcus tangens 
+\fIy\fP / \fIx\fP, kromě toho, že znaménka obou argumentů jsou použita pro
+určení kvadrantu, ve kterém se nachází výsledná hodnota.
+.SH NÁVRATOVÁ HODNOTA
+Funkce \fBatan2()\fP vrací výsledek v radiánech, který je mezi 
+-PI a PI včetně.
+.SH SPLŇUJE STANDARDY
+SVID 3, POSIX, BSD 4.3, ISO 9899
+.SH DALŠÍ INFORMACE
+.BR acos "(3), " asin "(3), " atan "(3), " cos "(3), " sin "(3), " tan(3)
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

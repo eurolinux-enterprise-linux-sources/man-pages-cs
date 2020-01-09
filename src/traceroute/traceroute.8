@@ -1,0 +1,285 @@
+.\" Copyright (c) 1989, 1995, 1996, 1997, 1999, 2000
+.\"	The Regents of the University of California.  All rights reserved.
+.\"
+.\" Redistribution and use in source and binary forms are permitted
+.\" provided that the above copyright notice and this paragraph are
+.\" duplicated in all such forms and that any documentation,
+.\" advertising materials, and other materials related to such
+.\" distribution and use acknowledge that the software was developed
+.\" by the University of California, Berkeley.  The name of the
+.\" University may not be used to endorse or promote products derived
+.\" from this software without specific prior written permission.
+.\" THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR
+.\" IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+.\" WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+.\"
+.\"	$Id: traceroute.8,v 1.19 2000/09/21 08:44:19 leres Exp $
+.\"
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH TRACEROUTE 8 "21. září 2000"  
+.UC 6
+.SH JMÉNO
+traceroute \- vypíše cestu, kterou pakety putují k zadanému počítači
+.SH POUŽITÍ
+.na
+\fBtraceroute\fP [ \fB\-dFInrvx\fP ] [ \fB\-f\fP \fIprvní_ttl\fP ] [ \fB\-g\fP \fIbrána\fP ]
+.br
+.ti +8
+[ \fB\-i\fP \fIiface\fP ] [ \fB\-m\fP max_ttl ] [ \fB\-p\fP \fIport\fP ]
+.br
+.ti +8
+[ \fB\-q\fP \fInqueries\fP ] [ \fB\-s\fP \fIsrc_addr\fP ] [ \fB\-t\fP \fItos\fP ]
+.br
+.ti +8
+[ \fB\-w\fP \fIčekací_čas\fP ] [ \fB\-z\fP \fIpauza_msecs\fP ]
+.br
+.ti +8
+\fIhost\fP [ \fIdélka_paketu\fP ]
+.ad
+.SH POPIS
+Internet je velké komplexní seskupení síťového hardware, spojeného
+dohromady branami (routery).  Zjišťování cesty, po které pakety chodí
+(nebo nalezení brány, která odmítá vaše pakety) může být
+obtížné.  \fITraceroute\fP využívá možnosti položky TTL (Time To Live)
+v hlavičce IP datagramu a pokouší se vyvolat u každé brány na cestě k
+cíli odezvu ICMP TIME_EXCEEDED (tj. hlášení o chybě, resp. o vypršení
+TTL).
+.PP
+Jediný povinný parametr je jméno nebo IP adresa cílového počítače.
+Standardní délka datagramu je 40 bytů, ale dá se zvýšit udáním jiné
+hodnoty (v bytech) za adresou cíle.
+.PP
+Další možné parametry:
+.TP 
+\fB\-f\fP
+Nastavení počáteční hodnoty TTL pro první vysílaný datagram.
+.TP 
+\fB\-F\fP
+Nastav příznak "don't fragment".
+.TP 
+\fB\-d\fP
+Zapni ladění na úrovni soketu.
+.TP 
+\fB\-g\fP
+Přímá specifikace routerů na cestě (max 8).
+.TP 
+\fB\-i\fP
+Určení síťového rozhraní, ze kterého budou datagramy vysílány
+(tj. určení zdrojové IP adresy). Obvykle se hodí pouze na počítači s
+více síťovými rozhraními (viz také parametr \fB\-s\fP).
+.TP 
+\fB\-I\fP
+Místo UDP datagramů použij datagramy ICMP ECHO.
+.TP 
+\fB\-m\fP
+Nastavení maximálního TTL používaného v odcházejících
+datagramech. Standardně je použita hodnota 30 (stejně jako u TCP
+spojení).
+.TP 
+\fB\-n\fP
+Adresy bran jsou vypisovány čísly, není prováděn převod na DNS jména
+(používá se pro urychlení výstupu nebo pokud DNS nefunguje).
+.TP 
+\fB\-p\fP
+Nastavení čísla UDP portu používaného pro traceroute (standardně je
+33434).  Traceroute předpokládá, že na cílových UDP portech od čísla
+\fIport\fP do čísla \fIport + počet_hopů \- 1\fP na trase k cíli nic
+nenaslouchá (takže se zpět vrátí zpráva ICMP PORT_UNREACHABLE).  Pokud
+na některém z portů naslouchá nějaká aplikace, lze tímto parametrem
+určit počátek nepoužívaného rozsahu portů.
+.TP 
+\fB\-r\fP
+Přeskoč normální routovací tabulky a vysílej přímo na připojené
+sítě.  Pokud cíl v přímo připojené síti neleží, je vrácena
+chyba.  Tento parametr může být použit pro pinknutí na localhost přes
+rozhraní, přes které nevede žádná cesta (například, poté co bylo
+rozhraní vypnuto pomocí \fIrouted\fP(8C)).
+.TP 
+\fB\-s\fP
+Použij následující IP adresu (obvykle zadanou spíše jako číslo než
+jako jméno)  jako zdrojovou adresu pro odcházející datagramy. Na
+počítačích s více síťovými rozhraními (tj. s více než jednou IP
+adresou), může být tento parametr použit k nastavení jiné zdrojové
+IP, než jaká je na odesílajícím síťovém rozhraní.  Pokud IP adresa
+nepatří mezi adresy rozhraní tohoto počítače, je vrácena chyba a nic
+se nevyšle (viz také parametr \fB\-i\fP).
+.TP 
+\fB\-t\fP
+Nastavení \fITOS\fP (Type\-Of\-Service)  v odesílaných paketech (standardně
+nula). Číslo musí být celé v rozsahu od 0 do 255. Tento parametr lze
+použít pro zjištění, zda různé typy služeb jsou směrovány
+různými cestami (pokud nemáte 4.4bsd, je to jen akademické, protože u
+normálních síťových služeb jako telnet a ftp není TOS možné
+nastavit). Ne všechny hodnoty jsou legální nebo významné \- (viz
+specifikaci IP).  Použitelné hodnoty jsou: `\fB\-t\fP \fI16\fP' (krátká doba
+odezvy) a `\fB\-t\fP \fI8\fP' (vysoký průtok).
+.TP 
+\fB\-v\fP
+Rozšířený výstup. Jsou vypsány i příchozí datagramy jiné než ICMP
+TIME_EXCEEDED a UNREACHABLE.
+.TP 
+\fB\-w\fP
+Čas (v sekundách) čekání pro odezvu na vyslané datagramy (standardně
+5 sec.).
+.TP 
+\fB\-x\fP
+Přepínání kontrolních součtů. Obvykle jsou kontrolní součty tímto
+parametrem vypnuty. V některých případech může operační systém
+přepsat části odcházejících datagramů, ale nepřepočítat kontrolní
+součet (tj. v některých případech se standardně kontrolní součty
+nepočítají a použití tohoto parametru způsobí jejich
+počítání). Nezapomeňte, že kontrolní součty jsou obvykle potřeba
+pro poslední přeskok, když se používá ICMP ECHO.  (\fB\-I\fP).  Takže
+pokud se používá ICMP, počítají se vždy.
+.TP 
+\fB\-z\fP
+Nastaví délku pauzy (v milisekundách) mezi vysíláním datagramů
+(výchozí je 0).  Některé systémy, jako např. Solaris, a routery, jako
+třeba Cisco, omezují icmp zprávy. Vhodná hodnota pro použití je 500
+(tj. 0,5 sekundy).
+.PP
+Tento program se pokouší zobrazit cestu, kterou vykoná IP datagram k
+cílovému počítači tak, že vysílá záměrně UDP datagramy s malými
+hodnotami TTL (Time To Live) a pak čeká, zda přijde od brány (routeru)
+ICMP zpráva "Čas vypršel" (Time Exceeded). Začíná se s vysláním
+datagramu s TTL nastaveným na hodnotu 1 a pak se TTL postupně zvyšuje,
+dokud není přijat datagram se ICMP zprávou "Port Unreachable" (což
+znamená, že jsme u cíle) nebo pokud se dosáhne maximální hodnoty TTL
+(která je standardně 30 skoků a může být změněna pomocí parametru
+\fB\-m\fP).  Pro každou hodnotu TTL jsou vyslány tři datagramy (lze změnit
+pomocí parametru \fB\-q\fP)  a pak je vypsán řádek s hodnotou TTL, adresou
+brány a dobami odezvy (round trip time)  každého vyslaného
+datagramu. Přijdou\-i odpovědi z různých bran, jsou všechny
+vypsány. Pokud nepřijde žádná odezva do pěti vteřin (lze změnit
+pomocí parametru \fB\-w\fP)  je vypsán znak "*".
+.PP
+Je potřeba, aby cílový počítač nezpracovával UDP výzvy, a tak je
+cílový port nastaven na nepravděpodobnou hodnotu (pokud nějaký program
+na cílovém počítači tento port používá, můžete ho změnit pomocí
+parametru \fB\-p\fP).
+.PP
+Příklad použití a následného výstupu:
+
+.RS
+.nf
+[yak 71]% traceroute nis.nsf.net.
+traceroute to nis.nsf.net (35.1.1.48), 30 hops max, 38 byte packet
+ 1  helios.ee.lbl.gov (128.3.112.1)  19 ms  19 ms  0 ms
+ 2  lilac\-dmc.Berkeley.EDU (128.32.216.1)  39 ms  39 ms  19 ms
+ 3  lilac\-dmc.Berkeley.EDU (128.32.216.1)  39 ms  39 ms  19 ms
+ 4  ccngw\-ner\-cc.Berkeley.EDU (128.32.136.23)  39 ms  40 ms  39 ms
+ 5  ccn\-nerif22.Berkeley.EDU (128.32.168.22)  39 ms  39 ms  39 ms
+ 6  128.32.197.4 (128.32.197.4)  40 ms  59 ms  59 ms
+ 7  131.119.2.5 (131.119.2.5)  59 ms  59 ms  59 ms
+ 8  129.140.70.13 (129.140.70.13)  99 ms  99 ms  80 ms
+ 9  129.140.71.6 (129.140.71.6)  139 ms  239 ms  319 ms
+10  129.140.81.7 (129.140.81.7)  220 ms  199 ms  199 ms
+11  nic.merit.edu (35.1.1.48)  239 ms  239 ms  239 ms
+
+.fi
+.RE
+
+Všimněte si, že řádky 2 a 3 obsahují stejná jména i IP adresy
+počítačů, což způsobuje chybné 4.3 BSD jádro na druhém přeskoku
+(lbl\-csam.arpa), které přeposílá datagramy s nulovým TTL.  Ve spodní
+části nejsou uvedeny jména počítačů, protože NSFNet (129.140) nemá
+v DNS zavedeny příslušné reverzní záznamy.
+.PP
+Další příklad:
+
+.RS
+.nf
+[yak 72]% traceroute allspice.lcs.mit.edu.
+traceroute to allspice.lcs.mit.edu (18.26.0.115), 30 hops max
+ 1  helios.ee.lbl.gov (128.3.112.1)  0 ms  0 ms  0 ms
+ 2  lilac\-dmc.Berkeley.EDU (128.32.216.1)  19 ms  19 ms  19 ms
+ 3  lilac\-dmc.Berkeley.EDU (128.32.216.1)  39 ms  19 ms  19 ms
+ 4  ccngw\-ner\-cc.Berkeley.EDU (128.32.136.23)  19 ms  39 ms  39 ms
+ 5  ccn\-nerif22.Berkeley.EDU (128.32.168.22)  20 ms  39 ms  39 ms
+ 6  128.32.197.4 (128.32.197.4)  59 ms  119 ms  39 ms
+ 7  131.119.2.5 (131.119.2.5)  59 ms  59 ms  39 ms
+ 8  129.140.70.13 (129.140.70.13)  80 ms  79 ms  99 ms
+ 9  129.140.71.6 (129.140.71.6)  139 ms  139 ms  159 ms
+10  129.140.81.7 (129.140.81.7)  199 ms  180 ms  300 ms
+11  129.140.72.17 (129.140.72.17)  300 ms  239 ms  239 ms
+12  * * *
+13  128.121.54.72 (128.121.54.72)  259 ms  499 ms  279 ms
+14  * * *
+15  * * *
+16  * * *
+17  * * *
+18  ALLSPICE.LCS.MIT.EDU (18.26.0.115)  339 ms  279 ms  279 ms
+.fi
+.RE
+
+Brány 12, 14, 15, 16 a 17 neposílají ICMP zprávy "Time Exceeded" nebo je
+posílají s příliš malou hodnotou TTL a proto se k nám nedostanou.  Na
+branách 14 \- 17 běží MIT C Gateway, která zprávy "time exceeded"
+neposílá.  Bůh ví, co je s 12.
+.PP
+Ztichlá brána 12 může být způsobena chybou v síťovém kódu 4.[23]
+BSD (a jeho odvozeniny): 4.x (x <= 3) posílají odpověď s použitím
+TTL, které bylo v příchozím datagramu, proto odpověď nedojde.  Tato
+chyba se projeví zajímavěji, pokud ji má cílový počítač:
+
+.RS
+.nf
+ 1  helios.ee.lbl.gov (128.3.112.1)  0 ms  0 ms  0 ms
+ 2  lilac\-dmc.Berkeley.EDU (128.32.216.1)  39 ms  19 ms  39 ms
+ 3  lilac\-dmc.Berkeley.EDU (128.32.216.1)  19 ms  39 ms  19 ms
+ 4  ccngw\-ner\-cc.Berkeley.EDU (128.32.136.23)  39 ms  40 ms  19 ms
+ 5  ccn\-nerif35.Berkeley.EDU (128.32.168.35)  39 ms  39 ms  39 ms
+ 6  csgw.Berkeley.EDU (128.32.133.254)  39 ms  59 ms  39 ms
+ 7  * * *
+ 8  * * *
+ 9  * * *
+10  * * *
+11  * * *
+12  * * *
+13  rip.Berkeley.EDU (128.32.131.22)  59 ms !  39 ms !  39 ms !
+.fi
+.RE
+
+Ve výstupu je vidět 12 bran (routerů), třináctý je cíl a přesně
+druhá polovina odpovědí chybí. Způsobuje to chyba na počítači rip
+(Sun\-3 se systémem Sun OS3.5), který používá TTL v dotazech jako TTL
+pro ICMP odpovědi. Proto odpověď dojde až v okamžiku, kdy je TTL
+větší, než dvojnásobek délky zpáteční trasy. Počítač rip je
+vzdálen skutečně jen sedm hopů. Odpověď vrácená s TTL 1 je
+vodítkem, že tento problém existuje.  Traceroute vypíše znak "!"
+pokaždé, když je TTL <= 1.  Protože je distribuována spousta
+zastaralého (DEC Ultrix, Sun 3.x)  nebo nestandardního (HPUX) software, je
+tento problém častý.
+
+Další možné poznámky za údajem o času jsou: \fB!H\fP, \fB!N\fP nebo \fB!P\fP
+(cíl, síť nebo protokol nedosažitelné), \fB!S\fP (zdrojová cesta selhala)
+nebo \fB!F\-<pmtu>\fP (je potřebná fragmentace \- zobrazí se hodnota
+Path MTU Discovery z RFC1191), \fB!X\fP (komunikace zakázána
+administrátory), \fB!V\fP (porušení pořadí cílů), \fB!C\fP (precedence
+cutoff in effect) nebo \fB!<číslo>\fP (ICMP nedostupné, kód
+<číslo>).  Tyto jsou definovány v RFC1812 (které nahrazuje
+RFC1716).  Pokud téměř všechny výzvy končí hlášeními o
+nedosažitelnosti, traceroute se ukončí.
+.PP
+Tento program je určen pro testovaní, měření a management sítí.
+Primárně by měl sloužit pro manuální izolaci chyb.  Protože
+traceroute může síť zatížit, není moudré používat \fItraceroute\fP
+během normálních operací a z automatických skriptů.
+.SH "DALŠÍ INFORMACE"
+pathchar(8), netstat(1), ping(8)
+.SH AUTOR
+Implementoval Van Jacobson podle návrhu Steve Deeringa.  Ladily tisíce
+lidí, zahrnuty opravy a návrhy od: C. Philip Wood, Tim Seaver a Ken
+Adelman.
+.LP
+Současné verze programu jsou k dispozici na anonymním ftp:
+.LP
+.RS
+\fIftp://ftp.ee.lbl.gov/traceroute.tar.gz\fP
+.RE
+.SH CHYBY
+Prosím posílejte chyby na adresu traceroute@ee.lbl.gov.

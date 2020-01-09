@@ -1,0 +1,134 @@
+.TH saned 1 "2 Apr 1999"
+.IX saned
+.SH JMÉNO
+saned - SANE síťový démon
+.SH OSNOVA
+.B saned
+.RB [ -d
+.RI [ n ]]
+.SH POPIS
+.B saned
+je SANE (Scanner Access Now Easy - Jednoduchý přistup ke skeneru) démon, který umožňuje vzdáleným klientům
+přístup k zařízení pro získání obrázků dostupných na lokálním počítači.
+.SH VOLBY
+.PP
+Příznak
+.B -d
+způsobí spuštění
+.B saned
+spuštěn v ladícím režimu (opak k režimu
+.BR inetd (8)
+).  V tomto módu,
+.B saned
+čeká na příchozí spojení. Pokud je přeložen s podporou pro ladění,
+je možné zadat číslo, které vyjadřuje množství vypisovaných informací.
+Čím je číslo větší, tím více informací je vypisováno.
+Použijeme-li např. -d128, budou vypisovány všechny ladící informace.
+.SH NASTAVENÍ
+Zaprvé a především: prosím 
+.I neinstalujte
+.B saned
+jako setuid root bez patřičného důvodu. Zejména pokud je linkován
+dynamicky, protože je zde potenciální riziko využití bezpečnostních chyb.
+.PP
+Soubor
+.I saned.conf
+obsahuje seznam jmen počítačů, které mohou používat místní SANE
+zařízení. Prázdné řádky a řádky začínající křížkem (#) jsou
+ignorovány. Obsahuje-li řádek samotný znak ``+'', je umožněn
+přístup k místnímu zařízení z jakéhokoli počítače.
+Tuto volbu byste měli používat jen v případě, že víte, co děláte.
+Následuje ukázka konfiguračního souboru:
+.PP
+.RS
+scan-client.somedomain.firm
+.br
+# toto je komentář
+.br
+localhost
+.RE
+.PP
+Velikost písmen nemá význam, takže Ahost.COM
+je identické s ahost.com.
+
+Pro správnou funkci
+.B saned
+je potřeba přidat následující řádek do souboru
+.IR /etc/inetd.conf :
+.PP
+.RS
+sane stream tcp nowait saned.saned /usr/sbin/saned saned
+.RE
+.PP
+Pokud používáte v systému
+.BR tcpd (8)
+lze pomocí něho kontrolovat přístup k SANED tak, že do 
+konfiguračního souboru
+.IR saned.conf
+vložíte znak ``+'' a v souboru
+.IR /etc/inetd.conf
+použijete řádek:
+.PP
+.RS
+sane stream tcp nowait saned.saned /usr/sbin/tcpd saned
+.RE
+.PP
+Poznámka k oběma příkladům: předpokládáme, že v systému je 
+uživatel
+.B saned
+a skupina
+.BR saned .
+Pokud použijete nastavení podle tohoto příkladu,
+je potřeba nastavit přístupová práva k zařízení scanneru tak,
+aby uživatel nebo skupina
+.B saned
+s ním mohli pracovat (tj. čtení i zápis).
+.PP
+Nakonec je potřeba přidat do souboru
+.I /etc/services
+následující řádek:
+.PP
+.RS
+sane 6566/tcp # SANE síťový skener démon
+.RE
+.PP
+Port číslo 6566 nebude k SANE protokolu v budoucnosti oficiálně přidělen,
+a proto se může změnit.
+.PP
+.SH SOUBORY
+.TP
+.I /etc/hosts.equiv
+Počítače vyjmenované v tomto souboru mají přístup ke všem lokálním
+zařízením. Pozor: tato metoda představuje bezpečnostní riziko a
+a její použití se nedoporučuje.
+.TP
+.I /etc/sane.d/saned.conf
+Obsahuje seznamu počítačů s povolením k přístupu do místních SANE zařízení
+(viz popis
+.BR SANE_CONFIG_DIR ).
+.SH PROMĚNNÉ PROSTŘEDÍ
+.TP
+.B SANE_CONFIG_DIR
+Tato proměnná udává seznam adresářů, které mohou
+obsahovat konfigurační soubory. V UNIXu jsou adresáře
+oddělovány dvojtečkou (`:'), v OS/2, jsou adresáře oddělovány
+středníkem (`;'). Jestliže tato proměnná není nastavena, konfigurační soubor
+je hledán ve dvou implicitních adresářích: nejprve v aktuálním adresáři
+(".") a pak v adresáři /etc/sane.d. Jestliže je proměnná ukončena
+oddělovacím znakem, pak jsou implicitní adresáře prohledány po explicitně
+definovaných adresářích (tj. po adresářích obsažených v proměnné prostředí).
+Např. při nastavení
+.B SANE_CONFIG_DIR
+na hodnotu "/tmp/config:" budou konfigurační soubory hledány v adresářích
+"tmp/config", "." a "/etc/sane.d".
+
+.SH "VIZ TAKÉ"
+scanimage(1), xscanimage(1), xcam(1), sane\-dll(5), sane\-hp(5),
+sane\-mustek(5), sane\-net(5), sane\-pnm(5), sane\-pint(5), sane\-qcam(5),
+sane\-umax(5)
+.SH AUTOR
+David Mosberger
+.SH PŘELOŽIL
+Ondřej Zvolský, do srozumitelné češtiny upravil Milan Keršláger.
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

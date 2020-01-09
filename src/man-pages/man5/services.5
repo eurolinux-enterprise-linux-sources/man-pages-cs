@@ -1,0 +1,169 @@
+.\" Hey Emacs! This file is -*- nroff -*- source.
+.\"
+.\" This manpage is Copyright (C) 1996 Austin Donnelly <and1000@cam.ac.uk>,
+.\" with additional material Copyright (c) 1995 Martin Schulze
+.\"     <joey@infodrom.north.de>
+.\"
+.\" Permission is granted to make and distribute verbatim copies of this
+.\" manual provided the copyright notice and this permission notice are
+.\" preserved on all copies.
+.\"
+.\" Permission is granted to copy and distribute modified versions of this
+.\" manual under the conditions for verbatim copying, provided that the
+.\" entire resulting derived work is distributed under the terms of a
+.\" permission notice identical to this one.
+.\"
+.\" Since the Linux kernel and libraries are constantly changing, this
+.\" manual page may be incorrect or out-of-date.  The author(s) assume no
+.\" responsibility for errors or omissions, or for damages resulting from
+.\" the use of the information contained herein.  The author(s) may not
+.\" have taken the same level of care in the production of this manual,
+.\" which is licensed free of charge, as they might when working
+.\" professionally.
+.\"
+.\" Formatted or processed versions of this manual, if unaccompanied by
+.\" the source, must acknowledge the copyright and authors of this work.
+.\"
+.\"   This manpage was made by merging two independently written manpages,
+.\"   one written by Martin Schulze (18 Oct 95), the other written by
+.\"   Austin Donnelly, (9 Jan 96).
+.\"
+.\" Thu Jan 11 12:14:41 1996 Austin Donnelly  <and1000@cam.ac.uk>
+.\"   * Merged two services(5) manpages
+.\"
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH SERVICES 5 2008\-09\-23 Linux "Linux \- příručka programátora"
+.SH JMÉNO
+services \- databáze služeb sítě Internet
+.SH POPIS
+\fBservices\fP je čitelný textový soubor poskytující převod mezi názvy
+služeb a jim příslušných čísel portů a protokolů. Každý síťový
+program by měl z tohoto souboru získat číslo portu a typ protokolu.
+Knihovna jazyka C poskytuje funkce \fBgetservent\fP(3), \fBgetservbyname\fP(3),
+\fBgetservbyport\fP(3), \fBsetservent\fP(3), a \fBendservent\fP(3), které slouží k
+obsluze této databáze.
+
+Čísla portů jsou přiřazována organizací IANA (Internet Assigned
+Numbers Authority), jejich současná strategie je přiřazovat jak TCP tak
+i UDP protokoly pro čísla portů. Proto má většina záznamů dva
+záznamy i pro služby provozované pouze nad TCP protokolem.
+
+Porty s čísly menšími než 1024 mohou být přiřazeny pouze
+superuživatelem (viz \fBbind\fP(2), \fBtcp\fP(7)  a \fBudp\fP(7)).  To je proto, aby
+klienti, kteří se připojují na tyto porty mohli důvěřovat, že zde
+běží standardní aplikace a ne nějaký prográmek nějakého
+uživatele. Standardní čísla portů specifikovaná IANA jsou normálně
+umístěna v této oblasti.
+
+Výskyt dané služby v databázi služeb ještě neznamená, že služba na
+tomto počítači momentálně běží, viz \fBinetd.conf\fP(5), kde je uvedeno
+více o konfiguraci internetových služeb. Mějte však na paměti, že ne
+všechny síťové služby musí být startovány pomocí \fBinetd\fP(8), a
+proto se nemusí vyskytovat v \fBinetd.conf\fP(5).  Např. news (NNTP) a mail
+(SMTP) servery jsou často inicializovány ve startovacích skriptech.
+
+Umístění souboru \fBservices\fP je definováno konstantou \fB_PATH_SERVICES\fP
+v \fI<netdb.h>\fP.  Obvykle je nastaveno na \fI/etc/services\fP.
+
+Každý řádek obsahuje jeden záznam ve tvaru:
+.IP
+\fIservice\-name\ \ \ port\fP\fB/\fP\fIprotocol\ \ \ \fP[\fIaliases ...\fP]
+.TP 
+kde:
+.TP  10
+\fIservice\-name\fP
+je název služby pod kterým je známa a vyhledávána. Velikost písma je
+rozhodující. Často je klient pojmenován stejně jako služba samotná.
+.TP 
+\fIport\fP
+je číslo portu v desítkové soustavě.
+.TP 
+\fIprotocol\fP
+je typ použitého protokolu. Toto políčko by mělo vyhovovat záznamu ze
+souboru \fBprotocols\fP(5)\fB.\fP Obvyklé hodnoty jsou \fBtcp\fP a \fBudp\fP.
+.TP 
+\fIaliases\fP
+toto je volitelný seznam přezdívek oddělený mezerou nebo
+tabulátorem. Opět zde rozhoduje velikost písmen.
+.PP
+Jednotlivá pole jsou oddělena mezerami nebo tabulátorem.
+
+Komentáře začínají znakem # a pokračují až do konce
+řádku. Prázdné řádky jsou vynechány.
+
+\fIservice\-name\fP by mělo začínat na začátku řádku, protože mezery na
+začátku nejsou odstraňovány.  \fIservice\-names\fP mohou být jakékoliv
+tisknutelné znaky kromě mezery a tabulátoru, ale z důvodu kompatibility
+se doporučuje použít pouze znaky a\-z, 0\-9, a pomlčka (\-).
+
+Řádky, které nevyhovují tomuto formátu, by se zde neměly vyskytovat.
+(V současné době jsou funkcemi \fBgetservent\fP(3), \fBgetservbyname\fP(3), a
+\fBgetservbyport\fP(3)  tiše ignorovány, ale na to by se nemělo spoléhat.)
+
+.\" The following is not true as at glibc 2.8 (a line with a comma is
+.\" ignored by getservent()); it's not clear if/when it was ever true.
+.\"   As a backwards compatibility feature, the slash (/) between the
+.\"   .I port
+.\"   number and
+.\"   .I protocol
+.\"   name can in fact be either a slash or a comma (,).
+.\"   Use of the comma in
+.\"   modern installations is deprecated.
+.\"
+Tento soubor může být distribuován po síti přes jmenné služby jako
+Yellow Pages/NIS nebo BIND/Hesiod.
+
+Jednoduchý soubor \fBservices\fP může vypadat nějak takto:
+.RS
+.nf
+.sp
+.ta 3i
+netstat         15/tcp
+qotd            17/tcp          quote
+msp             18/tcp          # message send protocol
+msp             18/udp          # message send protocol
+chargen         19/tcp          ttytst source
+chargen         19/udp          ttytst source
+ftp             21/tcp
+# 22 \- unassigned
+telnet          23/tcp
+
+.fi
+.RE
+.SH SOUBORY
+.TP 
+\fI/etc/services\fP
+databáze služeb sítě Internet
+.TP 
+\fI<netdb.h>\fP
+.\" .SH BUGS
+.\" It's not clear when/if the following was ever true;
+.\" it isn't true for glibc 2.8:
+.\"    There is a maximum of 35 aliases, due to the way the
+.\"    .BR getservent (3)
+.\"    code is written.
+.\"
+.\" It's not clear when/if the following was ever true;
+.\" it isn't true for glibc 2.8:
+.\"    Lines longer than
+.\"    .B BUFSIZ
+.\"    (currently 1024) characters will be ignored by
+.\"    .BR getservent (3),
+.\"    .BR getservbyname (3),
+.\"    and
+.\"    .BR getservbyport (3).
+.\"    However, this will also cause the next line to be mis-parsed.
+Definice konstanty \fB_PATH_SERVICES\fP
+.SH "DALŠÍ INFORMACE"
+\fBlisten\fP(2), \fBendservent\fP(3), \fBgetservbyname\fP(3), \fBgetservbyport\fP(3),
+\fBgetservent\fP(3), \fBsetservent\fP(3), \fBinetd.conf\fP(5), \fBprotocols\fP(5),
+\fBinetd\fP(8)
+
+Assigned Numbers RFC, nejnovější RFC\ 1700, (také známo pod STD0002)
+.SH TIRÁŽ
+Tato stránka je součástí projektu Linux \fIman\-pages\fP.  Popis projektu a
+informace o hlášení chyb najdete na http://www.kernel.org/doc/man\-pages/.

@@ -1,0 +1,56 @@
+.TH SOCKETPAIR 2 "5. dubna 1997" "BSD Man Page" "Linux - příručka programátora"
+.do hla cs
+.do hpf hyphen.cs
+.SH JMÉNO
+socketpair \- vytvoří pár spojených soketů
+.SH SYNTAXE
+.B #include <sys/types.h>
+.br
+.B #include <sys/socket.h>
+.sp
+.BI "int socketpair(int " d ", int " type ", int " protocol ", int " sv [2]);
+.SH POPIS
+Volání
+.N socketpair
+vytvoří pár nepojmenovaných spojených soketů ve specifikovaném jmenném
+prostoru
+.IR d ,
+jejich typ bude
+.IR type ,
+používaný protokol
+.IR protocol .
+Deskriptory nových soketů jsou vráceny v 
+.IR sv [0]
+a
+.IR sv [1].
+Tyto dva sokety jsou nerozlišitelné.
+.SH NÁVRATOVÁ HODNOTA
+Bylo-li volání úspěšné, je vrácena 0, jinak \-1 a je nastavena externí
+proměnná
+.I errno
+.SH CHYBY
+.TP 0.8i
+.B EMFILE
+Soubor má otevřeno příliš mnoho souborů.
+.TP
+.B EAFNOSUPPORT
+Specifikovaný jmenný prostor není na tomto počítači podporován.
+.TP
+.B EPROTONOSUPPORT
+Specifikovaný protokol není na tomto počítači podporován.
+.TP
+.B EOPNOSUPPORT
+Specifikovaný protokol nepodporuje vytvoření soketového páru.
+.TP
+.B EFAULT
+.I sv
+není v platné části adresového prostoru procesu.
+.SH SPLŇUJE STANDARDY
+4.4BSD (volání
+.B socketpair
+se poprvé objevilo v 4.2BSD). Obvykle přenositelné z ne-BSD systémů, které
+podporují BSD Sokety (včetně variant systému V).
+.SH DALŠÍ INFORMACE
+.BR read "(2), " write "(2), " pipe (2)
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/
