@@ -1,7 +1,7 @@
 Summary: Czech man pages from the Linux Documentation Project
 Name: man-pages-cs
 Version: 0.18.20090209
-Release: 16%{?dist}
+Release: 17%{?dist}
 # GPLv3 .. coreutils/
 # BSD   .. openssh/
 License: GPLv2 and GPLv3 and BSD
@@ -64,6 +64,9 @@ make install DESTDIR=$RPM_BUILD_ROOT MANDIR=%{_mandir}/cs
 %{_mandir}/cs/man*/*
 
 %changelog
+* Fri Dec 27 2013 Daniel Mach <dmach@redhat.com> - 0.18.20090209-17
+- Mass rebuild 2013-12-27
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.18.20090209-16
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
