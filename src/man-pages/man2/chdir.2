@@ -1,0 +1,87 @@
+.TH CHDIR 2 "21. března 1997" "Linux 1.2.4" "Linux - příručka Programátora"
+.do hla cs
+.do hpf hyphen.cs
+.SH JMÉNO
+chdir, fchdir \- změna pracovního adresáře
+.SH SYNTAXE
+.B #include <unistd.h>
+.sp
+.BI "int chdir(const char *" path );
+.br
+.BI "int fchdir(int " fd ");"
+.SH POPIS
+.B chdir
+změní současný adresář na adresář specifikovaný v 
+.IR path .
+.PP
+.B fchdir
+má tutéž funkci jako
+.BR chdir ,
+pouze s tím rozdílem, že adresář je zadán jako otevřený deskriptor souboru.
+.SH "NÁVRATOVÁ HODNOTA"
+Bylo-li volání úspěšné, je vrácena nula, jinak \-1 a je nastavena proměnná
+.I errno .
+.SH CHYBY
+V závislosti na druhu souborového systému mohou být vráceny i jiné chyby.
+Nejobvyklejší chyby pro
+.B chmod
+jsou vypsány zde:
+.TP 0.8i
+.B EPERM
+Proces nemá právo na vstup do adresáře (execute permission).
+.TP
+.B EFAULT
+.I path
+ukazuje mimo vám přístupný adresový prostor.
+.TP
+.B ENAMETOOLONG
+.I path
+je příliš dlouhá.
+.TP
+.B EBADF
+Deskriptor souboru
+.I fd
+není platný.
+.TP
+.B ENOENT
+Soubor neexistuje.
+.TP
+.B ENOMEM
+Nedostatek paměti pro kernel.
+.TP
+.B ENOTDIR
+Některá část cesty není adresář.
+.TP
+.B EACCES
+V cestě není povoleno prohledávání adresářů.
+.TP
+.B ELOOP
+.I path
+obsahuje cyklické odkazy (např. přes symbolický odkaz)
+.PP
+Obvyklé chyby 
+.B fchmod
+jsou zde:
+.TP 0.8i
+.B EBADF
+Deskriptor je neplatný.
+.TP
+.B EPERM
+Viz výše.
+.TP
+.B EROFS
+Viz výše.
+.SH "SPLŇUJE STANDARDY"
+Volání 
+.B chdir
+je kompatibilní se SVr4, SVID, POSIX, X/OPEN, 4.4BSD.  SVr4 dokumentuje
+navíc chyby EIO, EINTR, ENOLINK a EMULTIHOP, ale nemá ENOMEM a EPERM.
+POSIX.1 nemá EPERM, ENOMEM a ELOOP.
+
+Volání
+.B fchdir
+splňuje SVr4 a 4.4BSD. SVr4 dokumentuje navíc EIO, EINTR a ENOLINK.
+.SH "VIZ TÉŽ"
+.BR getcwd "(3), " chroot (2)
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

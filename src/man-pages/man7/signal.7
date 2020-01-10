@@ -1,0 +1,663 @@
+.\" t
+.\" Copyright (c) 1993 by Thomas Koenig (ig25@rz.uni-karlsruhe.de)
+.\" and Copyright (c) 2002, 2006 by Michael Kerrisk <mtk.manpages@gmail.com>
+.\" and Copyright (c) 2008 Linux Foundation, written by Michael Kerrisk
+.\"     <mtk.manpages@gmail.com>
+.\"
+.\" Permission is granted to make and distribute verbatim copies of this
+.\" manual provided the copyright notice and this permission notice are
+.\" preserved on all copies.
+.\"
+.\" Permission is granted to copy and distribute modified versions of this
+.\" manual under the conditions for verbatim copying, provided that the
+.\" entire resulting derived work is distributed under the terms of a
+.\" permission notice identical to this one.
+.\"
+.\" Since the Linux kernel and libraries are constantly changing, this
+.\" manual page may be incorrect or out-of-date.  The author(s) assume no
+.\" responsibility for errors or omissions, or for damages resulting from
+.\" the use of the information contained herein.  The author(s) may not
+.\" have taken the same level of care in the production of this manual,
+.\" which is licensed free of charge, as they might when working
+.\" professionally.
+.\"
+.\" Formatted or processed versions of this manual, if unaccompanied by
+.\" the source, must acknowledge the copyright and authors of this work.
+.\"
+.\" Modified Sat Jul 24 17:34:08 1993 by Rik Faith (faith@cs.unc.edu)
+.\" Modified Sun Jan  7 01:41:27 1996 by Andries Brouwer (aeb@cwi.nl)
+.\" Modified Sun Apr 14 12:02:29 1996 by Andries Brouwer (aeb@cwi.nl)
+.\" Modified Sat Nov 13 16:28:23 1999 by Andries Brouwer (aeb@cwi.nl)
+.\" Modified 10 Apr 2002, by Michael Kerrisk <mtk.manpages@gmail.com>
+.\" Modified  7 Jun 2002, by Michael Kerrisk <mtk.manpages@gmail.com>
+.\"	Added information on real-time signals
+.\" Modified 13 Jun 2002, by Michael Kerrisk <mtk.manpages@gmail.com>
+.\"	Noted that SIGSTKFLT is in fact unused
+.\" 2004-12-03, Modified mtk, added notes on RLIMIT_SIGPENDING
+.\" 2006-04-24, mtk, Added text on changing signal dispositions,
+.\"		signal mask, and pending signals.
+.\" 2008-07-04, mtk:
+.\"     Added section on system call restarting (SA_RESTART)
+.\"     Added section on stop/cont signals interrupting syscalls.
+.\" 2008-10-05, mtk: various additions
+.\"
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH SIGNAL 7 2008\-10\-15 Linux "Linux \- příručka programátora"
+.SH JMÉNO
+signal \- přehled signálů
+.SH POPIS
+V Linuxu jsou podporovány jak POSIX reliable signály (dále jen
+"standardní signály"), tak POSIX real\-time signály.
+.SS "Dispozice signálů"
+Každý signál má \fIdispozici\fP, která určuje, jak se proces zachová
+při jeho přijetí.
+
+Údaje ve sloupci "Akce" níže uvedených tabulek určují výchozí
+dipozici každého signálu následujícně:
+.IP Term
+Výchozí akcí je ukončení procesu.
+.IP Ign
+Výchozí akcí je ignorování signálu.
+.IP Core
+Výchozí akcí je ukončení procesu a výpis paměti (core dump) (viz
+\fBcore\fP(5)).
+.IP Stop
+Výchozí akcí je zastavení procesu.
+.IP Cont
+Výchozí akcí je pokračování procesu, pokud je momentálně zastavený.
+.PP
+Proces může změnit dispozici signálu pomocí \fBsigaction\fP(2)  nebo
+(méně přenositelně)  \fBsignal\fP(2).  Pomocí těchto systémových
+volání může proces vybrat jedno z následujících chování, které má
+nastat po přijetí signálu: provést výchozí akci; ignorovat signál;
+nebo zachytit signál pomocí \fIsignal handleru\fP, programátorem definovanou
+funkcí, která je automaticky volána při přijetí signálu. (By default,
+the signal handler is invoked on the normal process stack.  It is possible
+to arrange that the signal handler uses an alternate stack; see
+\fBsigaltstack\fP(2)  for a discussion of how to do this and when it might be
+useful.)
+
+Dispozice signálu je atribut procesu: v mnohovláknových aplikacích je
+dispozice určitého signálu stejná pro všechna vlákna.
+
+A child created via \fBfork\fP(2)  inherits a copy of its parent's signal
+dispositions.  During an \fBexecve\fP(2), the dispositions of handled signals
+are reset to the default; the dispositions of ignored signals are left
+unchanged.
+.SS "Poslání signálu"
+The following system calls and library functions allow the caller to send a
+signal:
+.TP  16
+\fBraise\fP(3)
+Sends a signal to the calling thread.
+.TP 
+\fBkill\fP(2)
+Sends a signal to a specified process, to all members of a specified process
+group, or to all processes on the system.
+.TP 
+\fBkillpg\fP(2)
+Sends a signal to all of the members of a specified process group.
+.TP 
+\fBpthread_kill\fP(3)
+Sends a signal to a specified POSIX thread in the same process as the
+caller.
+.TP 
+\fBtgkill\fP(2)
+Sends a signal to a specified thread within a specific process.  (This is
+the system call used to implement \fBpthread_kill\fP(3).)
+.TP 
+\fBsigqueue\fP(2)
+Sends a real\-time signal with accompanying data to a specified process.
+.SS "Waiting for a Signal to be Caught"
+The following system calls suspend execution of the calling process or
+thread until a signal is caught (or an unhandled signal terminates the
+process):
+.TP  16
+\fBpause\fP(2)
+Suspends execution until any signal is caught.
+.TP 
+\fBsigsuspend\fP(2)
+Temporarily changes the signal mask (see below) and suspends execution until
+one of the unmasked signals is caught.
+.SS "Synchronously Accepting a Signal"
+Rather than asynchronously catching a signal via a signal handler, it is
+possible to synchronously accept the signal, that is, to block execution
+until the signal is delivered, at which point the kernel returns information
+about the signal to the caller.  There are two general ways to do this:
+.IP * 2
+\fBsigwaitinfo\fP(2), \fBsigtimedwait\fP(2), and \fBsigwait\fP(3)  suspend execution
+until one of the signals in a specified set is delivered.  Each of these
+calls returns information about the delivered signal.
+.IP *
+\fBsignalfd\fP(2)  returns a file descriptor that can be used to read
+information about signals that are delivered to the caller.  Each \fBread\fP(2)
+from this file descriptor blocks until one of the signals in the set
+specified in the \fBsignalfd\fP(2)  call is delivered to the caller.  The
+buffer returned by \fBread\fP(2)  contains a structure describing the signal.
+.SS "Maska signálu a nevyřízené signály"
+Signál může být \fIblokován\fP, tj. nebude přijat, dokud nebude
+odblokován.  V mezidobí mezi vygenerovánim signálu a jeho přijetím je
+signál tzv.  \fInevyřízený\fP.
+
+Každé vlákno procesu má nezávislou \fImasku signálu\fP, která určuje
+sadu signálů, kterou vlákno právě blokuje.  Vlákno může manipulovat
+svou maskou signálu pomocí \fBpthread_sigmask\fP(3).  V klasické
+jednovláknové aplikaci může být k manipulaci maskou signálu použito
+\fBsigprocmask\fP(2).
+
+A child created via \fBfork\fP(2)  inherits a copy of its parent's signal mask;
+the signal mask is preserved across \fBexecve\fP(2).
+
+Signál může být vygenerován (a tedy nevyřízený)  pro proces jako
+celek (např. posláním pomocí \fBkill\fP(2))  nebo pro určité vlákno
+(např. některé signály jako \fBSIGSEGV\fP a \fBSIGFPE\fP, vygenerované jako
+důsledek spuštění určité instrukce strojového jazyka, jsou vláknově
+orientovány, stejně jako signály zaměřené na určité vlákno pomocí
+\fBpthread_kill\fP(3)).  Signál zaměřený na vlákno může být doručen
+jakémukoliv vláknu, které jej právě neblokuje. Pokud signál neblokuje
+více vláken, vybere příjemce signálu jádro.
+
+Vlákno může získat sadu signálů, které jsou momentálně
+nevyřízené, pomocí \fBsigpending\fP(2).  Tato sada se skládá ze
+sloučení sady nevyřízených signálů zaměřených na proces a sady
+signálů zaměřených na volající vlákno.
+
+A child created via \fBfork\fP(2)  initially has an empty pending signal set;
+the pending signal set is preserved across an \fBexecve\fP(2).
+.SS "Standardní Signály"
+.\" parisc is a law unto itself
+Linux podporuje níže uvedené standardní signály. Některá čísla
+signálů jsou závislá na architektuře, jak je uvedeno ve sloupci
+"Hodnota".  (Kde jsou uvedeny tři hodnoty, první obvykle platí pro alpha
+a sparc, prostřední pro i386, ppc a sh a poslední pro mips.  Znak \-
+znamená, že signál v odpovídající architektuře chybí.)
+
+ Nejprve jsou uvedeny signály popsané v normě POSIX.1\-1990.
+.TS
+l c c l
+____
+lB c c l.
+Signál\tHodnota\tAkce\tPoznámka
+SIGHUP\t\01\tTerm\t"Hangup" \- při zavěšení na řídícím terminálu
+
+\t\t\tnebo ukončení řídícího procesu.
+SIGINT\t\02\tTerm\t"Interrupt" \- přerušení z klávesnice.
+
+SIGQUIT\t\03\tCore\t"Quit" \- ukončení z klávesnice.
+
+SIGILL\t\04\tCore\t"Illegal Instruction" \- neplatná instrukce.
+
+SIGABRT\t\06\tCore\t"Abort" \- ukončení funkcí \fBabort\fP(3)
+
+SIGFPE\t\08\tCore\t"Floating point exception" \- přetečení v pohyblivé řádové čárce.
+
+SIGKILL\t\09\tTerm\t"Kill" \- signál pro nepodmíněné ukončení procesu.
+
+SIGSEGV\t11\tCore\tOdkaz na nepřípustnou adresu v paměti.
+
+SIGPIPE\t13\tTerm\t"Broken pipe" \- pokus o zápis do roury,
+
+\t\t\tkterou nemá žádný proces otevřenou pro čtení.
+SIGALRM\t14\tTerm\tSignál od časovače, nastaveného funkcí \fBalarm\fP(1)
+
+SIGTERM\t15\tTerm\t"Termination" \- signál ukončení
+
+SIGUSR1\t30,10,16\tTerm\tSignál 1 definovaný uživatelem
+
+SIGUSR2\t31,12,17\tTerm\tSignál 2 definovaný uživatelem
+
+SIGCHLD\t20,17,18\tIgn\tZastavení nebo ukončení dětského procesu
+
+SIGCONT\t19,18,25\tCont\tPokračování po zastavení
+
+SIGSTOP\t17,19,23\tStop\tZastavení procesu
+
+SIGTSTP\t18,20,24\tStop\tZastavení znakem "Stop" z terminálu
+
+SIGTTIN\t21,21,26\tStop\tčtení z terminálu v procesu běžícím na pozadí
+
+SIGTTOU\t22,22,27\tStop\tzápis na terminál v procesu běžícím na pozadí
+
+.TE
+
+Signály \fBSIGKILL\fP a \fBSIGSTOP\fP nemohou být zachyceny, blokovány ani
+ignorovány.
+
+Následují signály nad rámec standardu POSIX.1\-1990, které jsou popsány
+v SUSv2 a POSIX.1\-2001.
+.TS
+l c c l
+____
+lB c c l.
+Signál\tHodnota\tAkce\tPoznámka
+SIGBUS\t10,7,10\tCore\t"Bus error" \- pokus o přístup mimo mapovanou paměť
+
+SIGPOLL\t\tTerm\tPollable event (Sys V).
+\t\t\tSynonymum \fBSIGIO\fP
+SIGPROF\t27,27,29\tTerm\tČasovač používaný při profilování
+
+SIGSYS\t12,\-,12\tCore\tNepřípustný parametr syst. volání (SVr4)
+
+SIGTRAP\t5\tCore\tPřerušení při ladění (trasování,breakpoint)
+
+SIGURG\t16,23,21\tIgn\tSoket přijal data s příznakem Urgent (4.2 BSD)
+
+SIGVTALRM\t26,26,28\tTerm\tVirtuální časovač (4.2 BSD)
+
+SIGXCPU\t24,24,30\tCore\tPřekročen limit času CPU (4.2 BSD)
+
+SIGXFSZ\t25,25,31\tCore\tPřekročen limit velikosti souboru (4.2 BSD)
+
+.TE
+
+Až po Linux 2.2 včetně bylo výchozí chování pro \fBSIGSYS\fP,
+\fBSIGXCPU\fP, \fBSIGXFSZ\fP, a (na architekturách jiných než SPARC a MIPS)
+\fBSIGBUS\fP ukončit proces (bez core dump).  (Na některých jiných
+Unixových systémech bylo výchozí akcí pro \fBSIGXCPU\fP a \fBSIGXFSZ\fP
+ukončení procesu bez core dump.)  Linux 2.4 splňuje požadavky
+POSIX.1\-2001 pro tyto signály, ukončuje procesy s core dump.
+
+Další různé signály.
+.TS
+l c c l
+____
+lB c c l.
+Signál\tHodnota\tAkce\tPoznámka
+SIGIOT\t6\tCore\tIOT \- synonymum signálu \fBSIGABRT\fP
+
+SIGEMT\t7,\-,7\tTerm
+SIGSTKFLT\t\-,16,\-\tTerm\tChyba zásobníku koprocesoru (nepoužívá se)
+
+SIGIO\t23,29,22\tTerm\tLze pokračovat ve vstupu/výstupu (4.2 BSD)
+
+SIGCLD\t\-,\-,18\tIgn\tSynonymum \fBSIGCHLD\fP
+
+SIGPWR\t29,30,19\tTerm\tVýpadek napájení (Systém V)
+
+SIGINFO\t29,\-,\-\t\tSynonymum \fBSIGPWR\fP
+
+SIGLOST\t\-,\-,\-\tTerm\tZámek souboru byl ztracen
+
+SIGWINCH\t28,28,20\tIgn\tZměna velikosti okna (4.3 BSD, Sun)
+
+SIGUNUSED\t\-,31,\-\tTerm\tNepoužívaný signál (bude \fBSIGSYS\fP)
+
+.TE
+
+Signál č. 29 na procesorech Alpha znamená \fBSIGINFO\fP / \fBSIGPWE\fP, ale na
+Sparcu \fBSIGLOST\fP.)
+
+\fBSIGEMT\fP není specifikován v POSIX.1\-2001, ale stejně je přítomen na
+většině ostatních Unixových systémů, kde je výchozí akcí obvykle
+ukončení procesu s core dump.
+
+\fBSIGPWR\fP (není specifikován v POSIX.1\-2001) na většině ostatních
+Unixových systémů, kde se objevuje, je obvykle ignorován.
+
+\fBSIGIO\fP (není specifikován v POSIX.1\-2001) na některých dalších
+Unixech je jako výchozí ignorován.
+.SS "Real\-time signály"
+Linux podporuje real\-time signály tak, jak jsou definovány v POSIX.1b
+real\-time extensions (a nyní zahrnuty v POSIX.1\-2001).  Rozsah
+podporovaných real\-time signálů je definován makry \fBSIGRTMIN\fP a
+\fBSIGRTMAX\fP.  POSIX.1\-2001 vyžaduje, aby implementace podporovale alespoň
+\fB_POSIX_RTSIG_MAX\fP (8) real\-time signálů.
+.PP
+Linux podporuje 32 různých real\-time signálů očíslovaných 33 až 64.
+Nicméně implementace POSIX threads v glibc používá interně dva (pro
+NPTL) nebo tři (pro LinuxThreads) real\-time signály (viz \fBpthreads\fP(7)),
+a podle toho upravuje hodnotu \fBSIGRTMIN\fP (na 34 nebo 35).  protože rozsah
+dostupných real\-time signálů se liší v závislosti na implementaci
+vláken v glibc (může se měnit za běhu v závislosti na jádře a glibc)
+a navíc rozsah real\-time signálů se mezi Unixovými systémy liší,
+programy by \fInikdy neměly odkazovat na real\-time signály pevně danými
+čísly\fP, místo toho by měly používat notaci \fBSIGRTMIN\fP+n, a za běhu
+kontrolovat, zda \fBSIGRTMIN\fP+n nepřesahuje \fBSIGRTMAX\fP.
+.PP
+Na rozdíl od standardních signálů nemají real\-time signály stanovený
+význam: Celá sada real\-time signálů může být použita pro účely
+definované aplikací.  (Nicméně pozor, první tři real\-time signály
+používá implementace LinuxThreads.)
+.PP
+Výchozí akcí pro nezpracovaný real\-time signál je ukončení procesu,
+který jej přijal.
+.PP
+Real\-time signály se liší následujícně:
+.IP 1. 4
+Vícero instancí real\-time signálů může být zařazeno do fronty.
+Naopak pokud je doručeno vícero instancí standardního signálu, zatímco
+je signál blokován, je do fronty zařazen jen jeden.
+.IP 2. 4
+Pokud je signál poslán pomocí \fBsigqueue\fP(2), může s ním být poslána
+doprovodná hodnota (integer nebo pointer).  Pokud přijímací proces
+vytvoří pro tento signál handler pomocí vlajky \fBSA_SIGINFO\fP pro
+\fBsigaction\fP(2), tak může tato data získat v poli \fIsi_value\fP struktury
+\fIsiginfo_t\fP předané jako druhý argument handleru.  Navíc mohou být
+pole \fIsi_pid\fP a \fIsi_uid\fP této struktury použita k získání PID a real
+user ID procesu, který signál poslal.
+.IP 3. 4
+Real\-time signály jsou doručeny v zaručeném pořadí.  Vícero real\-time
+signálů stejného typu je doručeno v pořadí, v jakém byly vyslány.
+Pokud jsou procesu poslány různé real\-time signály, jsou doručeny v
+pořadí podle čísla, začínajíc nejnižším (tj. signály s nízkým
+číslem mají vyšší prioritu). Naopak, pokud na proces čeká vícero
+standardních signálů, není pořadí jejich doručení definováno.
+.PP
+Pokud má proces nevyřízené zároveň real\-time a standardní signály,
+POSIX neurčuje, které mají být doručeny jako první.  Linux, stejně
+jako mnoho jiných implementací, v takovém případě upřednostňí
+standardní signály.
+.PP
+Podle POSIX by měla implementace pro frontu procesu povolit alespoň
+\fB_POSIX_SIGQUEUE_MAX\fP (32) real\-time signálů.  Linux ale pracuje jinak.
+V jádrech do 2.6.7 včetně stanovuje Linux celosystémový limit na počet
+real\-time signálů ve frontách všech procesů.  tento limit je možné
+zjistit a (s patřičnými právy) změnit přes soubor
+\fI/proc/sys/kernel/rtsig\-max\fP.  Další soubor,
+\fI/proc/sys/kernel/rtsig\-nr\fP, může být použit ke zjištění, kolik
+real\-time signálů je momentálně ve frontách.  V Linuxu 2.6.8 byla tato
+\fI/proc\fP rozhraní nahrazena limitem zdrojů \fBRLIMIT_SIGPENDING\fP, který
+určuje uživatelský limit na počet signálů ve frontách; více viz
+\fBsetrlimit\fP(2).
+.SS "Async\-signal\-safe functions"
+.PP
+Rutina zpracovávající signál, kterou vytvořil \fBsigaction\fP(2)  nebo
+\fBsignal\fP(2), musí být velmi opatrná, neboť její zpracování může
+být v určitých místech programu přerušeno.  POSIX má koncept
+"bezpečné funkce". Pokud signál přeruší vykonávání ne\-bezpečné
+funkce a \fIhandler\fP zavolá ne\-bezpečnou funkci, potom je chování
+programu nedefinováno.
+
+POSIX.1\-2004 (také známý jako POSIX.1\-2001 Technical Corrigendum 2)
+vyžaduje, aby implementace zaručovala bezpečné volání následujících
+funkcí v rámci "signal handleru":
+
+.in +4
+.nf
+_Exit()
+_exit()
+abort()
+accept()
+access()
+aio_error()
+aio_return()
+aio_suspend()
+alarm()
+bind()
+cfgetispeed()
+cfgetospeed()
+cfsetispeed()
+cfsetospeed()
+chdir()
+chmod()
+chown()
+clock_gettime()
+close()
+connect()
+creat()
+dup()
+dup2()
+execle()
+execve()
+fchmod()
+fchown()
+fcntl()
+fdatasync()
+fork()
+fpathconf()
+fstat()
+fsync()
+ftruncate()
+getegid()
+geteuid()
+getgid()
+getgroups()
+getpeername()
+getpgrp()
+getpid()
+getppid()
+getsockname()
+getsockopt()
+getuid()
+kill()
+link()
+listen()
+lseek()
+lstat()
+mkdir()
+mkfifo()
+open()
+pathconf()
+pause()
+pipe()
+poll()
+posix_trace_event()
+pselect()
+raise()
+read()
+readlink()
+recv()
+recvfrom()
+recvmsg()
+rename()
+rmdir()
+select()
+sem_post()
+send()
+sendmsg()
+sendto()
+setgid()
+setpgid()
+setsid()
+setsockopt()
+setuid()
+shutdown()
+sigaction()
+sigaddset()
+sigdelset()
+sigemptyset()
+sigfillset()
+sigismember()
+signal()
+sigpause()
+sigpending()
+sigprocmask()
+sigqueue()
+sigset()
+sigsuspend()
+sleep()
+sockatmark()
+socket()
+socketpair()
+stat()
+symlink()
+sysconf()
+tcdrain()
+tcflow()
+tcflush()
+tcgetattr()
+tcgetpgrp()
+tcsendbreak()
+tcsetattr()
+tcsetpgrp()
+time()
+timer_getoverrun()
+timer_gettime()
+timer_settime()
+times()
+umask()
+uname()
+unlink()
+utime()
+wait()
+waitpid()
+write()
+.fi
+.in
+.PP
+POSIX.1\-2008 odstraňuje fpathconf(), pathconf() a sysconf() z uvedeného
+seznamu a přidává následující funkce:
+.PP
+.in +4n
+.nf
+execl()
+execv()
+faccessat()
+fchmodat()
+fchownat()
+fexecve()
+fstatat()
+futimens()
+linkat()
+mkdirat()
+mkfifoat()
+mknod()
+mknodat()
+openat()
+readlinkat()
+renameat()
+symlinkat()
+unlinkat()
+utimensat()
+utimes()
+.fi
+.in
+.SS "Přerušení systémových volání a funkcí knihoven prostřednictvím \(dqsignal handlers\(dq"
+Pokud je signal handler vyvolán v okamžiku, kdy je systémové volání
+nebo funkce knihovny blokována, pak:
+.IP * 2
+je volání automaticky restartováno po návratu signal handleru, nebo
+.IP *
+volání selže s chybou \fBEINTR\fP.
+.PP
+Která z těchto možností nastane, záleží na rozhraní a na tom, zda
+byl signal handler definován s pomocí vlajky \fBSA_RESTART\fP (viz
+\fBsigaction\fP(2)). Podrobnosti se mezi Unixovými systémy liší; dále jsou
+uvedeny pro Linux.
+
+.\" The following system calls use ERESTARTSYS,
+.\" so that they are restartable
+Pokud je blokované volání pro jedno z následujících rozhraní
+přerušeno signal handlerem a byla použita vlajka \fBSA_RESTART\fP, je
+volání automaticky restartováno po návratu signal handleru. V opačném
+případě volání selže s chybou \fBEINTR\fP:
+.RS 4
+.IP * 2
+Volání \fBread\fP(2), \fBreadv\fP(2), \fBwrite\fP(2), \fBwritev\fP(2) a \fBioctl\fP(2)
+na "pomalých" zařízeních. "Pomalé" zařízení je takové, kde I/O
+volání může blokovat nekonečně dlouho \- například terminál, roura
+nebo socket. (Podle této definice není disk pomalým zařízením) Pokud
+je I/O volání přerušeno signal handlerem v okamžiku, kdy již přeneslo
+nějaká data, je návratovou hodnotou volání úspěch (obvykle počet
+přenesených bajtů).
+.IP *
+\fBopen\fP(2), v případě, že může blokovat (např. při otevírání
+FIFO; viz \fBfifo\fP(7)).
+.IP *
+\fBwait\fP(2), \fBwait3\fP(2), \fBwait4\fP(2), \fBwaitid\fP(2) a \fBwaitpid\fP(2).
+.IP *
+.\" If a timeout (setsockopt()) is in effect on the socket, then these
+.\" system calls switch to using EINTR.  Consequently, they and are not
+.\" automatically restarted, and they show the stop/cont behavior
+.\" described below.  (Verified from 2.6.26 source, and by experiment; mtk)
+Rozhraní socketů: \fBaccept\fP(2), \fBconnect\fP(2), \fBrecv\fP(2), \fBrecvfrom\fP(2),
+\fBrecvmsg\fP(2), \fBsend\fP(2), \fBsendto\fP(2) a \fBsendmsg\fP(2); neplatí v
+případě, že byl pro socket nastaven časový limit (viz níže).
+.IP *
+Rozhraní souborových zámků: \fBflock\fP(2) a \fBfcntl\fP(2)  \fBF_SETLKW\fP.
+.IP *
+Rozhraní pro POSIXové fronty zpráv: \fBmq_receive\fP(3),
+\fBmq_timedreceive\fP(3), \fBmq_send\fP(3) a \fBmq_timedsend\fP(3).
+.IP *
+\fBfutex\fP(2)  \fBFUTEX_WAIT\fP (od jádra 2.6.22; předtím vždycky selhalo s
+\fBEINTR\fP).
+.IP *
+Rozhraní POSIXových semaforů: \fBsem_wait\fP(3) a \fBsem_timedwait\fP(3) (od
+jádra 2.6.22; předtím vždycky selhalo s \fBEINTR\fP).
+.RE
+.PP
+.\" These are the system calls that give EINTR or ERESTARTNOHAND
+.\" on interruption by a signal handler.
+Následující rozhraní se po přerušení signal handlerem nikdy
+nerestartují, bez ohledu na použití \fBSA_RESTART\fP \- vždycky selžou s
+chybou \fBEINTR\fP:
+.RS 4
+.IP * 2
+Rozhraní socketů v případě, že byl pro socket nastaven časový limit
+pomocí \fBsetsockopt\fP(2): \fBaccept\fP(2), \fBrecv\fP(2), \fBrecvfrom\fP(2) a
+\fBrecvmsg\fP(2) \- pokud byl nastaven časový limit pro přijetí
+(\fBSO_RCVTIMEO\fP); \fBconnect\fP(2), \fBsend\fP(2), \fBsendto\fP(2) a \fBsendmsg\fP(2) \-
+pokud byl nastaven časový limit pro odeslání (\fBSO_SNDTIMEO\fP).
+.IP *
+Rozhraní používaná k čekání na signály: \fBpause\fP(2),
+\fBsigsuspend\fP(2), \fBsigtimedwait\fP(2) a \fBsigwaitinfo\fP(2).
+.IP *
+Multiplexující rozhraní popisovačů souborů: \fBepoll_wait\fP(2),
+\fBepoll_pwait\fP(2), \fBpoll\fP(2), \fBppoll\fP(2), \fBselect\fP(2) a \fBpselect\fP(2).
+.IP *
+.\" On some other systems, SA_RESTART does restart these system calls
+System V IPC rozhraní: \fBmsgrcv\fP(2), \fBmsgsnd\fP(2), \fBsemop\fP(2) a
+\fBsemtimedop\fP(2).
+.IP *
+Rozhraní pro spánek: \fBclock_nanosleep\fP(2), \fBnanosleep\fP(2) a
+\fBusleep\fP(3).
+.IP *
+\fBread\fP(2)  z popisovače souborů \fBinotify\fP(7).
+.IP *
+\fBio_getevents\fP(2).
+.RE
+.PP
+Funkce \fBsleep\fP(3) se také při přerušení signal handlerem nerestartuje,
+nýbrž vrátí úspěch: počet sekund, které zbývají ke spaní.
+.SS "Přerušení systémovách volání a funkcí knihoven signály Stop"
+V Linuxu mohou některá blokující rozhraní selhat s chybou \fBEINTR\fP i
+bez signal handlerů, pokud je proces zastaven jedním ze stop signálů a
+poté obnoven pomocí \fBSIGCONT\fP. Toto chování neodporuje POSIX.1 a
+neobjevuje se v jiných systémech.
+
+Linuxová rozhraní, v nichž se toto chování projevuje, jsou:
+.RS 4
+.IP * 2
+Rozhraní socketů v případě, že byl pro socket nastaven časový limit
+pomocí \fBsetsockopt\fP(2): \fBaccept\fP(2), \fBrecv\fP(2), \fBrecvfrom\fP(2) a
+\fBrecvmsg\fP(2) \- pokud byl nastaven časový limit pro přijetí
+(\fBSO_RCVTIMEO\fP); \fBconnect\fP(2), \fBsend\fP(2), \fBsendto\fP(2) a \fBsendmsg\fP(2) \-
+pokud byl nastaven časový limit pro odeslání (\fBSO_SNDTIMEO\fP).
+.IP * 2
+\fBepoll_wait\fP(2), \fBepoll_pwait\fP(2).
+.IP *
+\fBsemop\fP(2), \fBsemtimedop\fP(2).
+.IP *
+\fBsigtimedwait\fP(2), \fBsigwaitinfo\fP(2).
+.IP *
+\fBread\fP(2)  z popisovače souborů \fBinotify\fP(7).
+.IP *
+Jádro 2.6.21 a dřívější: \fBfutex\fP(2)  \fBFUTEX_WAIT\fP,
+\fBsem_timedwait\fP(3), \fBsem_wait\fP(3).
+.IP *
+Jádro 2.6.8 a dřívější: \fBmsgrcv\fP(2), \fBmsgsnd\fP(2).
+.IP *
+Jádro 2.4 a dřívější: \fBnanosleep\fP(2).
+.RE
+.SH "SPLŇUJE STANDARDY"
+POSIX.1, s uvedenými výjimkami.
+.SH CHYBY
+Signály \fBSIGIO\fP a \fBSIGLOST\fP mají stejnou hodnotu.  SIGLOST se ve
+zdrojových textech jádra již nepoužívá, ale při překladu určitých
+balíků software se stále předpokládá, že signál č.29 znamená
+\fBSIGLOST\fP.
+.SH "DALŠÍ INFORMACE"
+\fBkill\fP(1), \fBgetrlimit\fP(2), \fBkill\fP(2), \fBkillpg\fP(2), \fBsetitimer\fP(2),
+\fBsetrlimit\fP(2), \fBsgetmask\fP(2), \fBsigaction\fP(2), \fBsigaltstack\fP(2),
+\fBsignal\fP(2), \fBsignalfd\fP(2), \fBsigpending\fP(2), \fBsigprocmask\fP(2),
+\fBsigqueue\fP(2), \fBsigsuspend\fP(2), \fBsigwaitinfo\fP(2), \fBabort\fP(3),
+\fBbsd_signal\fP(3), \fBlongjmp\fP(3), \fBraise\fP(3), \fBsigset\fP(3), \fBsigsetops\fP(3),
+\fBsigvec\fP(3), \fBsigwait\fP(3), \fBstrsignal\fP(3), \fBsysv_signal\fP(3), \fBcore\fP(5),
+\fBproc\fP(5), \fBpthreads\fP(7)
+.SH TIRÁŽ
+Tato stránka je součástí projektu Linux \fIman\-pages\fP.  Popis projektu a
+informace o hlášení chyb najdete na http://www.kernel.org/doc/man\-pages/.

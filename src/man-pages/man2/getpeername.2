@@ -1,0 +1,54 @@
+.TH GETPEERNAME 2 "2. července 1997" "BSD Man Page" "Linux - příručka programátora"
+.do hla cs
+.do hpf hyphen.cs
+.SH JMÉNO
+getpeername \- vrať adresu vzdáleného konce soketu
+.SH SYNTAXE
+.BI "int getpeername(int " s ", struct sockaddr *" name ", int *" namelen );
+.SH POPIS
+.B Getpeername
+vrací jméno (adresu) počítače, který je na druhém konci soketu.
+.IR s .
+Parametr
+.I namelen
+by měl být inicializován tak, aby indikoval velikost paměťového prostoru, na
+který ukazuje argument
+.IR name .
+Po návratu bude obsahovat aktuální velikost vrácené adresy (v bajtech).
+Jméno je příslušně zkráceno, je-li velikost příliš malá.
+.SH NÁVRATOVÁ HODNOTA
+V případě úspěchu je vrácena 0, jinak \-1 a proměnná
+.I errno
+je příslušně nastavena.
+.SH CHYBY
+.TP 0.8i
+.B EBADF
+Argument
+.I s
+není platným deskriptorem.
+.TP
+.B ENOTSOCK
+Argument
+.I s
+je deskriptorem souboru, není to soket.
+.TP
+.B ENOTCONN
+Soket není spojen.
+.TP
+.B ENOBUFS
+Systém nemá k dispozici dostatek vnitřních zdrojů, aby mohl tuto operaci
+provést.
+.TP
+.B EFAULT
+Argument
+.I name
+ukazuje na paměť, která se nenachází v platné části adresového prostoru
+procesu.
+.SH SPLŇUJE STANDARDY
+SVr4, 4.4BSD (volání
+.B getpeername
+se poprvé objevilo ve 4.2BSD).
+.SH DALŠÍ INFORMACE
+.BR accept "(2), " bind "(2), " getsockname (2)
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

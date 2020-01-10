@@ -1,0 +1,31 @@
+.\" -*- nroff -*-
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH PS2PS 1 "31. prosinec 2000" 6.60 "Ghostscript Tools"
+.\" $Id: eps2eps.1,v 1.2 2004/02/14 22:20:04 atai Exp $
+.SH JMÉNO
+ps2ps, eps2eps \- Ghostscript PostScript "distiller"
+.SH POUŽITÍ
+\fBps2ps\fP [ \fIvolby\fP ] \fIvstup.ps výstup.ps\fP
+.br
+\fBeps2eps\fP [ \fIvolby\fP ] \fIvstup.eps výstup.eps\fP
+.SH POPIS
+\fBps2ps\fP používá \fIgs\fP(1) ke konverzi souboru formátu \fBPostScript\fP(tm)
+"vstup.ps" na jednodušší a (obvykle) rychlejší PostScript soubor
+"výstup.ps".  Normálně je ve výstupu povoleno použití PostScript Level
+2 konstrukcí, ale volba \fB\-dLanguageLevel=1\fP omezí výstup pouze na Level
+1.
+.PP
+\fBeps2eps\fP provádí stejnou optimalizaci pro soubory typu Encapsulated
+PostScript (EPS).
+.SH SOUBORY
+Spuštěním "\fBgs \-h\fP" zjistíte umístění dokumentace balíku
+Ghostscript ve vašem systému, ze které se dozvíte více podrobností.
+.SH VERZE
+Tento dokument byl naposledy revidován pro Ghostscript verze 6.60.
+.SH AUTOR
+artofcode LLC a Artifex Software, bug\-gs at ghostscript.com, jsou hlavními
+udržovateli programu Ghostscript.

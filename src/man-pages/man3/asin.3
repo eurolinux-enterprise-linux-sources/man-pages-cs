@@ -1,0 +1,28 @@
+.TH ASIN 3  "5.ledna 1997" "" "Linux - příručka programátora"
+.do hla cs
+.do hpf hyphen.cs
+.SH JMÉNO
+asin \- arcus sinus
+.SH SYNTAXE
+.nf
+.B #include <math.h>
+.sp
+.BI "double asin(double " x );
+.fi
+.SH POPIS
+Funkce \fBasin()\fP počítá hodnotu arcus sinus čísla \fIx\fP; což je
+hodnota, jejíž sinus je \fIx\fP.  Je-li \fIx\fP mimo interval od 
+\-1 do 1, funkce \fBasin()\fP selže a proměnná \fIerrno\fP je nastavena.
+.SH NÁVRATOVÁ HODNOTA
+Funkce \fBasin()\fP vrací arcus sinus v radiánech a její obor hodnot je 
+od -PI/2 do PI/2 včetně.
+.SH CHYBY
+.TP
+.B EDOM
+\fIx\fP není z definičního oboru.
+.SH SPLŇUJE STANDARDY
+SVID 3, POSIX, BSD 4.3, ISO 9899
+.SH DALŠÍ INFORMACE
+.BR acos "(3), " atan "(3), " atan2 "(3), " cos "(3), " sin "(3), " tan (3)
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

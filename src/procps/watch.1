@@ -1,0 +1,72 @@
+.TH WATCH 1 "3. dubna 1999" " " "Linux - Příručka uživatele"
+.SH JMÉNO
+watch \- opakovaně spouští program a ukazuje jeho výstup maximalizovaně
+
+.SH SYNTAXE
+.B watch
+.I [\-dhvt] [\-n <sekundy>] [\-\-differences[=cumulative]] [\-\-help] [\-\-interval=<sekundy>] [\-\-no\-title] [\-\-version] <příkaz>
+
+.SH POPIS
+\fBwatch\fP spouští opakovaně \fIpříkaz\fP a zobrazuje jeho výstup. To umožňuje
+sledovat jak se mění výstup programu v čase. Standardně se program spouští každé
+2 sekundy; pro nastavení jiného intervalu použijte \fI\-n\fP nebo \fI\-\-interval\fP.
+.PP
+Parametr \fI\-d\fP zvýrazní změny oproti minulému výstupu. Volba \fI\-\-cumulative\fP
+způsobí, že budou zvýrazněny všechny pozice, které se někdy změnily. Přepínač \fI\-t\fP
+nebo také \fI\-\-no\-title\fP odstraní hlavičku (interval, příkaz a aktuální čas).
+.PP
+.BR watch
+běží dokud není přerušen.
+
+.SH POZNÁMKY
+Uvědomte si, že \fIpříkaz\fP je předán jako argument "sh \-c", což znamená, 
+že můžou být potřeba uvozovky navíc.
+.PP
+Uvědomte si, že je používáno POSIXové zpracování voleb (to jest zpracování voleb
+končí jakmile se objeví první nevolbový argument). To znamená, že přepínače po 
+\fPpříkazu\fP nebudou interpretovány jako přepínače programu watch.
+
+.SH PŘÍKLADY
+.IP "K sledování jestli nepřišel mail lze použít"
+.nf
+watch \-n 60 from
+.fi
+.IP "Ke sledování změn v adresáři"
+.nf
+watch \-d ls \-l
+.fi
+.IP "Pokud nás zajímají pouze soubory vlastněné uživatelem joe, použijeme"
+.nf
+watch \-d 'ls \-l | fgrep joe'
+.fi
+.IP "Ke sledování ovlivnění uvozovkami použijte tohle"
+.nf
+watch echo $$
+.br
+watch echo '$$'
+.br
+watch echo "'"'$$'"'"
+.fi
+.IP "Můžete sledovat kdy váš administrátor nainstaloval nové jádro"
+.nf
+watch uname -r
+.fi
+(Jenom vtip.)
+
+.SH CHYBY
+Při změně velikosti terminálu se obrazovka správně nepřekreslí až do následujícího
+obnovení watche. Při tomto obnovení budou také ztraceny všechny zvýrazněné rozdíly.
+.PP
+Netisknutelné znaky jsou ve výstupu vynechány. Pokud je chcete vidět, 
+použijte "cat \-v" jako součást příkazu.
+
+.SH AUTOŘI
+Původní \fBwatch\fP napsal Tony Rems <rembo@unisoft.com> v roce 1991, 
+s úpravami a opravami Francois Pinarda. V roce 1999 ho Mike Coleman
+<mkc@acm.org> přepracoval a přidal nové vlastnosti. 
+
+.SH PŘEKLAD
+Stínovlas <stinovlas@gmail.com>
+
+.\" Přeloženo z:procps-3.2.6
+.\" MD5 originálu:943dbda403a37222b15ce8e7d9500c5f

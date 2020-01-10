@@ -1,0 +1,79 @@
+.TH GETPROTOENT 3  "31. března 1997" "BSD" "Linux - příručka programátora"
+.do hla cs
+.do hpf hyphen.cs
+.SH JMÉNO
+getprotoent, getprotobyname, getprotobynumber, setprotoent,
+endprotoent \- funkce pro práci s databází protokolů
+.SH SYNTAXE
+.nf
+.B #include <netdb.h>
+.sp
+.B struct protoent *getprotoent(void);
+.sp
+.BI "struct protoent *getprotobyname(const char *" name );
+.sp
+.BI "struct protoent *getprotobynumber(int " proto );
+.sp
+.BI "void setprotoent(int " stayopen );
+.sp
+.B void endprotoent(void);
+.fi
+.SH POPIS
+Funkce \fBgetprotoent()\fP přečte další záznam z databáze protokolů 
+\fI/etc/protocols\fP a vrátí strukturu \fIprotoent\fP, která obsahuje
+jednotlivá pole. Soubor \fI/etc/protocols\fP je otevřen, je-li potřeba.
+.PP
+Funkce \fBgetprotobyname()\fP vrací strukturu \fIprotoent\fP
+ze souboru \fI/etc/protocols\fP pro řádek, který vyhovuje
+jménu \fIname\fP.
+.PP
+Funkce \fBgetprotobynumber()\fP vrací strukturu \fIprotoent\fP
+pro řádek, který vyhovuje protokolovému číslu \fInumber\fP.
+.PP
+Funkce \fBsetprotoent()\fP otevře databázi protokolů a nastaví ukazovátko na
+jeho začátek. Je-li \fIstayopen\fP nenulové, soubor nebude mezi voláními
+\fBgetprotobyname()\fP a \fBgetprotobynumber()\fP uzavírán.
+.PP
+Funkce \fBendprotoent()\fP uzavírá \fI/etc/protocols\fP.
+.PP
+Struktura \fIprotoent\fP je definována v \fI<netdb.h>\fP následovně:
+.sp
+.RS
+.nf
+.ne 5
+.ta 8n 16n 32n
+struct protoent {
+	char	*p_name;		/* official protocol name */
+	char	**p_aliases;		/* alias list */
+	int	p_proto;		/* protocol number */
+}
+.ta
+.fi
+.RE
+.PP
+Prvky struktury \fIprotoent\fP jsou:
+.TP
+.I p_name
+Oficiální jméno protokolu.
+.TP
+.I p_aliases
+Nulovým ukazatelem ukončený seznam přezdívek protokolu.
+.TP
+.I p_proto
+Číslo protokolu.
+.SH NÁVRATOVÁ HODNOTA
+Funkce \fBgetprotoent()\fP, \fBgetprotobyname()\fP a \fBgetprotobynumber()\fP
+vrací strukturu \fIprotoent\fP structure, nebo NULL, jestliže došlo k chybě
+nebo byl dosažen konec souboru.
+.SH SOUBORY
+.PD 0
+.TP
+.I /etc/protocols
+databáze protokolů
+.PD
+.SH SPLŇUJE STANDARDY
+BSD 4.3
+.SH DALŠÍ INFORMACE
+.BR getservent "(3), " getnetent "(3), " protocols (5)
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

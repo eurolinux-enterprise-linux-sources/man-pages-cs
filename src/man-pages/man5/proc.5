@@ -1,0 +1,1992 @@
+.\" Copyright (C) 1994, 1995 by Daniel Quinlan (quinlan@yggdrasil.com)
+.\" and Copyright (C) 2002-2008 Michael Kerrisk <mtk.manpages@gmail.com>
+.\" with networking additions from Alan Cox (A.Cox@swansea.ac.uk)
+.\" and scsi additions from Michael Neuffer (neuffer@mail.uni-mainz.de)
+.\" and sysctl additions from Andries Brouwer (aeb@cwi.nl)
+.\" and System V IPC (as well as various other) additions from
+.\" Michael Kerrisk <mtk.manpages@gmail.com>
+.\"
+.\" This is free documentation; you can redistribute it and/or
+.\" modify it under the terms of the GNU General Public License as
+.\" published by the Free Software Foundation; either version 2 of
+.\" the License, or (at your option) any later version.
+.\"
+.\" The GNU General Public License's references to "object code"
+.\" and "executables" are to be interpreted as the output of any
+.\" document formatting or typesetting system, including
+.\" intermediate and printed output.
+.\"
+.\" This manual is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public
+.\" License along with this manual; if not, write to the Free
+.\" Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111,
+.\" USA.
+.\"
+.\" Modified 1995-05-17 by faith@cs.unc.edu
+.\" Minor changes by aeb and Marty Leisner (leisner@sdsp.mc.xerox.com).
+.\" Modified 1996-04-13, 1996-07-22 by aeb@cwi.nl
+.\" Modified 2001-12-16 by rwhron@earthlink.net
+.\" Modified 2002-07-13 by jbelton@shaw.ca
+.\" Modified 2002-07-22, 2003-05-27, 2004-04-06, 2004-05-25
+.\"    by Michael Kerrisk <mtk.manpages@gmail.com>
+.\" 2004-11-17, mtk -- updated notes on /proc/loadavg
+.\" 2004-12-01, mtk, rtsig-max and rtsig-nr went away in 2.6.8
+.\" 2004-12-14, mtk, updated 'statm', and fixed error in order of list
+.\" 2005-05-12, mtk, updated 'stat'
+.\" 2005-07-13, mtk, added /proc/sys/fs/mqueue/*
+.\" 2005-09-16, mtk, Added /proc/sys/fs/suid_dumpable
+.\" 2005-09-19, mtk, added /proc/zoneinfo
+.\" 2005-03-01, mtk, moved /proc/sys/fs/mqueue/* material to mq_overview.7.
+.\" 2008-06-05, mtk, Added /proc/[pid]/oom_score, /proc/[pid]/oom_adj,
+.\"     /proc/[pid]/limits, /proc/[pid]/mountinfo, /proc/[pid]/mountstats,
+.\"     and /proc/[pid]/fdinfo/*.
+.\" 2008-06-19, mtk, Documented /proc/[pid]/status.
+.\" 2008-07-15, mtk, added /proc/config.gz
+.\"
+.\" FIXME 2.6.13 seems to have /proc/vmcore implemented
+.\" in the source code, but there is no option available under
+.\" 'make xconfig'; eventually this should be fixed, and then info
+.\" from the patch-2.6.13 and change log could be used to write an
+.\" entry in this man page.
+.\" Needs CONFIG_VMCORE
+.\"
+.\" FIXME cross check against Documentation/filesystems/proc.txt
+.\" to see what information could be imported from that file
+.\" into this file.
+.\"
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH PROC 5 2009\-01\-17 Linux "Linux \- příručka programátora"
+.SH JMÉNO
+proc \- pseudo souborový systém informací o procesech
+.SH POPIS
+Souborový systém \fIproc\fP je pseudo souborový systém, který je
+používán jako interface k datovým strukturám jádra. Obvykle se
+připojuje do \fI/proc\fP.  Většina jeho obsahu je pouze ke čtení, ale
+některé soubory umožňují změnit proměnné jadra.
+.LP
+Následující shrnutí rychle provede hierarchií \fI/proc\fP.
+.PD 1
+.TP 
+\fI/proc/[pid]\fP
+.\" FIXME Describe /proc/[pid]/attr and
+.\"       /proc/[pid]/task/[tid]/attr
+.\"	  This is a directory
+.\"       Added in ???
+.\"	  CONFIG_SECURITY
+.\"
+Pro každý běžící proces existuje číselný podadresář pojmenovaný
+podle ID procesu.  Každý podadresář obsahuje následující
+pseudosoubory a adresáře.
+.TP 
+\fI/proc/[pid]/auxv\fP (od 2.6.0\-test7)
+.\" FIXME Describe /proc/[pid]/cgroup and
+.\"       /proc/[pid]/task/[tid]/cgroup
+.\" 	  Info in Documentation/cgroups.txt
+.\"       Added in 2.6.24
+.\"	  CONFIG_CGROUPS
+.\"
+.\" FIXME Describe /proc/[pid]/clear_refs
+.\"       Added in 2.6.22
+.\"       "Clears page referenced bits shown in smaps output"
+.\"       write-only
+.\"       CONFIG_PROC_PAGE_MONITOR
+Obsahuje informaci o ELF interpretu, která byla procesu při spuštění
+předána. Její formát je jedno \fIunsigned long\fP ID a jedna \fIunsigned
+long\fP hodnota pro každou položku.  Poslední položka obsahuje dvě nuly.
+.TP 
+\fI/proc/[pid]/cmdline\fP
+.\" In 2.3.26, this also used to be true if the process was swapped out.
+Obsahuje celou příkazovou řádku procesu, pokud tedy proces není
+zombie. V takovém případě tento soubort neobsahuje nic, tj. čtení
+tohoto souboru vrátí 0 znaků.  Argumenty příkazové řádky se v tomto
+souboru objevují jako sada řetězců oddělených pomocí null, která je
+ukončena dalším bajtem null po posledním řetězci.
+.TP 
+\fI/proc/[pid]/coredump_filter\fP (od jádra 2.6.23)
+Viz \fBcore\fP(5).
+.TP 
+\fI/proc/[pid]/cpuset\fP (od jádra 2.6.12)
+.\" and/proc/[pid]/task/[tid]/cpuset
+Viz \fBcpuset\fP(7).
+.TP 
+\fI/proc/[pid]/cwd\fP
+Toto je symbolický odkaz na aktuální pracovní adresář (current working
+directory) procesu. Např. pro zjištění aktuálního pracovního
+adresáře procesu 20 lze provést:
+
+.in +4n
+.nf
+$\fB cd /proc/20/cwd; /bin/pwd\fP
+.fi
+.in
+
+Prosím všimněte si, že příkaz \fIpwd\fP je často zabudovaným příkazem
+shellu a nemusí fungovat správně. V \fBbash\fPi lze použít \fIpwd\ \-P\fP.
+
+.\" The following was still true as at kernel 2.6.13
+V případě vícevláknového procesu, jehož hlavní vlákno již
+skončilo (obvykle voláním \fBpthread_exit\fP(3)), již nebude obsah tohoto
+symbolického odkazu dostupný.
+.TP 
+\fI/proc/[pid]/environ\fP
+Tento soubor obsahuje proměnné prostředí procesu.  Jednotlivé údaje
+jsou odděleny znakem null (\(aq\e0\(aq)  a znaky null mohou být i na
+konci.  Takže pro vytištění proměnných prostředí procesu 1 se
+provede:
+.in +4n
+.nf
+
+$\fB (cat /proc/1/environ; echo) | tr \(aq\e000\(aq \(aq\en\(aq\fP
+.fi
+.in
+.TP 
+\fI/proc/[pid]/exe\fP
+.\" The following was still true as at kernel 2.6.13
+V Linuxu 2.2 a novějším je tento soubor symbolickým odkazem, který
+obsahuje skutečnou cestu ke spuštěnému příkazu.  Tento symbolický
+odkaz lze normálně dereferencovat; při pokusu jej otevřít je otevřen
+spustitelný soubor, na který odkazuje.  Je dokonce možné napsat
+\fI/proc/[pid]/exe\fP a spustit tak další kopii stejného spustitelného
+souboru, který je již spuštěn procesem [pid].  V případě
+vícevláknového procesu, jehož hlavní vlákno již skončilo (obvykle
+voláním \fBpthread_exit\fP(3)), již nebude obsah tohoto symbolického odkazu
+dostupný.
+
+V Linuxu do verze 2.0 včetně byl soubor \fI/proc/[pid]/exe\fP ukazatelem na
+spuštěný program a vypadal jako symbolický odkaz. Volání
+\fBreadlink\fP(2) na tento soubor v Linuxu 2.0 vracelo řetězec ve tvaru:
+
+    [zařízení]:inoda
+
+Například [0301]:1502 znamená inoda 1502 v zařízení s major číšlem
+03 (IDE, MFM, a jiné disky) a minor číslem 01 (první oddíl prvního
+disku).
+
+K nalezení souboru lze použít příkaz \fBfind\fP(1)  s volbou \fI\-inum\fP.
+.TP 
+\fI/proc/[pid]/fd\fP
+Toto je podadresář, který obsahuje pro každý soubor, který proces
+otevřel, jednu položku, pojmenovanou po jeho deskriptoru souboru, který
+je zároveň symbolickým odkazem na onen soubor. Tudíž 0 odpovídá
+standardnímu vstupu, 1 standardnímu výstupu, 2 standardnímu chybovému
+výstupu atd.
+
+.\" The following was still true as at kernel 2.6.13
+V případě vícevláknového procesu, jehož hlavní vlákno již
+skončilo (obvykle voláním \fBpthread_exit\fP(3)), již nebude obsah tohoto
+adresáře dostupný.
+
+Programy, které vyžadují jméno souboru, ale nedokáží bez zvláštní
+volby pracovat se standardním vstupem anebo ty, které zapisují do souboru
+zadaného na příkazové řádce, ale pokud není zadán, neposílají
+výstup na standardní výstup tak mohou být přesvědčeny k použití
+standardního vstupu a/nebo výstupu pomocí \fI/proc/[pid]/fd\fP. Např. pokud
+je \fI\-i\fP přepínač označující vstupní soubor a \fI\-o\fP přepínač
+označující výstupní soubor:
+.in +4n
+.nf
+
+$\fB foobar \-i /proc/self/fd/0 \-o /proc/self/fd/1 ...\fP
+.fi
+.in
+
+.\" The following is not true in my tests (MTK):
+.\" Note that this will not work for
+.\" programs that seek on their files, as the files in the fd directory
+.\" are not seekable.
+a máte funkční filtr.
+
+\fI/proc/self/fd/N\fP je v některých UNIXových a UNIX\-like systémech zhruba
+to samé jako \fI/dev/fd/N\fP. Většina Linuxových MAKEDEV skriptů ve
+skutečnosti vytváří \fI/dev/fd\fP jako symbolický odkaz na
+\fI/proc/self/fd\fP.
+
+Většina systémů poskytuje symbolické odkazy \fI/dev/stdin\fP,
+\fI/dev/stdout\fP a \fI/dev/stderr\fP, které ukazují na soubory \fI0\fP, \fI1\fP a
+\fI2\fP v \fI/proc/self/fd\fP. Tudíž výše uvedený příklad lze zapsat i
+jako:
+.in +4n
+.nf
+
+$\fB foobar \-i /dev/stdin \-o /dev/stdout ...\fP
+.fi
+.in
+.\" FIXME Describe /proc/[pid]/loginuid
+.\"       Added in 2.6.11; updating requires CAP_AUDIT_CONTROL
+.\"       CONFIG_AUDITSYSCALL
+.TP 
+\fI/proc/[pid]/fdinfo/\fP (od jádra 2.6.22)
+Toto je podadresář, který obsahuje pro každý soubor, který proces
+otevřel, jednu položku, pojmenovanou po svém popisovači souboru. Obsah
+každého souboru lze číst pro získání informací o příslušném
+popisovači souboru, např.:
+.in +4n
+.nf
+
+$\fB cat /proc/12015/fdinfo/4\fP
+pos:    1000
+flags:  01002002
+.fi
+.in
+
+Pole \fIpos\fP je desítkové číslo ukazující aktuální offset
+souboru. Pole \fIflags\fP je osmičkové číslo ukazující přístupová
+práva souboru a stavové vlajky souboru (viz \fBopen\fP(2)).
+
+.\" FIXME document /proc/[pid]/io
+.\" .TP
+.\" .IR /proc/[pid]/io " (since kernel 2.6.20)"
+Soubory v tomto adresáři jsou čitelné pouze vlastníkem procesu.
+.TP 
+\fI/proc/[pid]/limits\fP (od jádra 2.6.24)
+tento soubor ukazuje soft limit, hard limit a jednotky měření každého
+limitu zdrojů procesu (viz \fBgetrlimit\fP(2)). Soubor je chráněn, aby jej
+mohlo číst pouze skutečné UID procesu.
+.TP 
+\fI/proc/[pid]/maps\fP
+Soubor obsahující aktuálně namapované oblasti paměti a jejich
+přístupová práva.
+
+Jeho formát je:
+
+.nf
+\f(CWadresa            práva ofset   dev   inoda      cesta
+08048000\-08056000 r\-xp 00000000 03:0c 64593      /usr/sbin/gpm
+08056000\-08058000 rw\-p 0000d000 03:0c 64593      /usr/sbin/gpm
+08058000\-0805b000 rwxp 00000000 00:00 0
+40000000\-40013000 r\-xp 00000000 03:0c 4165       /lib/ld\-2.2.4.so
+40013000\-40015000 rw\-p 00012000 03:0c 4165       /lib/ld\-2.2.4.so
+4001f000\-40135000 r\-xp 00000000 03:0c 45494      /lib/libc\-2.2.4.so
+40135000\-4013e000 rw\-p 00115000 03:0c 45494      /lib/libc\-2.2.4.so
+4013e000\-40142000 rw\-p 00000000 00:00 0
+bffff000\-c0000000 rwxp 00000000 00:00 0\fP
+
+.fi
+
+kde adresa je obsazený adresový prostor v procesu, práva jsou sada práv:
+
+.nf
+.in +5
+r = čtení (read)
+w = zápis (write)
+x = spuštění (execute)
+s = sdílení (shared)
+p = soukromý (private) (copy on write)
+
+.fi
+.in
+
+ofset znamená ofset v souboru/kdekoliv, dev je zařízení (major:minor) a
+inoda je inoda v tomto zařízení. 0 znamená, že s oblastí paměti není
+asociována žádná inoda, což je třeba v případě BSS
+(neinicializovaná data).
+
+V Linuxu 2.0 žádné pole pro cestu neexistuje.
+.TP 
+\fI/proc/[pid]/mem\fP
+tento soubor může být použit pro přístup je stránkám paměti procesu
+pomocí \fBopen\fP(2), \fBread\fP(2), a \fBlseek\fP(2).
+.TP 
+\fI/proc/[pid]/mountinfo\fP (od jádra 2.6.26)
+.\" This info adapted from Documentation/filesystems/proc.txt
+Tento soubor obsahuje informace o přípojných bodech. Obsahuje řádky ve
+tvaru:
+.nf
+
+\f(CW36 35 98:0 /mnt1 /mnt2 rw,noatime master:1 \- ext3 /dev/root rw,errors=continue
+(1)(2)(3)   (4)   (5)      (6)      (7)   (8) (9)   (10)         (11)\fP
+.fi
+.IP
+Čísla v závorkách jsou značky pro níže uvedené popisky:
+.RS 7
+.TP  5
+(1)
+mount ID: unikátní identifikátor připojení (po \fBumount\fP(2) může být
+znovu použit).
+.TP 
+(2)
+parent ID: ID rodičovského připojení (nebo vlastní v případě, že se
+jedná o vrchol připojovacího stromu).
+.TP 
+(3)
+major:minor: hodnota \fIst_dev\fP pro soubory v systému souborů (viz
+\fBstat\fP(2)).
+.TP 
+(4)
+root: kořen připojení v rámci systému souborů.
+.TP 
+(5)
+mount point: přípojný bod relativní ke kořeni procesu.
+.TP 
+(6)
+mount options: volby specifické pro připojení.
+.TP 
+(7)
+volitelné položky: nula nebo véce položek ve tvaru "tag[:hodota]".
+.TP 
+(8)
+oddělovač: označuje konec volitelných položek.
+.TP 
+(9)
+typ systému souborů: jméno systému souborů ve tvaru "typ[.podtyp]".
+.TP 
+(10)
+mount source: informace specifická pro systém souborů nebo "none".
+.TP 
+(11)
+super options: volby pro superblok.
+.RE
+.IP
+Parsery by měly ignorovat všechny nerozeznané volitelné položky. V
+současnosti jsou možné tyto volitelné položky:
+.RS 12
+.TP  18
+shared:X
+připojení je sdílené skupinou X
+.TP 
+master:X
+skupina X je master\-em připojení
+.TP 
+propagate_from:X
+připojení je slave a dědí nastavení (FIXME \- ověřit překlad) ze
+skupiny X (*)
+.TP 
+unbindable
+mount is unbindable
+.RE
+.IP
+(*) X je nejbližší dominantní skupina pod kořenem procesu. Pokud je X
+bezprostředním master\-em připojení nebo pokud pod kořenem procesu není
+žádná dominantní skupina, pak je přítomna pouze položka "master:X" a
+nikoliv "propagate_from:X".
+
+Více informací o dědění připojení je uvedeno v:
+\fIDocumentation/filesystems/sharedsubtree.txt\fP ve zdrojovém kódu jádra.
+.TP 
+\fI/proc/[pid]/mounts\fP (od jádra 2.4.19)
+Toto je seznam všech souborových systémů aktuálně připojených ve
+jmenném prostory procesu. Formát tohoto souboru je dokumentován v
+\fBfstab\fP(5).  Od verze jádra 2.6.15 je tento soubor pollable: po otevření
+souboru ke čtení způsobí změna v tomto souboru (např. připojení nebo
+odpojení souborového systému), že \fBselect\fP(2) označí deskriptor
+souboru jako čitelný a volání \fBpoll\fP(2)  a \fBepoll_wait\fP(2) označí
+soubor jako mající chybovou podmínku.
+(pozn. překl. pokud to někdo dokážete přeložit lépe, pošlete opravu)
+.TP 
+\fI/proc/[pid]/mountstats\fP (od jádra 2.6.17)
+Tento soubor zpřístupňuje informace (statistiky, informace o konfiguraci)
+o přípojných bodech ve jmenném prostoru procesu. Obsahuje řádky ve
+tvaru:
+.nf
+
+device /dev/sda7 mounted on /home with fstype ext3 [statistics]
+(       1      )            ( 2 )             (3 ) (4)
+.fi
+.IP
+Položky v každém řádku jsou:
+.RS 7
+.TP  5
+(1)
+Jméno připojeného zařízení (nebo "nodevice", pokud není žádné
+odpovídající zařízení).
+.TP 
+(2)
+Bod připojení v rámci stromu systému souborů.
+.TP 
+(3)
+Typ systému souborů.
+.TP 
+(4)
+Volitelné statistiky a informace o konfiguraci. Aktuálně (jádro 2.6.26),
+používá tuto položku jen sytém souborů NFS.
+.RE
+.IP
+Tento soubor je čitelný pouze vlastníkem procesu.
+.TP 
+\fI/proc/[pid]/numa_maps\fP (od jádra 2.6.14)
+viz \fBnuma\fP(7).
+.TP 
+\fI/proc/[pid]/oom_adj\fP (od jádra 2.6.11)
+Tento soubor se používá k upravení skóre použitého pro určení
+procesu, který má být zabit v případě, že dojde paměť
+(out\-of\-memory (OOM)). Jádro použije tuto hodnotu k bitovému posunu
+hodnoty \fIoom_score\fP procesu: platné hodnoty jsou v rozsahu \-16 až +15,
+plus speciální hodnota \-17, která OOM\-zabití tohoto procesu
+zakáže. Kladné skóre zvyšuje pravděpodobnost zabití procesu
+OOM\-zabijákem, negativní skóre ji snižuje. Výchozí hodnotou pro tento
+soubor je 0; nový proces dědí nastavení \fIoom_adj\fP svého
+rodiče. Proces musí být privilegovaný (\fBCAP_SYS_RESOURCE\fP), aby mohl
+tento soubor měnit.
+.TP 
+\fI/proc/[pid]/oom_score\fP (od jádra 2.6.11)
+.\" See mm/oom_kill.c::badness() in the 2.6.25 sources
+.\" See mm/oom_kill.c::badness() in the 2.6.25 sources
+tento soubor ukazuje aktuální skóre přidělené procesu jádrem za
+účelem výběru procesu pro OOM\-zabijáka. Vyšší skóre znamená
+vyšší pravděpodobnost zabití OOM\-zabijákem. Základem pro toto skóre
+je množství paměti zabrané procesem; skóre se zvyšuje (+) nebo
+snižuje (\-) v závislosti na faktorech zahrnujících:
+.RS
+.IP * 2
+jestli proces vytváří mnoho potomků pomocí \fBfork\fP(2)  (+);
+.IP *
+jestli proces běží dlouhou dobu nebo zabíral hodně času CPU (\-);
+.IP *
+jestli má proces nízkou hodnotu nice (tj. > 0) (+);
+.IP *
+.\" More precisely, if it has CAP_SYS_ADMIN or CAP_SYS_RESOURCE
+jestli je proces privilegovaný (\-); a
+.IP *
+.\" More precisely, if it has CAP_SYS_RAWIO
+jestli proces provádí přímý přístup k hardware (\-).
+.RE
+.IP
+.\" FIXME Describe /proc/[pid]/pagemap
+.\"       Added in 2.6.25
+.\"       CONFIG_PROC_PAGE_MONITOR
+\fIoom_score\fP také odráží bitový posun určený hodnotou \fIoom_adj\fP
+procesu.
+.TP 
+\fI/proc/[pid]/root\fP
+Unix a Linux podporují ideu vlastního kořenového adresáře souborového
+systému pro každý proces, nastaveného systémovým voláním
+\fBchroot\fP(2).  Tento soubor je symbolickým odkazem na kořenový adresář
+procesu a chová se stejně jako exe, fd/*, atd.
+
+.\" The following was still true as at kernel 2.6.13
+.\" FIXME Describe /proc/[pid]/seccomp
+.\"       Added in 2.6.12
+.\" FIXME Describe /proc/[pid]/sessionid
+.\"       Added in 2.6.25; read-only; only readable by real UID
+.\"       CONFIG_AUDITSYSCALL
+.\" FIXME Describe /proc/[pid]/sched
+.\"       Added in 2.6.23
+.\"       CONFIG_SCHED_DEBUG, and additional fields if CONFIG_SCHEDSTATS
+.\"       Displays various scheduling parameters
+.\"       This file can be written, to reset stats
+.\" FIXME Describe /proc/[pid]/schedstats and
+.\"       /proc/[pid]/task/[tid]/schedstats
+.\"       Added in 2.6.9
+.\"       CONFIG_SCHEDSTATS
+V případě vícevláknového procesu, jehož hlavní vlákno již
+skončilo (obvykle voláním \fBpthread_exit\fP(3)), již nebude obsah tohoto
+symbolického odkazu dostupný.
+.TP 
+\fI/proc/[pid]/smaps\fP (od jádra 2.6.14)
+.\"       CONFIG_PROC_PAGE_MONITOR
+Tento soubor obsahuje spotřebu paměti pro každé namapování procesu.
+Pro každé namapování jsou přítomny řádky jako:
+.in +4n
+.nf
+
+08048000\-080bc000 r\-xp 00000000 03:02 13130      /bin/bash
+Size:               464 kB
+Rss:                424 kB
+Shared_Clean:       424 kB
+Shared_Dirty:         0 kB
+Private_Clean:        0 kB
+Private_Dirty:        0 kB
+
+
+.fi
+.in
+První řádek ukazuje stejnou informaci jako je uvedená v namapování v
+\fI/proc/[pid]/maps\fP. Zbývající řádky ukazují velikost tohoto
+namapování, velikost namapování, které je aktuálně rezidentní v RAM,
+počet clean a dirty sdílených stránek v namapování a počet clean a
+dirty privátních stránek v namapování.
+
+Tento soubor je přítomen pouze pokud je zapnuta konfigurační volba
+jádra \fBCONFIG_MMU\fP.
+.TP 
+\fI/proc/[pid]/stat\fP
+Stavová informace o procesu. Používá ji \fBps\fP(1).  Je definována v
+\fI/usr/src/linux/fs/proc/array.c\fP.
+
+Její položky, v pořadí a formátu určeném ve \fBscanf\fP(3)  jsou:
+.RS
+.TP  12
+\fIpid\fP %d
+ID procesu.
+.TP 
+\fIcomm\fP %s
+Jméno spuštěného souboru, v závorkách. Je viditelné i pokud je
+spuštěný soubor odswapován.
+.TP 
+\fIstav\fP %c
+Jeden ze znaků "RSDZTW", kde R znamená běžící (running), S je
+přerušitelně spící (sleeping), D znamená čekající v
+nepřerušitelném diskovém spánku, Z je zombie, T znamená trasovaný
+(traced) nebo zastavený (signálem) a W znamená swapovaný (paging).
+.TP 
+\fIppid\fP %d
+ID rodičovského procesu.
+.TP 
+\fIpgrp\fP %d
+ID skupiny procesu daného procesu.
+.TP 
+\fIsession\fP %d
+Session ID procesu.
+.TP 
+\fItty_nr\fP %d
+Ovládací terminál procesu. (minor číslo zařízení je obsaženo v
+bitech 31 až 20 a 7 až 0; major číslo zařízení je v bitech 15 až 8.)
+.TP 
+\fItpgid\fP %d
+.\" This field and following, up to and including wchan added 0.99.1
+The ID of the foreground process group of the controlling terminal of the
+process.
+.TP 
+\fIflags\fP %u (%lu před jádrem 2.6.22)
+Slovo obsahující příznaky jádra (flags) procesu. Významy jednotlivých
+bitů jsou uvedeny v definicích PF_* v \fI<linux/sched.h>\fP.
+Podrobnosti závisí na verzi jádra.
+.TP 
+\fIminflt\fP %lu
+Počet méně závažných chyb, kterých se proces dopustil, a které si
+nevyžádaly načtení stránky paměti z disku.
+.TP 
+.\" field 11
+\fIcminflt\fP %lu
+Počet méně závažných chyb, které provedli potomci procesu, na které
+proces čekal.
+.TP 
+\fImajflt\fP %lu
+Počet závažných chyb, kterých se proces dopustil, a které si
+vyžádaly načtení stránky paměti z disku.
+.TP 
+\fIcmajflt\fP %lu
+Počet závažných chyb, které provedli potomci procesu, na které proces
+čekal.
+.TP 
+\fIutime\fP %lu
+Množství času, který proces strávil v uživatelském režimu, měřené
+v clock ticks (nutno vydělit hodnotou \fIsysconf(_SC_CLK_TCK)\fP. To zahrnuje
+guest time, \fIguest_time\fP (čas strávený během virtuálního CPU, viz
+níže), takže aplikace, které nepočítají s položkou guest time
+zahrnou tento čas do svých výpočtů.
+.TP 
+\fIstime\fP %lu
+Množství času, které proces strávil v jaderném režimu, měřené v
+clock ticks (nutno vydělit hodnotou \fIsysconf(_SC_CLK_TCK)\fP.
+.TP 
+\fIcutime\fP %ld
+Množství času, strávené potomky, na které proces čekal, v
+uživatelském režimu, měřené v clock ticks (nutno vydělit hodnotou
+\fIsysconf(_SC_CLK_TCK)\fP. (Viz též \fBtimes\fP(2).) To zahrnuje guest time,
+\fIcguest_time\fP (čas strávený během virtuálního CPU, viz níže).
+.TP 
+\fIcstime\fP %ld
+Množství času, strávené potomky, na které proces čekal, v jaderném
+režimu, měřené v clock ticks (nutno vydělit hodnotou
+\fIsysconf(_SC_CLK_TCK)\fP.
+.TP 
+\fIpriority\fP %ld
+(Vysvětlení pro Linux 2.6) Pro procesy s real\-time plánovací politikou
+(\fIpolicy\fP níže; viz \fBsched_setscheduler\fP(2)) je toto negovaná
+plánovací priorita mínus jedna \- tj. číslo od \-2 do \-100,
+odpovídající real\-time prioritiám 1 až 99. Pro procesy s ne\-rel\-time
+plánovací politikou je toto surová hodnota nice (\fBsetpriority\fP(2)) tak,
+jak je reprezentovaná v jádru. Jádro skladuje hodnoty nice jako čísla v
+rozsahu 0 (vysoká) až 39 (nízká), odpovádající rozsahu \-20 až 19,
+která je prezentován uživateli.
+
+.\" And back in kernel 1.2 days things were different again.
+Před jádrem 2.6 to byla hodnota založená na váze přidělené procesu
+plánovačem.
+.TP 
+\fInice\fP %ld
+.\" Back in kernel 1.2 days things were different.
+Hodnota nice (viz \fBsetpriority\fP(2)), hodnota v rozsahu 19 (nízká
+priorita) až \-20 (vysoká priorita).
+.TP 
+.\" .TP
+.\" \fIcounter\fP %ld
+.\" The current maximum size in jiffies of the process's next timeslice,
+.\" or what is currently left of its current timeslice, if it is the
+.\" currently running process.
+.\" .TP
+.\" \fItimeout\fP %u
+.\" The time in jiffies of the process's next timeout.
+.\" timeout was removed sometime around 2.1/2.2
+\fInum_threads\fP %ld
+Počet vláken v tomto procesu (od jádra 2.6).  Před jádrem 2.6 bylo toto
+pole pevně dané jako 0 jako zástupce dříve odstraněného pole.
+.TP 
+.\" field 21
+\fIitrealvalue\fP %ld
+Čas v jednotkách jiffies před odesláním dalšího \fBSIGALRM\fP procesu,
+na základě intervalového časovače.  Od jádra 2.6.17 není toto pole
+udržováno a je pevně dáno jako 0.
+.TP 
+\fIstarttime\fP %llu (bylo %lu před jádrem 2.6)
+Čas v jednotkách jiffies kdy byl proces po spuštění systému spuštěn.
+.TP 
+\fIvsize\fP %lu
+Velikost virtuální paměti v bajtech.
+.TP 
+\fIrss\fP %ld
+Resident Set Size: počet stránek, které má proces ve fyzické
+paměti. Toto jsou pouze stránky obsahující text, data nebo stack. Nejsou
+zahrnuty stránky, které byly načteny na základě požadavku nebo
+odswapované stránky.
+.TP 
+\fIrsslim\fP %lu
+Aktuální soft limit na rss procesu v bajtech. Viz popis \fBRLIMIT_RSS\fP v
+\fBgetpriority\fP(2).
+.TP 
+\fIstartcode\fP %lu
+Adresa, nad kterou může text programu běžet.
+.TP 
+\fIendcode\fP %lu
+Adresa, pod kterou může text programu běžet.
+.TP 
+\fIstartstack\fP %lu
+Adresa začátku (tj. spodku) zásobníku.
+.TP 
+\fIkstkesp\fP %lu
+Aktuální hodnota ESP (stack pointer), jak je uvedena ve stránce s
+jaderným zásobníkem pro proces.
+.TP 
+\fIkstkeip\fP %lu
+Aktuální EIP (instruction pointer).
+.TP 
+.\" field 31
+\fIsignal\fP %lu
+Bitmapa nezpracovaných signálů, zobrazená jako desítkové
+číslo. Zastaralé, protože neposkytuje informaci o real\-time signálech;
+použijte raději \fI/proc/[pid]/status\fP.
+.TP 
+\fIblocked\fP %lu
+Bitmapa blokovaných signálů, zobrazená jako desítkové
+číslo. Zastaralé, protože neposkytuje informaci o real\-time signálech;
+použijte raději \fI/proc/[pid]/status\fP.
+.TP 
+\fIsigignore\fP %lu
+Bitmapa ignorovaných signálů, zobrazená jako desítkové
+číslo. Zastaralé, protože neposkytuje informaci o real\-time signálech;
+použijte raději \fI/proc/[pid]/status\fP.
+.TP 
+\fIsigcatch\fP %lu
+Bitmapa zachycených signálů, zobrazená jako desítkové
+číslo. Zastaralé, protože neposkytuje informaci o real\-time signálech;
+použijte raději \fI/proc/[pid]/status\fP.
+.TP 
+\fIwchan\fP %lu
+Toto je "kanál" ("channel"), ve kterém proces čeká. Je to adresa
+systémového volání a může být nalezena v seznamu názvů, pokud je
+její textový název potřeba.  (Pokud máte aktuální \fI/etc/psdatabase\fP,
+tak zkuste \fIps \-l\fP a uvidíte položku WCHAN v akci.)
+.TP 
+\fInswap\fP %lu
+.\" nswap was added in 2.0
+Počet odswapovaných stránek (not maintained).
+.TP 
+\fIcnswap\fP %lu
+.\" cnswap was added in 2.0
+Kumulativní \fInswap\fP pro procesy potomků (not maintained).
+.TP 
+\fIexit_signal\fP %d (od jádra 2.1.22)
+Signál, který se pošle rodiči, když proces zemře.
+.TP 
+\fIprocessor\fP %d (od jádra 2.2.8)
+Číslo procesoru na kterém byl naposledy spuštěn.
+.TP 
+\fIrt_priority\fP %u (od jádra 2.5.19; bylo %lu před jádrem 2.6.22)
+Real\-time plánovací priorita, číslo v rozsahu 1 až 99 pro procesy
+plánované real\-time politikou, nebo 0, pro ne\-real\-time procesy (viz
+\fBsched_setscheduler\fP(2)).
+.TP 
+.\" field 41
+\fIpolicy\fP %u (od jádra 2.5.19; bylo %lu před jádrem 2.6.22)
+Plánovací politika (viz \fBsched_setscheduler\fP(2)). Dekódujte pomocí
+konstant SCHED_* v \fIlinux/sched.h\fP.
+.TP 
+\fIdelayacct_blkio_ticks\fP %llu (od jádra 2.6.18)
+Agregovaná zpoždění blokových I/O (měřená v clock ticks (setiny
+vteřiny)).
+.TP 
+\fIguest_time\fP %lu (od jádra 2.6.24)
+Guest time procesu (množství času, strávené během virtuálního CPU
+pro hostovaný operační systém), měřené v clock ticks (nutno vydělit
+hodnotou \fIsysconf(_SC_CLK_TCK)\fP.
+.TP 
+\fIcguest_time\fP %ld (od jádra 2.6.24)
+Guest time potomků procesu, měřené v clock ticks (nutno vydělit
+hodnotou \fIsysconf(_SC_CLK_TCK)\fP.
+.RE
+.TP 
+\fI/proc/[pid]/statm\fP
+Poskytuje informaci o využití paměti, měřeno ve stránkách. Sloupce
+jsou:
+.in +4n
+.nf
+
+.\" (not including libs; broken, includes data segment)
+.\" (including libs; broken, includes library text)
+size       celková velikost programu (stejné jako VmSize v \fI/proc/[pid]/status\fP)
+resident   resident set size (stejné jako VmSize v \fI/proc/[pid]/status\fP)
+share      sdílené stránky (from shared mapping)
+text       text (kód)
+lib        knihovna (v jádře 2.6 se nepoužívá)
+data       data +stack
+dt         dirty pages (v jádře 2.6 se nepoužívá)
+
+.fi
+.in
+.TP 
+\fI/proc/[pid]/status\fP
+Poskytuje většinu informací z \fI/proc/[pid]/stat\fP a \fI/proc/[pid]/statm\fP
+v lidštějším formátu. Příklad:
+.in +4n
+.nf
+
+$\fB cat /proc/$$/status\fP
+Name:   bash
+State:  S (sleeping)
+Tgid:   3515
+Pid:    3515
+PPid:   3452
+TracerPid:      0
+Uid:    1000    1000    1000    1000
+Gid:    100     100     100     100
+FDSize: 256
+Groups: 16 33 100
+VmPeak:     9136 kB
+VmSize:     7896 kB
+VmLck:         0 kB
+VmHWM:      7572 kB
+VmRSS:      6316 kB
+VmData:     5224 kB
+VmStk:        88 kB
+VmExe:       572 kB
+VmLib:      1708 kB
+VmPTE:        20 kB
+Threads:        1
+SigQ:   0/3067
+SigPnd: 0000000000000000
+ShdPnd: 0000000000000000
+SigBlk: 0000000000010000
+SigIgn: 0000000000384004
+SigCgt: 000000004b813efb
+CapInh: 0000000000000000
+CapPrm: 0000000000000000
+CapEff: 0000000000000000
+CapBnd: ffffffffffffffff
+Cpus_allowed:   00000001
+Cpus_allowed_list:      0
+Mems_allowed:   1
+Mems_allowed_list:      0
+voluntary_ctxt_switches:        150
+nonvoluntary_ctxt_switches:     545
+.fi
+.in
+.IP
+Položky jsou:
+.RS
+.IP * 2
+\fIName\fP: Příkazy spuštěné tímto procesem.
+.IP *
+\fIState\fP: Aktuální stav procesu. Jeden ze znaků "RSDTZX", kde R znamená
+běžící (running), S je přerušitelně spící (sleeping), D znamená
+čekající  v  nepřerušitelném diskovém spánku, T znamená trasovaný
+(traced) nebo zastavený (signálem), Z je zombie a X znamená mrtvý.
+.IP *
+\fITgid\fP: ID skupiny vláken (tj. ID procesu).
+.IP *
+\fIPid\fP: ID vlákna (viz \fBgettid\fP(2)).
+.IP *
+\fITracerPid\fP: PID procesu kterým je tento proces trasuován (0 pokud není
+trasován).
+.IP *
+\fIUid\fP, \fIGid\fP: Real, effective, saved set, and file system UIDs (GIDs).
+.IP *
+\fIFDSize\fP: Počet aktuálně alokovaných slotů popisovače souboru.
+.IP *
+\fIGroups\fP: Doplňkový seznam skupin.
+.IP *
+\fIVmPeak\fP: Maximální velikost virtuální paměti.
+.IP *
+\fIVmSize\fP: Velikost virtuální paměti.
+.IP *
+\fIVmLck\fP: Velikost Locked memory.
+.IP *
+\fIVmHWM\fP: Maximální resident set size ("high water mark").
+.IP *
+\fIVmRSS\fP: Resident set size.
+.IP *
+\fIVmData\fP, \fIVmStk\fP, \fIVmExe\fP: Size of data, stack, and text segments.
+.IP *
+\fIVmLib\fP: Shared library code size.
+.IP *
+\fIVmPTE\fP: Page table entries size (od jádra 2.6.10).
+.IP *
+\fIThreads\fP: Počet vláken v procesu obsahujícím toto vlákno.
+.IP *
+\fISigPnd\fP, \fIShdPnd\fP: Počet nezpracovaných signálů pro vlákno a pro
+celý proces (viz \fBpthreads\fP(7) a \fBsignal\fP(7)).
+.IP *
+\fISigBlk\fP, \fISigIgn\fP, \fISigCgt\fP: Masky udávající blokované, ignorované
+a zachytávané signály (viz \fBsignal\fP(7)).
+.IP *
+\fICapInh\fP, \fICapPrm\fP, \fICapEff\fP: Masks of capabilities enabled in
+inheritable, permitted, and effective sets (see \fBcapabilities\fP(7)).
+.IP *
+\fICapBnd\fP: Capability Bounding set (since kernel 2.6.26, see
+\fBcapabilities\fP(7)).
+.IP *
+\fICpus_allowed\fP: Mask of CPUs on which this process may run (since Linux
+2.6.24, see \fBcpuset\fP(7)).
+.IP *
+\fICpus_allowed_list\fP: Same as previous, but in "list format" (since Linux
+2.6.26, see \fBcpuset\fP(7)).
+.IP *
+\fIMems_allowed\fP: Mask of memory nodes allowed to this process (since Linux
+2.6.24, see \fBcpuset\fP(7)).
+.IP *
+\fIMems_allowed_list\fP: Same as previous, but in "list format" (since Linux
+2.6.26, see \fBcpuset\fP(7)).
+.IP *
+\fIvoluntary_context_switches\fP, \fInonvoluntary_context_switches\fP: Number of
+voluntary and involuntary context switches (since Linux 2.6.23).
+.RE
+.TP 
+\fI/proc/[pid]/task\fP (od jádra 2.6.0\-test6)
+Adresář obsahující pro každé vlákno procesu jeden podadresář.
+Jména podadresářů jsou číselná ID vlákna(\fI[tid]\fP) (viz
+\fBgettid\fP(2)).  V každém z těchto podadresářů je sada souborů s
+názvy a obsahem jako u adresářů \fI/proc/[pid]\fP.  Pro atributy společné
+všem vláknům jsou obsahy všech souborů v podadresářích \fItask/[tid]\fP
+stejné jako v odpovídajícím souboru rodičovského adresáře
+\fI/proc/[pid]\fP (např. u vícevláknového procesu obsahují všchny soubory
+\fItask/[tid]/cwd\fP stejnou hodnotu jako soubor \fI/proc/[pid]/cwd\fP v
+nadřazeném adresáři, jelikož všechna vlákna v procesu mají stejný
+pracovní adresář). U atributů, které se pro každé vlákno liší,
+mohou odpovídající soubory v \fItask/[tid]\fP obsahovat různé hodnoty
+(např. položky v souborech \fItask/[tid]/status\fP se mohou pro každé
+vlákno lišit).
+
+.\" The following was still true as at kernel 2.6.13
+V případě vícevláknového procesu, jehož hlavní vlákno již
+skončilo (obvykle voláním \fBpthread_exit\fP(3)), již nebude obsah
+adresáře \fI/proc/[pid]/task\fP dostupný.
+.TP 
+\fI/proc/apm\fP
+Pokud bylo při kompilaci jádra definováno \fBCONFIG_APM\fP, obsahuje číslo
+verze Advanced power managementu a informace o baterii.
+.TP 
+\fI/proc/bus\fP
+Obsahuje podadresáře pro instalované sběrnice.
+.TP 
+\fI/proc/bus/pccard\fP
+Podadresář pro pcmcia zařízení, pokud bylo při kompilaci jádra
+nastaveno \fBCONFIG_PCMCIA\fP.
+.TP 
+\fI/proc/bus/pccard/drivers\fP
+.TP 
+\fI/proc/bus/pci\fP
+Obsahuje různé podadresáře sběrnic a pseudo\-soubory obsahující
+informace o sběrnicích pci, instalovaných zařízeních a ovladačích
+zařízení. Některé z těchto souborů nejsou textové.
+.TP 
+\fI/proc/bus/pci/devices\fP
+Informace o pci zařízeních. Lze k nim přistupovat pomocí \fBlspci\fP(8)  a
+\fBsetpci\fP(8).
+.TP 
+\fI/proc/cmdline\fP
+Argumenty předané linuxovému jádru při jeho zavedení, často pomocí
+zaváděcího programu jako je třeba \fBlilo\fP(8) nebo \fBgrub\fP(8).
+.TP 
+\fI/proc/config.gz\fP (od jádra 2.6)
+This file exposes the configuration options that were used to build the
+currently running kernel, in the same format as they would be shown in the
+\&\fI.config\fP file that resulted when configuring the kernel (using \fImake
+xconfig\fP, \fImake config\fP, or similar).  The file contents are compressed;
+view or search them using \fBzcat\fP(1), \fBzgrep\fP(1), etc.  As long as no
+changes have been made to the following file, the contents of
+\fI/proc/config.gz\fP are the same as those provided by :
+.in +4n
+.nf
+
+cat /lib/modules/$(uname \-r)/build/.config
+.fi
+.in
+.IP
+\fI/proc/config.gz\fP is only provided if the kernel is configured with
+\fBCONFIG_IKCONFIG_PROC\fP.
+.TP 
+\fI/proc/cpuinfo\fP
+Toto je sbírka údajů závislých na CPU a systémové architektuře,
+každá podporovaná architektura obsahuje jiné položky.  Obvyklými
+položkami jsou \fIprocessor\fP, který udává počet CPU a \fIbogomips\fP, což
+je systémová konstanta vypočtená při inicializaci jádra.  Stroje s
+více jádry (SMP) mají údaje pro každé CPU.
+.TP 
+\fI/proc/devices\fP
+textový seznam hlavních čísel a skupin zařízení. Může být použit
+skripty MAKEDEV pro konzistenci s jádrem.
+.TP 
+\fI/proc/diskstats\fP (od jádra 2.5.69)
+tento soubor obsahuje vstupně\-výstupní statistiky pro každé diskové
+zařízení.  Další informace jsou uvedeny ve zdrojovém souboru jádra
+\fIDocumentation/iostats.txt\fP.
+.TP 
+\fI/proc/dma\fP
+Seznam registrovaných \fIISA\fP DMA (direct memory access) kanálů, které
+jsou používány.
+.TP 
+\fI/proc/driver\fP
+Prázdný podadresář.
+.TP 
+\fI/proc/execdomains\fP
+List of the execution domains (ABI personalities).
+.TP 
+\fI/proc/fb\fP
+Informace frame bufferu, pokud bylo při kompilaci jádra definováno
+\fBCONFIG_FB\fP.
+.TP 
+\fI/proc/filesystems\fP
+Textový seznam souborových systémů podporovaných jádrem,
+tj. zakompilovaných do jádra nebo jejichž jaderné moduly jsou právě
+načteny (Viz též \fBfilesystems\fP(5).)  Pokud je souborový systém
+označen "nodev", znamená to, že nevyžaduje, aby bylo připojeno blokové
+zařízení (např. virtuální souborový systém, síťový souborový
+systém).
+
+Shodou okolností může být používán programem \fBmount\fP(8), pokud nebyl
+zadán žádný souborový systém a nepodařilo se mu určit druh
+souborového systému.  V tom případě zkouší souborové systémy
+obsažené v tomto souboru (s výjimkou těch označených "nodev").
+.TP 
+\fI/proc/fs\fP
+Prázdný podadresář.
+.TP 
+\fI/proc/ide\fP
+Tento adresář je přítomen v systémech se sběrnicí ide. Pro každý
+ide kanál a připojené zařízení existuje adresář. Soubory jsou:
+
+.in +4n
+.nf
+cache              velikost vyrovnávací paměti v KB
+capacity           počet sektorů
+driver             verze ovladače
+geometry           fyzická a logická geometrie
+identify           v šestnáctkové soustavě
+media              druh média
+model              číslo modelu výrobce
+settings           nastavení jednotky
+smart_thresholds   v šestnáctkové soustavě
+smart_values       v šestnáctkové soustavě
+
+.fi
+.in
+
+Příkaz \fBhdparm\fP(8)  poskytuje přístup k těmto informacím v
+přístupnějším formátu.
+.TP 
+\fI/proc/interrupts\fP
+This is used to record the number of interrupts per CPU per IO device.
+Since Linux 2.6.24, for the i386 and x86_64 architectures, at least, this
+also includes interrupts internal to the system (that is, not associated
+with a device as such), such as NMI (nonmaskable interrupt), LOC (local
+timer interrupt), and for SMP systems, TLB (TLB flush interrupt), RES
+(rescheduling interrupt), CAL (remote function call interrupt), and possibly
+others.  Very easy to read formatting, done in ASCII.
+.TP 
+\fI/proc/iomem\fP
+I/O mapa paměti v Linuxu 2.4.
+.TP 
+\fI/proc/ioports\fP
+Seznam aktuálně registrovaných oblastí I/O portů, které jsou
+používány.
+.TP 
+\fI/proc/kallsyms\fP (od jádra 2.5.71)
+Obsahuje exportované definice symbolů jádra používané nástroji
+\fBmodules\fP(X)  k dynamickému odkazování a vázání načítaných
+modulů.  V jádře 2.5.47 a dřívějších se podobný soubor s lehce
+odlišnou syntaxí jmenoval \fIksyms\fP.
+.TP 
+\fI/proc/kcore\fP
+Tento soubor reprezentuje fyzickou paměť systému a je uložen ve formátu
+ELF core.  S tímto pseudo\-souborem a nestripovaným jádrem
+(\fI/usr/src/linux/vmlinux\fP)  může být GDB použit ke zkoumání
+aktuálního stavu jakékoliv datové struktury jádra.
+
+Celková velikost souboru je rovna velikosti fyzické paměti (RAM) plus
+4KB.
+.TP 
+\fI/proc/kmsg\fP
+Tento soubor může být použit místo systémového volání \fBsyslog\fP(2)
+ke čtení zpráv jádra. Proces, který chce číst tento soubor, musí
+mít práva superuživatele a tento soubor by měl být čten pouze jedním
+procesem.  Tento soubor by neměl být čten, pokud je spuštěn proces
+syslog, který používá systémové volání \fBsyslog\fP(2)  k
+zaznamenávání zpráv jádra.
+
+Informace z tohoto souboru získává program \fBdmesg\fP(8).
+.TP 
+\fI/proc/ksyms\fP (Linux 1.1.23\-2.5.47)
+Viz \fI/proc/kallsyms\fP.
+.TP 
+\fI/proc/loadavg\fP
+První tři položky v tomto souboru jsou hodnoty průměrné zátěže
+(load average)  udávající počet úkolů (jobs) čekajících ve frontě
+na spuštění (stav R)  nebo čekajících na čtení/zápis disku (stav
+D), zprůměrované po 1, 5 a 15 minutách.  Jsou to stejné hodnoty, jako
+poskytuje \fBuptime\fP(1)  a další programy.  Čtvrté pole se skládá ze
+dvou čísel oddělených lomítkem (/).  První představuje počet
+současně vykonávaných entit plánovače jádra (procesů, vláken); bude
+menší nebo rovno počtu CPU.  Hodnota za lomítkem je počet entit
+plánovače jádra, aktuálně přítomných v systému.  Páté pole je PID
+systémem naposledy vytvořeného procesu.
+.TP 
+\fI/proc/locks\fP
+Tento soubor ukazuje aktuální zámky souborů (file locks)  (\fBflock\fP(2) a
+\fBfcntl\fP(2))  a leases (\fBfcntl\fP(2)).
+.TP 
+\fI/proc/malloc\fP (pouze do jádra 2.2 včetně)
+.\" It looks like this only ever did something back in 1.0 days
+Tento soubor je přítomen pouze pokud bylo při kompilaci definováno
+\fBCONFIG_DEBUG_MALLOC\fP.
+.TP 
+\fI/proc/meminfo\fP
+Tento soubor udává statistiky o využití paměti v systému. Používá
+jej \fBfree\fP(1)  pro informaci o velikosti volné a používané paměti
+(fyzické i swapu) v systému, stejně jako sdílené paměti a
+vyrovnávacích pamětí jádra.
+.TP 
+\fI/proc/mounts\fP
+Před uvedením jádra 2.4.19 obsahoval tento soubor seznam všech
+souborových systémů aktuálně připojených v systému. Se zavedením
+jmenných prostorů připojení pro každý proces v jádře 2.4.19 se tento
+soubor stal odkazem na \fI/proc/self/mounts\fP, který obsahuje přípojné
+body jmenného prostoru připojení procesu. Formát tohoto souboru je
+dokumentován v \fBfstab\fP(5).
+.TP 
+\fI/proc/modules\fP
+Textový seznam modulů nahraných systémem.  Viz též \fBlsmod\fP(8).
+.TP 
+\fI/proc/mtrr\fP
+Memory Type Range Registers.  Podrobnosti jsou uvedeny v
+\fIDocumentation/mtrr.txt\fP.
+.TP 
+\fI/proc/net\fP
+různé pseudo\-soubory, které udávají stav některé části síťové
+vrstvy. Tyto soubory obsahují ASCII struktury, a proto je možné je číst
+příkazem \fBcat\fP(1).  Nicméně standardní příkaz \fBnetstat\fP(8)
+poskytuje k těmto souborům čistší přístup.
+.TP 
+\fI/proc/net/arp\fP
+Obsahuje textový výpis ARP tabulky jádra, používané pro překlad
+adres.  Obsahuje dynamicky zjištěné i předprogramované ARP
+položky. Jeho formát je:
+
+.nf
+.in 8n
+\f(CWIP adresa      Druh HW   Příznaky  HW adresa          Maska   Zařízení
+192.168.0.50   0x1       0x2       00:50:BF:25:68:F3   *      eth0
+192.168.0.250  0x1       0xc       00:00:00:00:00:00   *      eth0\fP
+
+.fi
+.in
+
+"IP adresa" je IPv4 adresa počítače a "Druh HW" je druh hardwarové
+adresy podle RFC 826. Příznaky jsou interními příznaky ARP struktur
+(tak, jak jsou
+definovány v \fI/usr/include/linux/if_arp.h\fP) a "HW adresa" je namapování
+datové vrstvy
+pro danou IP adresu, pokud je známo.
+.TP 
+\fI/proc/net/dev\fP
+Pseudo\-soubor dev obsahuje stavové informace síťových zařízení \-
+počet přijatých a odeslaných paketů, počet chyb a kolizí a další
+základní statistiky. Používá je program \fBifconfig\fP(8)  pro uvádění
+stavu zařízení. Jeho formát je:
+
+.nf
+.in 1n
+\f(CWInter\-|   Receive                                                |  Transmit
+ face |bytes    packets errs drop fifo frame compressed multicast|bytes    packets errs drop fifo colls carrier compressed
+    lo: 2776770   11307    0    0    0     0          0         0  2776770   11307    0    0    0     0       0          0
+  eth0: 1215645    2751    0    0    0     0          0         0  1782404    4324    0    0    0   427       0          0
+  ppp0: 1622270    5552    1    0    0     0          0         0   354130    5669    0    0    0     0       0          0
+  tap0:    7714      81    0    0    0     0          0         0     7714      81    0    0    0     0       0          0\fP
+
+.in
+.fi
+.\" .TP
+.\" .I /proc/net/ipx
+.\" No information.
+.\" .TP
+.\" .I /proc/net/ipx_route
+.\" No information.
+.TP 
+\fI/proc/net/dev_mcast\fP
+Je definován v \fI/usr/src/linux/net/core/dev_mcast.c\fP:
+.nf
+.in +5
+indx interface_name  dmi_u dmi_g dmi_address
+2    eth0            1     0     01005e000001
+3    eth1            1     0     01005e000001
+4    eth2            1     0     01005e000001
+
+.in
+.fi
+.TP 
+\fI/proc/net/igmp\fP
+Internet Group Management Protocol.  Je definován v
+\fI/usr/src/linux/net/core/igmp.c\fP.
+.TP 
+\fI/proc/net/rarp\fP
+Tento soubor používá stejný formát jako soubor \fIarp\fP a obsahuje
+aktuální databázi zpětného mapování, užívanou programem \fBrarp\fP(8)
+k reverznímu vyhledávání adres. Pokud není RARP nakonfigurován v
+jádře, není tento soubor přítomen.
+.TP 
+\fI/proc/net/raw\fP
+.\" .TP
+.\" .I /proc/net/route
+.\" No information, but looks similar to
+.\" .BR route (8).
+Obsahuje výpis tabulky RAW socketů. Většina informací má význam pouze
+pro ladění.  Hodnota "sl" je kernel hash slot pro socket, "local_address"
+je lokální adresa a číslo protokolu. "St" znamená interní stav
+socketu. "tx_queue" a "rx_queue" jsou příchozí a odchozí fronty dat
+vyjádřené jako využití paměti jádrem.  Pole "tr", "tm\->when" a
+"rexmits" nejsou v RAW používána.  Pole "uid" obsahuje platný UID
+tvůrce socketu.
+.TP 
+\fI/proc/net/snmp\fP
+Tento soubor obsahuje ASCII data potřebná pro řízení informací o IP,
+ICMP, TCP a UDP pro SNMP agenta.
+.TP 
+\fI/proc/net/tcp\fP
+Obsahuje výpis z tabulky TCP socketů. Většina informací má význam
+pouze pro ladění.  Hodnota "sl" je kernel hash slot pro socket,
+"local_address" je lokální adresa a číslo protokolu. "rem_address" je
+vzdálená adresa a číslo portu (pokud je připojen). "St" znamená
+interní stav socketu. "tx_queue" a "rx_queue" jsou příchozí a odchozí
+fronty dat vyjádřené jako využití paměti jádrem.  Pole "tr",
+"tm\->when" a "rexmits" obsahují interní informace o stavech socketů
+jádra a mají význam pouze pro ladění.  Pole "uid" obsahuje platný UID
+tvůrce socketu.
+.TP 
+\fI/proc/net/udp\fP
+Obsahuje výpis z tabulky UDP socketů. Většina informací má význam
+pouze pro ladění.  Hodnota 'sl' je kernel hash slot pro socket,
+\&'local_address' je lokální adresa a číslo portu. "rem_address" je
+vzdálená adresa a číslo portu (pokud je připojen). "St" znamená
+interní stav socketu. "tx_queue" a "rx_queue" jsou příchozí a odchozí
+fronty dat vyjádřené jako využití paměti jádrem.  Pole "tr",
+"tm\->when" a "rexmits" nejsou RAW používána.  Pole "uid" obsahuje
+platný UID tvůrce socketu.  Jeho formát je:
+
+.nf
+.in 1n
+\f(CWsl  local_address rem_address   st tx_queue rx_queue tr rexmits  tm\->when uid
+ 1: 01642C89:0201 0C642C89:03FF 01 00000000:00000001 01:000071BA 00000000 0
+ 1: 00000000:0801 00000000:0000 0A 00000000:00000000 00:00000000 6F000100 0
+ 1: 00000000:0201 00000000:0000 0A 00000000:00000000 00:00000000 00000000 0\fP
+
+.in
+.fi
+.TP 
+\fI/proc/net/unix\fP
+Obsahuje seznam UNIX domain socketů přítomných v systému a jejich
+status. Jeho formát je:
+.nf
+.sp .5
+\f(CWNum RefCount Protocol Flags    Type St Path
+ 0: 00000002 00000000 00000000 0001 03
+ 1: 00000001 00000000 00010000 0001 01 /dev/printer\fP
+
+.sp .5
+.fi
+
+"Num" znamená číslo slotu v tabulce jádra, "RefCount" je počet
+uživatelů socketu, "Protocol" je v současnosti vždycky 0, "Flags"
+ukazuje interní vlajky jádra, které vyjadřují stav socketu. V
+současnosti je "Type" vždycky "1" (sockety pro
+Unixové doménové datagramy ještě jádro nepodporuje). "St" je interní
+stav socketu
+a "Path" je cesta přidělená socketu (pokud je) (bound path).
+.TP 
+\fI/proc/partitions\fP
+Obsahuje hlavní a vedlejší čísla každého oddílu, počet bloků a
+název oddílu.
+.TP 
+\fI/proc/pci\fP
+Výpis všech PCI zařízení nalezených během inicializace jádra, spolu
+s jejich konfigurací.
+
+.\" FIXME /proc/sched_debug
+.\" .TP
+.\" .IR /proc/sched_debug " (since Linux 2.6.23)"
+.\" See also /proc/[pid]/sched
+Tento soubor byl označen jako zastaralý ve prospěch nového \fI/proc\fP
+rozhraní pro PCI (\fI/proc/bus/pci\fP). Stal se voliteným v jádře 2.2
+(dostupný s volbou \fBCONFIG_PCI_OLD_PROC\fP nastavenou při kompilaci
+jádra). Byl nevolitelně povolen v jádře 2.4. Poté byl v jádře 2.6
+označen jako zastaralý (stále dostupný s volbou
+\fBCONFIG_PCI_LEGACY_PROC\fP) a konečně úplně odstraněn od jádra 2.6.17.
+.TP 
+\fI/proc/scsi\fP
+Adresář se středněúrovňovým pseudo\-souborem \fIscsi\fP a různými
+adresáři nízkoúrovňových SCSI ovladačů, které obsahují jeden
+soubor pro každé SCSI zařízení přítomné v systému; všechny
+obsahují status nějaké části SCSI IO subsystému. Tyto soubory
+obsahují ACSII struktury a pro jejich čtení je tedy možné použít
+\fBcat\fP(1).
+
+Do některých těchto souborů je také možné zapisovat a
+překonfigurovat tak daný subsystém či vypnout a zapnout některé
+vlastnosti.
+.TP 
+\fI/proc/scsi/scsi\fP
+Výpis všech SCSI zařízení, o kterých jádro ví. Je podobný výpisu
+při zavádění systému. scsi momentálně podporuje pouze příkaz
+\fIadd\-single\-device\fP, který umožňuje uživateli root přidat zařízení
+připojené za chodu do seznamu známých zařízení.
+
+Příkaz
+.in +4n
+.nf
+
+echo \(aqscsi add\-single\-device 1 0 5 0\(aq > /proc/scsi/scsi
+
+.fi
+.in
+způsobí, že hostitel scsi1 bude v SCSI kanálu 0 hledat zařízení s ID
+5 LUN 0. Pokud je již na této adrese známé zařízení nebo adresa není
+platná, je vrácena chyba.
+.TP 
+\fI/proc/scsi/[název_ovladače]\fP
+\fI[název_ovladače]\fP může být momentálně NCR53c7xx, aha152x, aha1542,
+aha1740, aic7xxx, buslogic, eata_dma, eata_pio, fdomain, in2000, pas16,
+qlogic, scsi_debug, seagate, t128, u15\-24f, ultrastore nebo wd7000.  Tyto
+adresáře se objeví pro každý ovladač, který zaregistroval alespoň
+jeden SCSI HBA. Každý adresář obsahuje jeden soubor pro každého
+zaregistrovaného hostitele. Každý tento soubor je pojmenován po číslu,
+které bylo hostiteli přiděleno během inicializace.
+
+Čtením těchto souborů se obvykle zjistí konfigurace ovladače a
+hostitele, statistiky atd.
+
+Zápis do těchto souborů umožňuje u různých hostitelů různé věci.
+Například příkazy \fIlatency\fP a \fInolatency\fP může root zapnout a
+vypnout kód pro měření latence příkazů v ovladači
+eata_dma. Příkazy \fIlockup\fP a \fIunlock\fP může root ovládat zaseknutí
+(lockups) sběrnice simulované ovladačem scsi_debug.
+.TP 
+\fI/proc/self\fP
+Tento adresář odkazuje na proces, který přistupuje k souborovému
+systému \fI/proc\fP a je shodný s adresářem v \fI/proc\fP pojmenovaném po ID
+tohoto procesu.
+.TP 
+\fI/proc/slabinfo\fP
+Informace o vyrovnávacích pamětech jádra.  Od jádra 2.6.16 je tento
+soubor přítomen pouze pokud je zapnuta volba \fBCONFIG_SLAB\fP.  Sloupce v
+\fI/proc/slabinfo\fP jsou:
+.in +4n
+.nf
+
+cache\-name
+num\-active\-objs
+total\-objs
+object\-size
+num\-active\-slabs
+total\-slabs
+num\-pages\-per\-slab
+
+.fi
+.in
+
+Viz \fBslabinfo\fP(5)  pro další informace.
+.TP 
+\fI/proc/stat\fP
+statistiky jádra/systému. Liší se podle architektury. Obvyklé záznamy
+zahrnují:
+.RS
+.TP 
+\fIcpu  3357 0 4313 1362393\fP
+.\" 1024 on Alpha and ia64
+.\" FIXME Actually, the following info about the /proc/stat 'cpu' field
+.\"       does not seem to be quite right (at least in 2.6.12)
+Doba, měřená v jednotkách USER_HZ (1/100 vteřiny na většině
+architektur, použijte \fIsysconf(_SC_CLK_TCK)\fP pro aktuální hodnotu),
+kterou systém strávil v uživatelském režimu, uživatelském režimu s
+nízkou prioritou (nice), systémovém režimu a nečinně.  Poslední
+hodnota by se měla rovnat USER_HZ krát druhá hodnota v pseudo\-souboru
+uptime.
+
+V Linuxu 2.6 obsahuje tato řádka tři další sloupce: \fIiowait\fP \- čas
+strávený čekáním na dokončení I/O (od 2.5.41); \fIirq\fP \- čas
+strávený obsluhou přerušení (od 2.6.0\-test4); \fIsoftirq\fP \- čas
+strávený obsluhou softirqs (od 2.6.0\-test4).
+
+Od jádra 2.6.11 existuje osmý sloupec \fIsteal\fP \- ukradený čas, což je
+čas strávený v jiném operačním systému v případě běhu ve
+virtualizovaném prostředí.
+
+.\" See Changelog entry for 5e84cfde51cf303d368fcb48f22059f37b3872de
+Od jádra 2.6.24 existuje devátý sloupec, \fIguest\fP, což je čas
+strávený během virtuálního CPU pro operační systémy hostované
+linuxovým jádrem.
+.TP 
+\fIpage 5741 1808\fP
+Počet stránek, které systém odstránkoval na disk a z disku.
+.TP 
+\fIswap 1 0\fP
+Počet stránek swapu, které have been brought in and out.
+.TP 
+.\" FIXME The following is not the full picture for the 'intr' of
+.\"       /proc/stat on 2.6:
+\fIintr 1462898\fP
+Tato řádka obsahuje počty přerušení obsloužených od zavedení
+systému pro všechna možná systémová přerušení. První sloupec je
+celkový počet obsloužených přerušení; každý další sloupec
+znamená celkový počet pro určité přerušení.
+.TP 
+\fIdisk_io: (2,0):(31,30,5764,1,2) (3,0):\fP...
+(major,disk_idx):(noinfo, read_io_ops, blks_read, write_io_ops,
+blks_written)
+.br
+(jen pro Linux 2.4)
+.TP 
+\fIctxt 115315\fP
+Počet změn kontextu, které systém prodělal.
+.TP 
+\fIbtime 769041601\fP
+Čas, kdy byl zaveden systém; v sekundách od začátku Epochy (1.leden
+1970).
+.TP 
+\fIprocesses 86031\fP
+Počet forků od zavedení systému.
+.TP 
+\fIprocs_running 6\fP
+Počet procesů v runnable state.  (Od Linuxu 2.5.45)
+.TP 
+\fIprocs_blocked 2\fP
+Počet zablokovaných procesů, které čekají na dokončení I/O.  (Od
+Linuxu 2.5.45)
+.RE
+.TP 
+\fI/proc/swaps\fP
+Využívané oblasti swapu. Viz též \fBswapon\fP(8).
+.TP 
+\fI/proc/sys\fP
+Tento adresář (přítomen od 1.3.57) obsahuje množství souborů a
+podadresářů, které odpovídají proměnným jádra. Tyto proměnné lze
+číst a někdy i měnit prostřednictvím souborového systému \fIproc\fP, a
+deprecated systémového volání \fBsysctl\fP(2).  V současnosti obsahuje
+podadresáře \fIabi\fP, \fIdebug\fP, \fIdev\fP, \fIfs\fP, \fIkernel\fP, \fInet\fP, \fIproc\fP,
+\fIrxrpc\fP, \fIsunrpc\fP a \fIvm\fP které obsahují další soubory a
+podadresáře.
+.TP 
+\fI/proc/sys/abi\fP (od jádra 2.4.10)
+.\" On some systems, it is not present.
+Tento adresář může obsahovat soubory s binárními informacemi
+aplikací.  Podrobnosti jsou uvedeny v souboru
+\fIDocumentation/sysctl/abi.txt\fP ve zdrojovém kódu jádra.
+.TP 
+\fI/proc/sys/debug\fP
+Tento adresář může být prázdný.
+.TP 
+\fI/proc/sys/dev\fP
+Tento adresář obsahuje informace specifické pro zařízení (např.
+\fIdev/cdrom/info\fP).  V některých systémech může být prázdný.
+.TP 
+\fI/proc/sys/fs\fP
+Obsahuje podadresáře \fIbinfmt_misc\fP, \fIepoll\fP, \fIinotify\fP a \fImqueue\fP a
+soubory \fIdentry\-state\fP, \fIdir\-notify\-enable\fP, \fIdquot\-nr\fP, \fIfile\-max\fP,
+\fIfile\-nr\fP, \fIinode\-max\fP, \fIinode\-nr\fP, \fIinode\-state\fP, \fIlease\-break\-time\fP,
+\fIleases\-enable\fP, \fIoverflowgid\fP, \fIoverflowuid\fP, \fIsuid_dumpable\fP,
+\fIsuper\-max\fP a \fIsuper\-nr\fP.
+.TP 
+\fI/proc/sys/fs/binfmt_misc\fP
+Dokumentace k souborům v tomto adresáři je ve zdrojových kódech jádra
+v \fIDocumentation/binfmt_misc.txt\fP.
+.TP 
+\fI/proc/sys/fs/dentry\-state\fP (since Linux 2.2)
+This file contains information about the status of the directory cache
+(dcache).  The file contains six numbers, \fInr_dentry\fP, \fInr_unused\fP,
+\fIage_limit\fP (age in seconds), \fIwant_pages\fP (pages requested by system) and
+two dummy values.
+.RS
+.IP * 2
+\fInr_dentry\fP is the number of allocated dentries (dcache entries).  This
+field is unused in Linux 2.2.
+.IP *
+\fInr_unused\fP is the number of unused dentries.
+.IP *
+.\" looks like this is unused in kernels 2.2 to 2.6
+\fIage_limit\fP is the age in seconds after which dcache entries can be
+reclaimed when memory is short.
+.IP *
+.\" looks like this is unused in kernels 2.2 to 2.6
+\fIwant_pages\fP is non\-zero when the kernel has called shrink_dcache_pages()
+and the dcache isn't pruned yet.
+.RE
+.TP 
+\fI/proc/sys/fs/dir\-notify\-enable\fP
+Tento soubor může být použit pro zakázání nebo povolení rozhraní
+\fIdnotify\fP popsaného v \fBfcntl\fP(2), na celosystémové úrovni.  Hodnota 0
+v tomto souboru rozhraní zakáže, hodnota 1 jej povolí.
+.TP 
+\fI/proc/sys/fs/dquot\-max\fP
+Tento soubor ukazuje maximální počet cached disk quota entries.  V
+některých systémech (2.4) není přítomen. Pokud je počet volných
+cached disk quota entries velmi nízký a v systému je najednou přítomno
+ohromné množství uživatelů, může být vhodné tento limit zvýšit.
+.TP 
+\fI/proc/sys/fs/dquot\-nr\fP
+Tento soubor ukazuje počet alokovaných disk quota entries a počet
+volných disk quota entries.
+.TP 
+\fI/proc/sys/fs/epoll\fP (od Linuxu 2.6.28)
+Tento adresář obsahuje soubory \fI max_user_instances \fP a
+\fImax_user_watches\fP, které je možno použít k omezení paměti jádra
+využité rozhraním \fIepoll\fP. Více informací viz \fBinotify\fP(7).
+.TP 
+\fI/proc/sys/fs/file\-max\fP
+Tento soubor definuje celosystémový limit počtu otevřených souborů pro
+všechny procesy.  (Viz též \fBsetrlimit\fP(2), který může být použit
+procesem k nastavení limitu na proces, \fBRLIMIT_NOFILE\fP, na počet
+souborů, které může otevřít.)  Pokud se objeví spousta chybových
+hlášení, že dochází file handles, zkuste tuto hodnotu zvýšit:
+.br
+
+.br
+.nf
+\f(CWecho 100000 > /proc/sys/fs/file\-max\fP
+
+.fi
+
+Konstanta jádra \fBNR_OPEN\fP stanovuje horní limit pro hodnotu, kterou je
+možné vložit do \fIfile\-max\fP.
+
+Pokud zvýšíte \fI/proc/sys/fs/file\-max\fP, zvyšte také
+\fI/proc/sys/fs/inode\-max\fP na 3\-4 násobek nové hodnoty
+\fI/proc/sys/fs/file\-max\fP, nebo dojdou inody.
+.TP 
+\fI/proc/sys/fs/file\-nr\fP
+Tento soubor (jen ke čtení) udává počet souborů, které jsou
+momentálně otevřeny.  Obssahuje tři čísla: počet alokovaných file
+handles, počet volných file handles a maximální počet file
+handles. Jádro alokuje file handles dynamicky, ale potom je již
+neuvolňuje. Pokud je počet alokovaných souborů blízký maximu, mělo by
+být maximum zvýšeno. Pokud je počet volných file handles velký,
+jednalo se o špičku ve využití file handles a pravděpodobně není
+potřeba maximum zvyšovat.
+.TP 
+\fI/proc/sys/fs/inode\-max\fP
+Tento soubor obsahuje maximální počet in\-memory inodes. V některých
+(2.4)  systémech nemusí být přítomen. Tato hodnota by měla být 3\-4
+krát větší než hodnota ve \fIfile\-max\fP, protože \fIstdin\fP, \fIstdout\fP a
+síťové sockety také vyžadují inody pro své ovládání. Pokud často
+docházejí inody, je potřeba tuto hodnotu zvýšit.
+.TP 
+\fI/proc/sys/fs/inode\-nr\fP
+Tento soubor obsahuje první dvě hodnoty z \fIinode\-state\fP.
+.TP 
+\fI/proc/sys/fs/inode\-state\fP
+Tento soubor obsahuje sedm čísel: \fInr_inodes\fP, \fInr_free_inodes\fP,
+\fIpreshrink\fP a čtyři dummy hodnoty.  \fInr_inodes\fP je počet inodů, které
+jsou alokovány systémem. Může být lehce vyšší než \fIinode\-max\fP,
+protože Linux je alokuje po celých stránkách. \fInr_free_inodes\fP
+reprezentuje počet volných inodů. \fIpreshrink\fP je nenulová hodnota,
+když \fInr_inodes\fP > \fIinode\-max\fP a systém potřebuje vyčistit seznam
+inodů namísto alokování dalších.
+.TP 
+\fI/proc/sys/fs/inotify\fP (od Linuxu 2.6.13)
+Tento adresář obsahuje soubory \fImax_queued_events\fP, \fImax_user_instances\fP
+a \fImax_user_watches\fP, které je možno použít k omezení paměti jádra
+využité rozhraním \fIinotify\fP.  Více informací viz \fBinotify\fP(7).
+.TP 
+\fI/proc/sys/fs/lease\-break\-time\fP
+Tento soubor určuje oddechový čas, který dává jádro procesu, který
+holding a file lease (\fBfcntl\fP(2)), poté co mu poslalo signál, kterým jej
+upozorňuje, že další proces čeká na otevření souboru. Pokud lease
+holder does not remove or downgrade the lease během tohoto oddechového
+času, jádro forcibly breaks the lease.
+.TP 
+\fI/proc/sys/fs/leases\-enable\fP
+Tento soubor je možné použít k povolení nebo zakázání file leases
+(\fBfcntl\fP(2))  na celosystémové úrovni. Pokud tento soubor obsahuje
+hodnotu 0, jsou leases zakázány. Nenulová hodnota leases povolí.
+.TP 
+\fI/proc/sys/fs/mqueue\fP (od Linuxu 2.6.6)
+Tento adresář obsahuje soubory \fImsg_max\fP, \fImsgsize_max\fP a \fIqueues_max\fP,
+které kontrolují zdroje používané POSIXovými frontami zpráv.  Více
+informací viz \fBmq_overview\fP(7).
+.TP 
+\fI/proc/sys/fs/overflowgid\fP a \fI/proc/sys/fs/overflowuid\fP
+Tyto soubory umožňují změnit hodnotu pevně daných UID a GID.
+Výchozí hodnota 65534.  Některé souborové systémy podporují poze 16
+bitové UID a GID, ačkoliv UID a GID v Linuxu jsou 32 bitové. Když je
+jeden z těchto souborových systémů připojen jako zapisovatelný, je
+každé UID nebo GID, které by překročilo 65535, před zápisem na disk
+přeloženo na stanovenou hodnotu přetečení.
+.TP 
+\fI/proc/sys/fs/suid_dumpable\fP (od Linuxu 2.6.13)
+.\" The following is based on text from Documentation/sysctl/kernel.txt
+Hodnota v tomto souboru určuje, zda jsou soubory core dump vytvářeny i
+pro set\-user\-ID nebo jinak chráněné/poskvrněné binárky.  Je možné
+použít tři různé integer hodnoty:
+.sp
+\fI0\ (výchozí)\fP Tradiční (před verzí 2.6.13) chování. Core dump se
+nevytváří pro soubor s pozměněnými vlastnosti (voláním
+\fBseteuid\fP(2), \fBsetgid\fP(2), apod., nebo spuštěním programu s set\-user\-ID
+nebo set\-group\-ID)  nebo jehož binárka nemá povolena práva ke čtení.
+.sp
+\fI1\ ("debug")\fP Core dump je vytvářen u všech souborů, kdykoliv je to
+možné.  Vlastníkem souboru core dump je ID uživatele vypisovaného
+procesu a neaplikují se žádná bezpečnostní opatření.  Mělo by se
+používat jen pro ladění systému. Ptrace není kontrolován.
+.sp
+\fI2\ ("suidsafe")\fP Jakákoliv binárka, která by za normálních okolností
+nebyla vypsána (viz 0 výše), je vypsána s čitelností pouze pro
+uživatele root.  To umožňuje uživateli soubor core dump odstranit, ale
+nikoliv číst.  Z důvodu bezpečnosti se v tomto režimu soubory core dump
+vzájemně nepřepisují ani nepřepisují jiné soubory.  tento režim je
+vhodný pro administrátory pokoušející se ladit problémy v normálním
+prostředí.
+.TP 
+\fI/proc/sys/fs/super\-max\fP
+Tento soubor ovládá maximální počet superbloků a tím i maximální
+počet souborových systémů, které může jádro připojit. \fIsuper\-max\fP
+je nutné zvýšit pouze v případě, že je potřeba připojit více
+souborových systémů, než aktuální hodnota v \fIsuper\-max\fP umožňuje.
+.TP 
+\fI/proc/sys/fs/super\-nr\fP
+Tento soubor obsahuje počet právě připojených souborových systémů.
+.TP 
+\fI/proc/sys/kernel\fP
+Tento adresář obsahuje soubory řídící mnoho parametrů jádra. Jejich
+popis následuje.
+.TP 
+\fI/proc/sys/kernel/acct\fP
+Tento soubor obsahuje tři čísla: \fIhighwater\fP, \fIlowwater\fP a
+\fIfrequency\fP.  Pokud je zapnuto BSD\-style process accounting, je jeho
+chování těmito hodnotami ovládáno. Pokud se volné místo na
+souborovém systému, kde sídlí log, sníží pod procento určené
+hodnotou \fIlowwater\fP, accounting se pozastaví. Pokud se volné místo
+dostane nad procento určené hodnotou \fIhighwater\fP, accounting se
+obnoví. Frequency určuje, jak často má jádro kontrolovat volné místo
+(v sekundách). Výchozí hodnoty jsou 4, 2 a 30.  To znamená pozastavit
+accounting, pokud volné místo představuje <= 2%; obnovit jej, pokud
+volné místo dosáhne >= 4%; informaci o volném místě považovat za
+platnou po 30 sekund.
+.TP 
+\fI/proc/sys/kernel/cap\-bound\fP (od jádra 2.2 do 2.6.24)
+Tento soubor obsahuje hodnotu jádra \fIcapability bounding set\fP (vyjádřeno
+jako číslo v desítkové soustavě se znaménkem).  Tato sada je ANDována
+s capabilities povolenými procesu při \fBexecve\fP(2). Od jádra 2.6.25
+celosystémový capability bounding set zmizel a byl nahrazen per\-thread
+bounding setem; viz \fBcapabilities\fP(7).
+.TP 
+\fI/proc/sys/kernel/core_pattern\fP
+Viz \fBcore\fP(5).
+.TP 
+\fI/proc/sys/kernel/core_uses_pid\fP
+Viz \fBcore\fP(5).
+.TP 
+\fI/proc/sys/kernel/ctrl\-alt\-del\fP
+Tento soubor řídí zpracování Ctrl\-Alt\-Del z klávesnice.  Pokud je
+hodnota v tomto souboru 0, Ctrl\-Alt\-Del je odchyceno a posláno programu
+\fBinit\fP(8)  program k provedení elegantního restartu.  Pokud je tato
+hodnota větší než 0, reakce Linuxu bude okamžitý reboot, nebude ani
+provedena synchronizace bufferů.  Poznámka: když má program (jako třeba
+dosemu) klávesnici v "raw" režimu, je ctrl\-alt\-del odchyceno programem
+ještě dříve než dosáhne tty úrovně jádra a je na programu, jak s
+ním naloží.
+.TP 
+\fI/proc/sys/kernel/hotplug\fP
+Tento soubor obsahuje cestu pro hotplug policy agent.  Výchozí hodnota v
+tomto souboru je \fI/sbin/hotplug\fP.
+.TP 
+\fI/proc/sys/kernel/domainname\fP a \fI/proc/sys/kernel/hostname\fP
+mohou být použity pro nastavení NIS/YP domainname a hostname počítače
+naprosto stejným způsobem jako příkazy \fBdomainname\fP(1)  an
+\fBhostname\fP(1), tj.:
+
+.in +4n
+.nf
+#\fB echo \(aqdarkstar\(aq > /proc/sys/kernel/hostname\fP
+#\fB echo \(aqmydomain\(aq > /proc/sys/kernel/domainname\fP
+.fi
+.in
+
+má stejný efekt jako
+
+.in +4n
+.nf
+#\fB hostname \(aqdarkstar\(aq\fP
+#\fB domainname \(aqmydomain\(aq\fP
+.fi
+.in
+
+Všimněte si ale, že darkstar.frop.org má hostname "darkstar" a DNS
+(Internet Domain Name Server) domainname "frop.org", které nesmí být
+zaměňováno s NIS (Network Information Service) nebo YP (Yellow Pages)
+domainname. Tato doménová jména jsou zcela odlišná. Podrobná diskuze
+je uvedena v manuálové stránce \fBhostname\fP(1).
+.TP 
+\fI/proc/sys/kernel/htab\-reclaim\fP
+(jen pro PowerPC) Pokud tento soubor obsahuje nenulovou hodnotu, je PowerPC
+htab (viz soubor jádra \fIDocumentation/powerpc/ppc_htab.txt\fP)  vyčištěno
+pokaždé, když systém narazí na nečinnou smyčku.
+.TP 
+\fI/proc/sys/kernel/l2cr\fP
+(jen pro PowerPC) Tento soubor obsahuje vlajku, která řídí L2
+vyrovnávací paměť desek pro procesor G3. Pokud je 0, je vyrovnávací
+paměť vypnuta. Pokud je nenulová, je zapnuta.
+.TP 
+\fI/proc/sys/kernel/modprobe\fP
+Tento soubor obsahuje cestu k zavaděči modulů jádra Výchozí hodnotou
+je \fI/sbin/modprobe\fP.  Tento soubor je přítomen pouze pokud je jádro
+sestaveno s volbou \fBCONFIG_KMOD\fP.  It is described by the kernel source
+file \fIDocumentation/kmod.txt\fP (only present in kernel 2.4 and earlier).
+.TP 
+\fI/proc/sys/kernel/msgmax\fP
+Tento soubor definuje celosystémový limit na maximální počet bajtů v
+jediné zprávě zapsané do System V fronty zpráv.
+.TP 
+\fI/proc/sys/kernel/msgmni\fP
+Tento soubor definuje celosystémový limit počtu identifikátorů fronty
+zpráv.  (Tento soubor je přítomen od Linuxu 2.4)
+.TP 
+\fI/proc/sys/kernel/msgmnb\fP
+Tento soubor definuje celosystémový parametr používaný pro inicializaci
+hodnoty \fImsg_qbytes\fP pro následně vytvořené fronty zpráv.  Hodnota
+\fImsg_qbytes\fP určuje maximální počet bajtů, které mohou být zapsány
+do fronty zpráv.
+.TP 
+\fI/proc/sys/kernel/ostype\fP a \fI/proc/sys/kernel/osrelease\fP
+Tyto soubory obsahují části řetězců z \fI/proc/version\fP.
+.TP 
+\fI/proc/sys/kernel/overflowgid\fP a \fI/proc/sys/kernel/overflowuid\fP
+Tyto soubory duplikují soubory \fI/proc/sys/fs/overflowgid\fP a
+\fI/proc/sys/fs/overflowuid\fP.
+.TP 
+\fI/proc/sys/kernel/panic\fP
+Tento soubor umožňuje čtení/zápis proměnné jádra
+\fIpanic_timeout\fP. Pokud je nulová, bude jádro při panice ve smyčce;
+pokud je nenulová, znamená počet sekund po kterých by jádro mělo samo
+rebootovat. Pokud je použit software watchdog device driver, doporučuje se
+hodnota 60.
+.TP 
+\fI/proc/sys/kernel/panic_on_oops\fP (od jádra 2.5.68)
+Tento soubor řídí chování jádra, pokud dojde k oops nebo chybě. Pokud
+tento soubor obsahuje 0, pokusí se systém pokračovat. Pokud obsahuje 1,
+počká systém několik sekund (aby měl klogd čas zaznamenat výstup
+oops) a pak zpanikaří.  Pokud soubor \fI/proc/sys/kernel/panic\fP také
+obsahuje nenulovou hodnotu, bude počítač rebootován.
+.TP 
+\fI/proc/sys/kernel/pid_max\fP (od jádra 2.5.34)
+.\" Prior to 2.6.10, pid_max could also be raised above 32768 on 32-bit
+.\" platforms, but this broke /proc/[pid]
+.\" See http://marc.theaimsgroup.com/?l=linux-kernel&m=109513010926152&w=2
+Tento soubor určuje hodnotu, při které se PID přetočí (tj. hodnota v
+tomto souboru je o jedna větší než nejvyšší PID). Výchozí hodnota
+pro tento soubor, 32768, má za následek stejný rozsah PID jako v
+předchozích jádrech.  Na 32 bitových systémech je 32768 maximální
+hodnotou \fIpid_max\fP. Na 64 bitových systémech může být \fIpid_max\fP
+nastaven na jakoukoliv hodnotu až do 2^22 (\fBPID_MAX_LIMIT\fP, zhruba 4
+milióny).
+.TP 
+\fI/proc/sys/kernel/powersave\-nap\fP (pouze pro PowerPC)
+Tento soubor obsahuje vlajku. Pokud je nastavena, Linux\-PPC použije režim
+šetření energií "nap", jinak bude použit režim "doze".
+.TP 
+\fI/proc/sys/kernel/printk\fP
+Čtyři hodnoty v tomto souboru jsou \fIconsole_loglevel\fP,
+\fIdefault_message_loglevel\fP, \fIminimum_console_level\fP a
+\fIdefault_console_loglevel\fP. Tyto hodnoty ovlivňují chování \fIprintk()\fP
+při tisku nebo záznamu zpráv o chybách.  Více informací o různých
+úrovních logování uvádí \fBsyslog\fP(2). Zprávy s prioritou vyšší
+než \fIconsole_loglevel\fP budou vytisknuty do konsoly. Zprávy bez zadané
+priority budou vytisknuty s prioritou
+\fIdefault_message_level\fP. \fIminimum_console_loglevel\fP je minimální
+(nejvyšší) hodnota, na kterou může být \fIconsole_loglevel\fP nastavena.
+\fIdefault_console_loglevel\fP je výchozí hodnota pro \fIconsole_loglevel\fP.
+.TP 
+\fI/proc/sys/kernel/pty\fP (od Linuxu 2.6.4)
+Tento adresář obsahuje dva soubory, která se vztahují k počtu
+pseudoterminálů typu Unix 98 (viz \fBpts\fP(4))  v systému.
+.TP 
+\fI/proc/sys/kernel/pty/max\fP
+Tento soubor definuje maximální počet pseudoterminálů.
+.TP 
+\fI/proc/sys/kernel/pty/nr\fP
+Tento read\-only soubor ukazuje, kolik pseudoterminálů je právě
+užíváno.
+.TP 
+\fI/proc/sys/kernel/random\fP
+Tento adresář obsahuje různé parametry pro řízení činnosti souboru
+\fI/dev/random\fP.  Více informací uvádí \fBrandom\fP(4).
+.TP 
+\fI/proc/sys/kernel/real\-root\-dev\fP
+Tento soubor je dokumentován ve zdrojovém souboru jádra
+\fIDocumentation/initrd.txt\fP.
+.TP 
+\fI/proc/sys/kernel/reboot\-cmd\fP (jen Sparc)  
+Tento soubor je zřejmě určen pro předání parametru zavaděči SPARC
+ROM/Flash.  Možná mu říká, co dělat po rebootování?
+.TP 
+\fI/proc/sys/kernel/rtsig\-max\fP
+(Pouze v jádrech do 2.6.7 včetně; viz \fBsetrlimit\fP(2))  Tento soubor
+může být použit k nastavení maximálního počtu POSIXových realtime
+signálů (ve frontě), které mohou v systému zbývat.
+.TP 
+\fI/proc/sys/kernel/rtsig\-nr\fP
+(Pouze v jádrech do 2.6.7 včetně) Tento soubor ukazuje počet POSIXových
+realtime signálů, které jsou právě ve frontě.
+.TP 
+\fI/proc/sys/kernel/sem\fP (od Linuxu 2.4)
+Tento soubor obsahuje 4 čísla, která definují limity pro System V IPC
+semafory.  Tyto položky jsou, popořadě:
+.RS
+.IP SEMMSL 8
+Maximální počet semaforů v sadě semaforů.
+.IP SEMMNS 8
+Celosystémový limit na počet semaforů ve všech sadách semaforů.
+.IP SEMOPM 8
+Maximální počet operací, které mohou být určeny voláním
+\fBsemop\fP(2).
+.IP SEMMNI 8
+Celosystémový limit na maximální počet identifikátorů semaforů.
+.RE
+.TP 
+\fI/proc/sys/kernel/sg\-big\-buff\fP
+Tento soubor ukazuje velikost bufferu obecného SCSI zařízení (sg).
+Zatím není možné jej měnit za chodu, ale je možné jej měnit při
+kompilaci úpravou \fIinclude/scsi/sg.h\fP a změnou hodnoty \fBSG_BIG_BUFF\fP.
+Nicméně nemělo by být nutné tuto hodnotu měnit.
+.TP 
+\fI/proc/sys/kernel/shmall\fP
+Tento soubor obsahuje celosystémový limit na celkový počet stránek
+sdílené paměti System V.
+.TP 
+\fI/proc/sys/kernel/shmmax\fP
+Tento soubor je možné použít pro zjištění a nastavení limitu na
+maximální (System V IPC)  velikost segmentu sdílené paměti, který
+může být vytvořen.  Jádro nyní podporuje segmenty sdílené paměťi
+až do 1GB. Výchozí hodnota je \fBSHMMAX\fP.
+.TP 
+\fI/proc/sys/kernel/shmmni\fP
+(od Linuxu 2.4 dál)  Tento soubor určuje celosystémový maximální
+počet segmentů sdílené paměti System V, které mohou být vytvořeny.
+.TP 
+\fI/proc/sys/kernel/version\fP
+Tento soubor obsahuje řetězec ve tvaru:
+
+    #5 Wed Feb 25 21:49:24 MET 1998
+
+"#5" znamená, že se jedná o páté jádro sestavené z těchto
+zdrojových souborů a datum za ním je čas, kdy bylo sestaveno.
+.TP 
+\fI/proc/sys/kernel/threads\-max\fP (od jádra 2.3.11)
+Tento soubor určuje globální limit pro počet vláken (úloh), která
+mohou být v systému vytvořena.
+.TP 
+\fI/proc/sys/kernel/zero\-paged\fP (pouze pro PowerPC)  
+Tento soubor obsahuje vlajku. Pokud je nastavena (nenulová), Linux\-PPC will
+pre\-zero pages in the idle loop, possibly speeding up get_free_pages.
+.TP 
+\fI/proc/sys/net\fP
+Tento adresář obsahuje síťové položky.  Vysvětlení k některým
+souborům v tomto adresáři je uvedeno v \fBtcp\fP(7)  a \fBip\fP(7).
+.TP 
+\fI/proc/sys/net/core/somaxconn\fP
+Tento soubor definuje maximální hodnotu pro parametr \fIbacklog\fP volání
+\fBlisten\fP(2); viz manuálová stránka \fBlisten\fP(2).
+.TP 
+\fI/proc/sys/proc\fP
+Tento adresář může být prázdný.
+.TP 
+\fI/proc/sys/sunrpc\fP
+Tento adresář podporuje remote procedure call Sunu pro network file system
+(NFS).  V některých systémech není přítomen.
+.TP 
+\fI/proc/sys/vm\fP
+Tento adresář obsahuje soubory pro ladění memory managementu, buffer a
+cache managementu.
+.TP 
+\fI/proc/sys/vm/drop_caches\fP (od Linuxu 2.6.16)
+Zápis do tohoto souboru způsobí, že jádro vyhodí prázdné
+vyrovnávací paměti, dentries a inody z paměti, čímž se paměť
+uvolní.
+
+K uvolnění pagecache se použije \fIecho 1 > /proc/sys/vm/drop_caches\fP;
+k uvolnění dentries a inodů se použije \fIecho 2 >
+/proc/sys/vm/drop_caches\fP; k uvolnění pagecache, dentries a inodů se
+použije \fIecho 3 > /proc/sys/vm/drop_caches\fP.
+
+Protože toto je nedestruktivní operace a dirty objekty není možné
+uvolnit, měl by uživatel nejprve spustit \fBsync\fP(8).
+.TP 
+\fI/proc/sys/vm/legacy_va_layout\fP (od Linuxu 2.6.9)
+.\" The following is from Documentation/filesystems/proc.txt
+Pokud je nenulový, vypne nový 32 bitový memory\-mapping layout; jádro
+použije pro všechny procesy původní (2.4) layout.
+.TP 
+\fI/proc/sys/vm/oom_dump_tasks\fP (od jádra 2.6.25)
+.\" The following is from Documentation/sysctl/vm.txt
+Enables a system\-wide task dump (excluding kernel threads) to be produced
+when the kernel performs an OOM\-killing.  The dump includes the following
+information for each task (thread, process): thread ID, real user ID, thread
+group ID (process ID), virtual memory size, resident set size, the CPU that
+the task is scheduled on, oom_adj score (see the description of
+\fI/proc/[pid]/oom_adj\fP), and command name.  This is helpful to determine why
+the OOM\-killer was invoked and to identify the rogue task that caused it.
+
+If this contains the value zero, this information is suppressed.  On very
+large systems with thousands of tasks, it may not be feasible to dump the
+memory state information for each one.  Such systems should not be forced to
+incur a performance penalty in OOM situations when the information may not
+be desired.
+
+If this is set to non\-zero, this information is shown whenever the
+OOM\-killer actually kills a memory\-hogging task.
+
+Výchozí hodnota je 0.
+.TP 
+\fI/proc/sys/vm/oom_kill_allocating_task\fP (od jádra 2.6.24)
+.\" The following is from Documentation/sysctl/vm.txt
+This enables or disables killing the OOM\-triggering task in out\-of\-memory
+situations.
+
+If this is set to zero, the OOM\-killer will scan through the entire tasklist
+and select a task based on heuristics to kill.  This normally selects a
+rogue memory\-hogging task that frees up a large amount of memory when
+killed.
+
+If this is set to non\-zero, the OOM\-killer simply kills the task that
+triggered the out\-of\-memory condition.  This avoids a possibly expensive
+tasklist scan.
+
+If \fI/proc/sys/vm/panic_on_oom\fP is non\-zero, it takes precedence over
+whatever value is used in \fI/proc/sys/vm/oom_kill_allocating_task\fP.
+
+Výchozí hodnota je 0.
+.TP 
+\fI/proc/sys/vm/overcommit_memory\fP
+Tento soubor obsahuje režim kernel virtual memory accounting. Hodnoty jsou:
+.RS
+.IP
+0: heuristic overcommit (výchozí)
+.br
+1: always overcommit, never check
+.br
+2: always check, never overcommit
+.RE
+.IP
+V režimu 0 nejsou volání \fBmmap\fP(2) s \fBMAP_NORESERVE\fP kontrolována
+nikdy a výchozí kontrola je velmi slabá, což způsobuje riziko, že bude
+proces "OOM\-zabit". V Linuxu 2.4 jakákoliv nenulová hodnota implikuje
+režim 1. V režimu 2 (dostupný od Linuxu 2.6) je celkový virtuální
+adresní prostor systému omezen na (SS + RAM*(r/100)), kde SS je velikost
+odkládacího prostoru, RAM je velikost fyzické paměti a r je obsah
+souboru \fI/proc/sys/vm/overcommit_ratio\fP.
+.TP 
+\fI/proc/sys/vm/overcommit_ratio\fP
+Viz popis \fI/proc/sys/vm/overcommit_memory\fP.
+.TP 
+\fI/proc/sys/vm/panic_on_oom\fP (od jádra 2.6.18)
+.\" The following is adapted from Documentation/sysctl/vm.txt
+This enables or disables a kernel panic in an out\-of\-memory situation.
+
+If this file is set to the value 0, the kernel's OOM\-killer will kill some
+rogue process.  Usually, the OOM\-killer is able to kill a rogue process and
+the system will survive.
+
+If this file is set to the value 1, then the kernel normally panics when
+out\-of\-memory happens.  However, if a process limits allocations to certain
+nodes using memory policies (\fBmbind\fP(2)  \fBMPOL_BIND\fP)  or cpusets
+(\fBcpuset\fP(7))  and those nodes reach memory exhaustion status, one process
+may be killed by the OOM\-killer.  No panic occurs in this case: because
+other nodes' memory may be free, this means the system as a whole may not
+have reached an out\-of\-memory situation yet.
+
+If this file is set to the value 2, the kernel always panics when an
+out\-of\-memory condition occurs.
+
+The default value is 0.  1 and 2 are for failover of clustering.  Select
+either according to your policy of failover.
+.TP 
+\fI/proc/sysvipc\fP
+Podadresář obsahující pseudosoubory \fImsg\fP, \fIsem\fP a \fIshm\fP.  Tyto
+soubory obsahují seznam objektů System V Interprocess Communication (IPC)
+(fronty zpráv, semafory a sdílená paměť), které jsou aktuálně v
+systému přítomny, poskytují podobnou informaci jako \fBipcs\fP(1).  Tyto
+soubory mají záhlaví a jsou formátovány (jeden IPC objekt na řádek)
+pro lepší přehled.  \fBsvipc\fP(7)  poskytuje další detaily pro informace
+obsažené v těchto souborech.
+.TP 
+\fI/proc/tty\fP
+Podadresář obsahující pseudosoubory a podadresáře pro ovladače tty a
+line disciplines.
+.TP 
+\fI/proc/uptime\fP
+Tento soubor obsahuje dvě čísla: uptime systému (sekundy) a čas
+strávený nečinností (sekundy).
+.TP 
+\fI/proc/version\fP
+Řetězec identifikující verzi jádra, které právě běží.  Zahrnuje
+obsah \fI/proc/sys/kernel/ostype\fP, \fI/proc/sys/kernel/osrelease\fP a
+\fI/proc/sys/kernel/version\fP.  Například:
+.nf
+.in -2
+\f(CWLinux version 1.0.9 (quinlan@phaze) #1 Sat May 14 01:51:54 EDT 1994\fP
+
+.in +2
+.fi
+.\" FIXME Document /proc/timer_list
+.\" .TP
+.\" .IR /proc/timer_list " (since Linux 2.6.21)"
+.\" See the 2.6.21 Change log
+.\" FIXME Document /proc/timer_stats
+.\" .TP
+.\" .IR /proc/timer_stats " (since Linux 2.6.21)"
+.\" See the 2.6.21 Change log
+.TP 
+\fI/proc/vmstat\fP (od Linuxu 2.6)
+Tento soubor zobrazuje různé statistiky virtuální paměti.
+.TP 
+\fI/proc/zoneinfo\fP (od Linuxu 2.6.13)
+.\" FIXME more should be said about /proc/zoneinfo
+Tento soubor obsahuje informace o paměťových zónách.  Hodí se při
+analyzování chování virtuální paměti.
+.SH POZNÁMKY
+Mnoho řetězců (např. proměnné prostředí a příkazový řádek) je
+ve vnitřním formátu s podpoložkami oddělenými NULL bajty
+(\(aq\e0\(aq), takže mohou být lépe čitelné s užitím \fIod \-c\fP nebo
+\fItr "\e000" "\en"\fP. Jako další možnost poslouží dobře i \fIecho \`cat
+<file>\`\fP.
+
+.\" .SH ACKNOWLEDGEMENTS
+.\" The material on /proc/sys/fs and /proc/sys/kernel is closely based on
+.\" kernel source documentation files written by Rik van Riel.
+Tato manuálová stránka není úplná, může být nepřesná a potřebuje
+být často doplňována.
+.SH "DALŠÍ INFORMACE"
+\fBcat\fP(1), \fBfind\fP(1), \fBfree\fP(1), \fBps\fP(1), \fBtr\fP(1), \fBuptime\fP(1),
+\fBchroot\fP(2), \fBmmap\fP(2), \fBreadlink\fP(2), \fBsyslog\fP(2), \fBslabinfo\fP(5),
+\fBhier\fP(7), \fBtime\fP(7), \fBarp\fP(8), \fBdmesg\fP(8), \fBhdparm\fP(8),
+\fBifconfig\fP(8), \fBinit\fP(8), \fBlsmod\fP(8), \fBlspci\fP(8), \fBmount\fP(8),
+\fBnetstat\fP(8), \fBprocinfo\fP(8), \fBroute\fP(8)
+.br
+Soubory zdrojového kódu jádra: \fIDocumentation/filesystems/proc.txt\fP,
+\fIDocumentation/sysctl/vm.txt\fP
+.SH TIRÁŽ
+Tato stránka je součástí projektu Linux \fIman\-pages\fP.  Popis projektu a
+informace o hlášení chyb najdete na http://www.kernel.org/doc/man\-pages/.

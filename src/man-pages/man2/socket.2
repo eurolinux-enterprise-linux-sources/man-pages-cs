@@ -1,0 +1,192 @@
+.TH SOCKET 2 "4. dubna 1997" "BSD Man Page" "Linux - příručka programátora"
+.do hla cs
+.do hpf hyphen.cs
+.SH JMÉNO
+socket \- vytvoř soket
+.SH SYNTAXE
+.B #include <sys/types.h>
+.br
+.B #include <sys/socket.h>
+.sp
+.BI "int socket(int " domain ", int " type ", int " protocol );
+.SH POPIS
+.B Socket
+vytvoří soket a vrátí jeho deskriptor.
+
+Parametr
+.I domain
+specifikuje jmenný prostor, ve kterém se bude komunikace odehrávat; tím je
+zvolena i rodina protokolů, které mohou být použity. Tyto rodiny jsou
+definovány v hlavičkovém souboru
+.IR sys/socket.h .
+V současné době jsou podporovány tyto formáty:
+
+.RS
+.TP 0.9i
+AF_UNIX
+(interní protokol UNIXu)
+.TP
+AF_INET
+(Internetový jmenný prostor)
+.TP
+AF_ISO
+(protokoly ISO)
+.TP
+AF_NS
+(protokoly Xerox Network Systems)
+.TP
+AF_IMPLINK
+(IMP \*(lqhost at IMP\*(rq link layer)
+.RE
+
+Soket má typ 
+.IR type ,
+který specifikuje komunikační styl. Podporované typy jsou:
+
+.RS
+.nf
+SOCK_STREAM
+SOCK_DGRAM
+SOCK_RAW
+SOCK_SEQPACKET
+SOCK_RDM
+.fi
+.RE
+
+A
+.B SOCK_STREAM
+poskytuje sekvenční, spolehlivou a dvoustrannou proudovou komunikaci.
+Může být podporován mechanismus přenosu out-of-band dat.
+.B SOCK_DGRAM
+soket podporuje datagramy (nespojované, nespolehlivé zprávy pevné (typicky
+malé) maximální délky).
+.B SOCK_SEQPACKET
+soket poskytuje sekvenční, spolehlivý, dvojstranný přenos dat pro datagramy
+pevné maximální délky; konzument může číst tato data voláním jádra. Tento
+typ je v současné době implementován pouze pro 
+.BR AF_NS .
+.B SOCK_RAW
+poskytuje přístup k interním síťovým protokolům a rozhraním.
+Typy
+.BR SOCK_RAW ,
+který je k dispozici pouze superuživateli a 
+.BR SOCK_RDM ,
+který je plánován, ale ještě není implementován, zde nejsou popsány.
+
+Argument
+.I protocol
+specifikuje, který konkrétní protokol má být použit. Normálně existuje pouze
+jeden protokol, který se dá použít u soketu konkrétního typu a dané rodiny
+protokolů. Ale je samozřejmě možné, aby existovalo protokolů více. Číslo
+protokolu závisí na použitém jmenném prostoru, bližší informace naleznete v 
+.BR protocols (5).
+
+Sokety typu
+.B SOCK_STREAM
+jsou plně duplexní proudy dat podobné rourám. Proudový soket musí být 
+.I spojen
+před tím, než přijme nebo pošle jakákoliv data. Spojení s jiným soketem se
+provádí voláním
+.BR connect (2) .
+Jestliže bylo spojení navázáno, mohou být přenášena data pomocí volání
+.BR read (2)
+a
+.BR write (2)
+nebo některou variantou volání
+.BR send (2)
+a
+.BR recv (2).
+Je-li sezení ukončeno, můžete zavolat funkci
+.BR close (2).
+Out-of-band data mohou být poslána. Konkrétní informace najdete v 
+.BR send (2).
+Out-of-band data mohou být přijata voláním
+.BR recv (2).
+
+Komunikační protokoly, které implementují
+.B SOCK_STREAM
+zaručují, že data se neztratí a ani nebudou duplikována. Je-li část dat, pro
+kterou je k dispozici prostor ve vyrovnávací paměti, nedoručena po rozumnou
+dobu, je spojení prohlášeno za přerušené a volání budou vracet chyby (\-1) a 
+globální proměnná errno bude nastavena na
+.B ETIMEDOUT .
+
+Některé protokoly uchovávají sokety v činnosti tím, že přibližně každou
+minutu posílají packet, nevyskytuje-li se jiná aktivita. Neobjeví-li se
+odpověď po delší dobu (např. 5 minut), je opět indikována chyba. Signál
+.B SIGPIPE
+je poslán procesu, jestliže proces pošle data do "rozbitého" proudu.
+To způsobí, že "naivní" procesy, které neobsluhují tento signál skončí.
+
+.B SOCK_SEQPACKET
+sokety používají stejná volání jako
+.B SOCK_STREAM
+sokety. Jediným rozdílem je, že volání
+.BR read (2)
+vrací pouze požadované množství dat a ostatní data budou zničena.
+
+.B SOCK_DGRAM
+a
+.B SOCK_RAW
+sokety povolují posílání paketů adresátům specifikovaným ve volání
+.BR send (2) .
+Datagramy jsou obvykle přijímány pomocí volání
+.BR recvfrom (2),
+které vrací další datagram s jeho návratovou adresou.
+
+Volání
+.BR fcntl (2)
+může být použito ke specifikování skupiny procesů, které obdrží signál
+.B SIGURG
+při příchodu out-of-band dat. Může také povolit neblokující vstupně-výstupní
+operace případně asynchronní hlášení vstupně-výstupních událostí signálem
+.BR SIGIO .
+
+Operace soketu jsou řízeny volbami soketů. Tyto volby jsou specifikovány v
+hlavičkovém souboru
+.IR sys/socket.h .
+.BR Setsockopt (2)
+a
+.BR getsockopt (2)
+se používají pro jejich nastavení a k získání jejich aktuálního
+stavu.
+.SH NÁVRATOVÁ HODNOTA
+\-1 je vrácena, jestliže nastala chyba, jinak je vrácen deskriptor soketu.
+.SH CHYBY
+.TP 0.8i
+.B EPROTONOSUPPORT
+Komunikační styl nebo protokol není podporován specifikovaným jmenným
+prostorem.
+.TP
+.B EMFILE
+Tabulka deskriptorů procesu je zaplněna.
+.TP
+.B ENFILE
+Tabulka otevřených souborů systému je zaplněna.
+.TP
+.B EACCESS
+Nemáte právo vytvořit soket specifikovaného typu a/nebo protokolu.
+.TP
+.B ENOBUFS
+Nedostatek vyrovnávacích pamětí. Soket nemůže být vytvořen, dokud nedojde k
+uvolnění zdrojů.
+.SH SPLŇUJE STANDARDY
+4.4BSD (volání jádra
+.B socket
+se objevilo v 4.2BSD). Obvykle je kompatibilní s ne-BSD systémy, které
+podporují BSD Sokety (včetně variant Systému V).
+.SH DALŠÍ INFORMACE
+.BR accept "(2), " bind "(2), " connect "(2), " getprotoent "(3), "
+.BR getsockname "(2), " getsockopt "(2), " ioctl "(2), " listen "(2), "
+.BR read "(2), " recv "(2), " select "(2), " send "(2), " shutdown "(2), "
+.BR socketpair "(2), " write (2)
+.sp
+"An Introductory 4.3 BSD Interprocess Communication Tutorial"
+je znovu vydáno v
+.I UNIX Programmer's Supplementary Documents Volume 1
+.sp
+"BSD Interprocess Communication Tutorial"
+je znovu vydáno v
+.I UNIX Programmer's Supplementary Documents Volume 1
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

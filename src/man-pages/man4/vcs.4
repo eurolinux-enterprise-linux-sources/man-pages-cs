@@ -1,0 +1,144 @@
+.\" Copyright (c) 1995 James R. Van Zandt <jrv@vanzandt.mv.com>
+.\" Sat Feb 18 09:11:07 EST 1995
+.\"
+.\" This is free documentation; you can redistribute it and/or
+.\" modify it under the terms of the GNU General Public License as
+.\" published by the Free Software Foundation; either version 2 of
+.\" the License, or (at your option) any later version.
+.\"
+.\" The GNU General Public License's references to "object code"
+.\" and "executables" are to be interpreted as the output of any
+.\" document formatting or typesetting system, including
+.\" intermediate and printed output.
+.\"
+.\" This manual is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public
+.\" License along with this manual; if not, write to the Free
+.\" Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111,
+.\" USA.
+.\"
+.\" Modified, Sun Feb 26 15:08:05 1995, faith@cs.unc.edu
+.\" 2007-12-17, Samuel Thibault <samuel.thibault@ens-lyon.org>:
+.\"     document the VT_GETHIFONTMASK ioctl
+.\" "
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH VCS 4 2007\-12\-17 Linux "Linux \- příručka programátora"
+.SH JMÉNO
+vcs, vcsa \- paměť virtuální konzoly
+.SH POPIS
+\fI/dev/vcs0\fP je znakové zařízení s hlavním číslem 7 a vedlejším
+0. Obvykle je jeho vlastníkem root.tty a jeho přístupová práva jsou
+0644. Ukazuje na paměť právě zobrazené virtuální konzoly.
+.LP
+\fI/dev/vcs[1\-63]\fP jsou znaková zařízení pro virtuální konzoly, mají
+hlavní číslo 7 a vedlejší od 1 do 63. Obvykle je jejich vlastníkem
+root.tty a jejich přístupová práva jsou 0644.  \fI/dev/vcsa[0\-63]\fP jsou
+stejné, ale používají \fIunsigned short\fP (byte order podle hostitele),
+které obsahují atributy a začínají čtyřmi bajty, které určují
+rozměry obrazovky a pozici kurzoru: \fIpočet řádků\fP, \fIsloupců\fP, \fIx\fP,
+\fIy\fP.  (\fIx\fP = \fIy\fP = 0 je v levém horním rohu obrazovky.)
+
+Pokud je načten 512 znakový font, lze 9. bit získat pomocí \fBioctl\fP(2)
+operace \fBVT_GETHIFONTMASK\fP (dostupné v jádře 2.6.18 a novějším) na
+\fI/dev/tty[1\-63]\fP; hodnota je vrácena v \fIunsigned short\fP na které ukazuje
+třetí argument \fBioctl\fP(2).
+.PP
+Tato znaková zařízení nahrazují screendump \fBioctl\fP(2)  konzoly \- viz
+\fBconsole\fP(4), proto mohou systémoví administrátoři kontrolovat
+přístup pomocí přístupových práv k těmto speciálním souborům.
+.PP
+Speciální soubory pro prvních osm virtuálních konzol mohou být
+vytvořeny takto:
+
+.nf
+        for x in 0 1 2 3 4 5 6 7 8; do
+        mknod \-m 644 /dev/vcs$x c 7 $x;
+        mknod \-m 644 /dev/vcsa$x c 7 $[$x+128];
+    done
+    chown root:tty /dev/vcs*
+
+.fi
+
+Žádné \fBioctl\fP(2)  požadavky nejsou podporovány.
+.SH SOUBORY
+/dev/vcs[0\-63]
+.br
+.\" .SH AUTHOR
+.\" Andries Brouwer <aeb@cwi.nl>
+/dev/vcsa[0\-63]
+.SH VERZE
+Objevilo se ve verzi 1.1.92 jádra.
+.SH PŘÍKLAD
+Budete\-li chtít udělat kopii obrazovky na třetí virtuální konzole,
+stačí se přepnout například na první konzolu a napsat \fIcat /dev/vcs3
+>něco\fP.  Avšak pozor, výstup neobsahuje znaky nového řádku, proto
+je nutné výstup nějak zpracovat, např. pomocí \fIfold \-w 80 /dev/vcs3 |
+lpr\fP nebo pomocí "geniálního" \fIsetterm \-dump 3 \-file /proc/self/fd/1\fP.
+.LP
+Zařízení \fI/dev/vcsa0\fP se používá pro podporu Braillova písma.
+
+Tento program zobrazí znak a obrazovkové atributy na místě kurzoru na
+druhé virtuální konzole a potom tam změní barvu pozadí:
+
+.nf
+#include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <fcntl.h>
+#include <sys/ioctl.h>
+#include <linux/vt.h>
+
+
+int
+main(void)
+{
+    int fd;
+    char *device = "/dev/vcsa2";
+    char *console = "/dev/tty2";
+    struct {unsigned char lines, cols, x, y;} scrn;
+    unsigned short s;
+    unsigned short mask;
+    unsigned char ch, attrib;
+
+    fd = open(console, O_RDWR);
+    if (fd < 0) {
+        perror(console);
+        exit(EXIT_FAILURE);
+    }
+    if (ioctl(fd, VT_GETHIFONTMASK, &mask) < 0) {
+        perror("VT_GETHIFONTMASK");
+        exit(EXIT_FAILURE);
+    }
+    (void) close(fd);
+    fd = open(device, O_RDWR);
+    if (fd < 0) {
+        perror(device);
+        exit(EXIT_FAILURE);
+    }
+    (void) read(fd, &scrn, 4);
+    (void) lseek(fd, 4 + 2*(scrn.y*scrn.cols + scrn.x), 0);
+    (void) read(fd, &s, 2);
+    ch = s & 0xff;
+    if (attrib & mask)
+        ch |= 0x100;
+    attrib = ((s & ~mask) >> 8);
+    printf("ch=\(aq%c\(aq attrib=0x%02x\en", ch, attrib);
+    attrib ^= 0x10;
+    (void) lseek(fd, \-1, 1);
+    (void) write(fd, &attrib, 1);
+    exit(EXIT_SUCCESS);
+}
+.fi
+.SH "DALŠÍ INFORMACE"
+\fBconsole\fP(4), \fBtty\fP(4), \fBttyS\fP(4), \fBgpm\fP(8)
+.SH TIRÁŽ
+Tato stránka je součástí projektu Linux \fIman\-pages\fP.  Popis projektu a
+informace o hlášení chyb najdete na http://www.kernel.org/doc/man\-pages/.

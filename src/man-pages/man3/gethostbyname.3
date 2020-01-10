@@ -1,0 +1,119 @@
+.TH GETHOSTBYNAME 3  "30. března 1997" "BSD" "Linux - příručka programátora"
+.do hla cs
+.do hpf hyphen.cs
+.SH JMÉNO
+gethostbyname, gethostbyaddr, sethostent, endhostent, herror \- získej
+záznam z databáze počítačů
+.SH SYNTAXE
+.nf
+.B #include <netdb.h>
+.B extern int h_errno;
+.sp
+.BI "struct hostent *gethostbyname(const char *" name );
+.sp
+.BI "struct hostent *gethostbyaddr(const char *" addr ", int " len ", int " type );
+.sp
+.BI "void sethostent(int " stayopen );
+.sp
+.B void endhostent(void);
+.sp
+.BI "void herror(const char *" s );
+.fi
+.SH POPIS
+Funkce \fBgethostbyname()\fP vrací strukturu typu \fIhostent\fP
+pro zadaný počítač \fIname\fP. Doména počítače a jí nadřazené jsou
+prohledávány pouze tehdy, nekončí-li \fIname\fP tečkou.
+Pokud \fIname\fP nekončí tečkou a proměnná prostředí \fBHOSTALIASES\fP
+je nastavena, bude prvně prohledáván soubor, na který ukazuje proměnná 
+\fBHOSTALIASES\fP.
+.PP
+Funkce \fBgethostbyaddr()\fP vrací strukturu typu \fIhostent\fP pro 
+počítač, jehož adresa \fIaddr\fP (délky \fIlen\fP a typu \fItype\fP) byla
+zadána. Jediným platný typem adresy je nyní AF_INET.
+.PP
+Funkce \fBsethostent()\fP specifikuje, je-li \fIstayopen\fP pravdivé (1), 
+že k dotazování budou použity spojené TCP sokety a spojení zůstane mezi
+jednotlivými dotazy otevřeno. Jinak budou k dotazování použity UDP
+datagramy.
+.PP
+Funkce \fBendhostent()\fP ukončí TCP spojení pro dotazy na nameserver.
+.PP
+Funkce \fBherror()\fP vytiskne chybovou zprávu, která přísluší hodnotě
+proměnné \fIh_errno\fP.
+.PP
+Funkce \fBgethostbyname()\fP a \fBgethostbyaddr()\fP používají při své
+činnosti jak nameservery \fBnamed\fP(8), tak soubor \fI/etc/hosts\fP, ale
+samozřejmě i NIS nebo YP, to záleží na pořadí definovaném v \fI/etc/host.conf\fP.
+(Viz 
+.BR resolv+ (8)).
+Standardně je prvně dotazován \fBnamed\fP(8) a potom soubor
+\fI/etc/hosts\fP.
+.PP
+Struktura \fIhostent\fP je definována v \fI<netdb.h>\fP následovně:
+.sp
+.RS
+.nf
+.ne 7
+.ta 8n 16n 32n
+struct hostent {
+	char	*h_name;		/* official name of host */
+	char	**h_aliases;		/* alias list */
+	int	h_addrtype;		/* host address type */
+	int	h_length;		/* length of address */
+	char	**h_addr_list;		/* list of addresses */
+}
+#define h_addr	h_addr_list[0]		/* for backward compatibility */
+.ta
+.fi
+.RE
+.PP
+Prvky struktury \fIhostent\fP jsou:
+.TP
+.I h_name
+Oficiální jméno počítače.
+.TP
+.I h_aliases
+Nulou ukončené pole alternativních jmen počítačů.
+.TP
+.I h_addrtype
+Typ adres, v současné době vždy AF_INET.
+.TP
+.I h_length
+Délka adresy v bajtech.
+.TP
+.I h_addr_list
+Nulou ukončené pole síťových adres počítače v síťovém pořadí dat.
+.TP
+.I h_addr
+První adresa v \fIh_addr_list\fP kvůli zpětné kompatibilitě.
+.SH NÁVRATOVÁ HODNOTA
+Funkce \fBgethostbyname()\fP a \fBgethostbyaddr()\fP vrací strukturu
+\fIhostent\fP nebo ukazatel NULL v případě výskytu chyby. Potom je nastavena
+proměnná \fIh_errno\fP.
+.SH CHYBY
+Proměnná \fIh_errno\fP může obsahovat následující hodnoty:
+.TP
+.B HOST_NOT_FOUND
+Specifikovaný počítač je neznámý.
+.TP
+.B NO_ADDRESS
+Jméno je platné, ale nemá žádnou IP adresu.
+.TP
+.B NO_RECOVERY
+Došlo k výskytu neodstranitelné chyby nameserveru.
+.TP
+.B TRY_AGAIN
+Došlo k dočasné chybě autoritativního nameserveru. Zkuste později.
+.SH SOUBORY
+.TP
+.I /etc/host.conf
+konfigurační soubor resolveru.
+.TP
+.I /etc/hosts
+databáze počítačů.
+.SH SPLŇUJE STANDARDY
+BSD 4.3
+.SH DALŠÍ INFORMACE
+.BR resolver "(3), " hosts "(5), " hostname "(7), " resolv+ " (8), " named (8)
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

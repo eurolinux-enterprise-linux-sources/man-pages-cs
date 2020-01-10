@@ -1,0 +1,36 @@
+.TH _EXIT 2 "26. prosince 1996" Linux "Linux - příručka programátora"
+.do hla cs
+.do hpf hyphen.cs
+.SH JMÉNO
+_exit \- ukonči právě probíhající proces
+.SH SYNTAXE
+.B #include <unistd.h>
+.sp
+.BI "void _exit(int " status );
+.SH POPIS
+.B _exit
+okamžitě ukončí volající proces. Všechny otevřené deskriptory souborů, které
+náleží procesu jsou uzavřeny; případní potomci procesu jsou zděděni procesem
+číslo 1, initem, a rodiči procesu je zaslán signál 
+.B SIGCHLD.
+
+.I status
+je vrácen rodiči jako návratový kód, a může být použit některou funkcí
+z rodiny
+.B wait.
+.SH NÁVRATOVÁ HODNOTA
+.B _exit
+se nikdy nevrátí, okamžitě ukončí proces.
+.SH SPLŇUJE STANDARDY
+SVID, AT&T, POSIX, X/OPEN, BSD 4.3
+.SH POZNÁMKY
+.B _exit
+nevolá žádné funkce registrované ANSI C funkcí 
+.B atexit
+a ani nevyprázdní standardní vstupně výstupní buffery. Tyto operace provádí 
+.BR exit (3).
+.SH DALŠÍ INFORMACE
+.BR fork "(2), " execve "(2), " waitpid "(2), " wait4 "(2), " kill "(2), "
+.BR wait "(3), " exit (3)
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

@@ -1,0 +1,39 @@
+.TH SIGPAUSE 2 "18. února 1997" "Linux 1.3" "Linux - příručka Programátora"
+.do hla cs
+.do hpf hyphen.cs
+.SH JMÉNO
+sigpause \- uvolni blokované signály a čekej na přerušení
+
+.SH SYNTAXE
+.B #include <signal.h>
+.sp
+.BI "int sigpause(int " sigmask );
+
+.SH POPIS
+Tato funkce je zastaralá a je nahrazena funkcí
+.BR sigsuspend (2).
+
+Funkce
+.B sigpause
+nastaví masku blokovaných signálů na
+.I sigmask
+a poté čeká na příchod signálu. Při návratu je obnovena původní maska signálů.
+.PP
+Parametr
+.I sigmask
+je obvykle nastavován na nulu, tj. že nemá být blokován žádný signál.
+Funkce
+.B sigpause
+je vždy ukončena přerušením, vrací \-1 a globální proměnná
+.I errno
+je nastavena na
+.BR EINTR .
+.SH "SPLŇUJE STANDARDY"
+4.4BSD. Funkce
+.B sigpause
+se poprvé objevila v 4.3BSD a její použití v nových programech se nedoporučuje.
+.SH "DALŠÍ INFORMACE"
+.BR sigsuspend "(2), " kill "(2), " sigaction "(2), " sigprocmask "(2), "
+.BR sigblock "(2), " sigvec (2)
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

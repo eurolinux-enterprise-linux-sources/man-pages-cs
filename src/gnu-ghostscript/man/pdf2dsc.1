@@ -1,0 +1,42 @@
+.\" -*- nroff -*-
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH PDF2DSC 1 "9. květen 2005" 8.16 "Ghostscript Tools"
+.\" $Id: pdf2dsc.1,v 1.4 2005/05/09 22:04:37 Arabidopsis Exp $
+.SH JMÉNO
+pdf2dsc \- generuje PostScript seznam stránek dokumentu PDF
+.SH POUŽITÍ
+\fBpdf2dsc\fP \fIvstup.pdf\fP [ \fIvýstup.dsc\fP ]
+.SH POPIS
+\fBpdf2dsc\fP používá \fBgs\fP(1) k přečtení souboru ve formátu Adobe
+\fBPortable Document Format\fP (PDF) "vstup.pdf" a vytvoření dokumentu ve
+formátu \fBPostScript\fP(tm) "výstup.dsc", který odpovídá požadavkům
+Adobe's \fBDocument Structuring Conventions\fP (DSC).
+.PP
+Tento nový dokument jednoduše říká programu Ghostscript, aby četl
+soubor PDF a zobrazoval jej jednu stránku po druhé.  Vygenerovaný
+dokument je pak možné prohlížet pomocí jakéhokoli prohlížeče
+PostScriptu založeného na programu Ghostscript, jako například
+\fBghostview\fP(1) na Unixových platformách nebo \fBGSview\fP pro Windows, se
+kterým může uživatel procházet stránkami dokumentu PDF v libovolném
+pořadí.
+.PP
+Pokud nebyl na příkazovém řádku zadáno jméno výstupního souboru,
+bude jméno stejné jako jméno vstupního souboru (bez původní přípony)
+a jako přípona se použije ".dsc".
+.SH NÁSTRAHY
+Dokument DSC používá postupy specifické pro Ghostscript. Navíc musí
+být při zpracovávání dokumentu DSC původní dokument PDF k dispozici.
+.PP
+Ke správné funkci budete potřebovat soubor "pdf2dsc.ps" (autorem je
+Russell Lang), který je dodáván s programem Ghostscript od verze 3.53.
+.SH "DALŠÍ INFORMACE"
+gs(1), ghostview(1)
+.SH VERZE
+Tento dokument byl naposledy revidován pro Ghostscript verze 8.16.
+.SH AUTOR
+Yves Arrouye <yves.arrouye@usa.net> a Russell Lang gsview at
+ghostgum.com.au.

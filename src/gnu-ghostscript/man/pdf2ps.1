@@ -1,0 +1,27 @@
+.\" -*- nroff -*-
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH PDF2PS 1 "9. květen 2005" 8.16 "Ghostscript Tools"
+.\" $Id: pdf2ps.1,v 1.4 2005/05/09 22:04:37 Arabidopsis Exp $
+.SH JMÉNO
+pdf2ps \- Ghostscript převaděč souborů PDF na PostScript
+.SH POUŽITÍ
+\fBpdf2ps\fP [ \fIvolby\fP ] \fIvstup.pdf [výstup.ps]\fP
+.SH POPIS
+\fBpdf2ps\fP používá \fBgs\fP(1) ke konverzi souboru "vstup.pdf" ve formátu
+Adobe \fBPortable Document Format\fP (PDF) na soubor "výstup.ps" formátu
+\fBPostScript\fP(tm). Jako výchozí je povoleno použít konstrukcí
+PostScript Level 2 (ale nikoliv PostScript Level 3); volba
+\fB\-dLanguageLevel=1\fP omezí výstup na Level 1, zatímco volba
+\fB\-dLanguageLevel=3\fP povolí ve výstupu použití LanguageLevel 3.
+.SH SOUBORY
+Spuštěním "\fBgs \-h\fP" zjistíte umístění dokumentace balíku
+Ghostscript ve vašem systému, ze které se dozvíte více podrobností.
+.SH VERZE
+Tento dokument byl naposledy revidován pro Ghostscript verze 8.16.
+.SH AUTOR
+artofcode LLC a Artifex Software, bug\-gs at ghostscript.com, jsou hlavními
+udržovateli programu Ghostscript.

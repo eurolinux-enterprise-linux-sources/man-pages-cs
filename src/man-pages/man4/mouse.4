@@ -1,0 +1,157 @@
+.\" t
+.\"roff.\" Copyright
+.\" This manpage is Copyright (C) 1996 Michael Haardt.
+.\" Updates Nov 1998, Andries Brouwer
+.\"
+.\" Permission is granted to make and distribute verbatim copies of this
+.\" manual provided the copyright notice and this permission notice are
+.\" preserved on all copies.
+.\"
+.\" Permission is granted to copy and distribute modified versions of this
+.\" manual under the conditions for verbatim copying, provided that the
+.\" entire resulting derived work is distributed under the terms of a
+.\" permission notice identical to this one.
+.\"
+.\" Since the Linux kernel and libraries are constantly changing, this
+.\" manual page may be incorrect or out-of-date.  The author(s) assume no
+.\" responsibility for errors or omissions, or for damages resulting from
+.\" the use of the information contained herein.  The author(s) may not
+.\" have taken the same level of care in the production of this manual,
+.\" which is licensed free of charge, as they might when working
+.\" professionally.
+.\"
+.\" Formatted or processed versions of this manual, if unaccompanied by
+.\" the source, must acknowledge the copyright and authors of this work.
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH MOUSE 4 1996\-02\-10 Linux "Linux \- příručka programátora"
+.SH JMÉNO
+mouse \- rozhraní pro sériovou myš
+.SH KONFIGURACE
+Sériové myši jsou připojeny na sériová rozhraní RS232/V24, viz
+\fBttyS\fP(4).
+.SH POPIS
+.SS Úvod
+Zapojení 9 pinového konektoru sériové myši:
+.TS
+center;
+r c l.
+pin	jméno	použití
+
+2	RX	Data
+3	TX	\-12 V, Imax = 10 mA
+
+4	DTR	+12 V, Imax = 10 mA
+
+7	RTS	+12 V, Imax = 10 mA
+
+5	GND	Zem
+.TE
+
+To je specifikace, ve skutečnosti vystačí většina myší s 9 V.
+.PP
+Ovladač myši rozpozná typ myši tak, že na RTS nasadí logickou nulu a
+vzápětí jedničku.  Po asi 14 ms pošle myš na datový pin 0x4D
+(\(aqM\(aq). Po dalších 63 ms pošle Microsoft kompatibilní
+třítlačítková myš 0x33 (\(aq3\(aq).
+.PP
+Relativní pohyb myši je posílán jako \fIdx\fP (kladné znamená pohyb
+vpravo)  a \fIdy\fP (kladné znamená dolů). Různé myši mohou fungovat na
+různých rychlostech. Chcete\-li vybrat rychlost (jednu z 9600, 4800, 2400
+nebo 1200 bitů/s, zapište vždy dva znaky z následující tabulky a
+počkejte 0.1 sekundy.  Následující tabulka udává dostupné rychlosti a
+řetězce, které je vyberou:
+.TS
+center;
+l l.
+bitů/s	řetězec
+
+9600	*q
+
+4800	*p
+
+2400	*o
+
+1200	*n
+
+.TE
+
+První bajt z datového paketu může být určen k synchronizačním
+účelům.
+.SS "Microsoft protokol"
+\fBMicrosoft\fP protokol používá 1 start bit, 7 datových bitů, žádný
+paritní a jeden stop bit na rychlosti 1200 bitů/sec. Data jsou posílána
+na RxD v 3\-bajtových paketech. \fIdx\fP a \fIdy\fP jsou posílány jako dvojkové
+doplňky, \fIlb\fP (\fIrb\fP) jsou poslány, je\-li stisknuto levé (pravé)
+tlačítko:
+.TS
+center;
+r c c c c c c c.
+bajt	d6	d5	d4	d3	d2	d1	d0
+1	1	lb	rb	dy7	dy6	dx7	dx6
+2	0	dx5	dx4	dx3	dx2	dx1	dx0
+3	0	dy5	dy4	dy3	dy2	dy1	dy0
+.TE
+.SS "3\-tlačítkový Microsoft protokol"
+Původní myš Microsoft měla pouze dvě tlačítka. Nyní jsou již i
+třítlačítkové myši, které komunikují tímto protokolem. Stisk
+prostředního tlačítka je poslán jako paket, kde se myš nepohla a ani
+jedno tlačítko nebylo stisknuto.  (Takže, narozdíl od levého a pravého
+tlačítka, stav prostředního tlačítka není vysílán v každém
+paketu.)
+.SS "Logitech protokol"
+Sériové 3\-tlačítkové myši Logitech používají jiné rozšíření
+protokolu Microsoft: Pokud není prostřední tlačítko stisknuto, posílá
+se výše popsaný 3\-bajtový paket.  Pokud stisknuto je, posílá se
+4\-bajtový paket, jehož čtvrtý bajt má hodnotu 0x20 (nebo má alespoň
+nastavený bit 0x20). Konkrétně, stisk prostředního tlačítka (pokud
+nejsou stisknuta ostatní tlačítka) se posílá jako 0,0,0,0x20.
+.SS "Mousesystems protokol"
+Protokol \fBMousesystems\fP používá 1 start bit, 8 datových bitů, žádný
+paritní a dva stop bity na rychlosti 1200 bitů/sec. Data jsou posílána
+na RxD v 5\-bajtových paketech. \fIdx\fP je posíláno jako součet dvou
+dvojkových doplňků, \fIdy\fP je posíláno jako invertovaný součet dvou
+dvojkových doplňků. \fIlb\fP (\fImb\fP, \fIrb\fP) jsou vymazány, je\-li stisknuto
+levé (prostřední, pravé) tlačítko:
+.TS
+center;
+r c c c c c c c c.
+bajt	d7	d6	d5	d4	d3	d2	d1	d0
+1	1	0	0	0	0	lb	mb	rb
+2	0	dxa6	dxa5	dxa4	dxa3	dxa2	dxa1	dxa0
+3	0	dya6	dya5	dya4	dya3	dya2	dya1	dya0
+4	0	dxb6	dxb5	dxb4	dxb3	dxb2	dxb1	dxb0
+5	0	dyb6	dyb5	dyb4	dyb3	dyb2	dyb1	dyb0
+.TE
+
+Bajty 4 a 5 popisují změny, které nastaly od vyslání bajtů 2 a 3.
+.SS "Sun protokol"
+Protokol \fBSun\fP je 3\-bajtová verze 5\-bajtového protokolu Mousesystems:
+poslední dva bajty se neposílají.
+.SS "MM protokol"
+Protokol \fBMM\fP používá 1 start bit, 8 datových bitů, lichou paritu a
+jeden stop bit na rychlosti 1200 bitů/sec. Data jsou posílána na RxD v
+3\-bajtových paketech. \fIdx\fP a \fIdy\fP jsou posílány jako samostatné
+hodnoty se znaménkem. Nastavení bitu pro znaménko znamená zápornou
+hodnotu.  \fIlb\fP (\fImb\fP, \fIrb\fP) jsou nastaveny, je\-li stisknuto levé
+(prostřední, pravé) tlačítko:
+.TS
+center;
+r c c c c c c c c.
+bajt	d7	d6	d5	d4	d3	d2	d1	d0
+1	1	0	0	dxs	dys	lb	mb	rb
+2	0	dx6	dx5	dx4	dx3	dx2	dx1	dx0
+3	0	dy6	dy5	dy4	dy3	dy2	dy1	dy0
+.TE
+.SH SOUBORY
+.TP 
+\fI/dev/mouse\fP
+často používaný symbolický odkaz na skutečné zařízení myši.
+.SH "DALŠÍ INFORMACE"
+\fBttyS\fP(4), \fBgpm\fP(8)
+.SH TIRÁŽ
+Tato stránka je součástí projektu Linux \fIman\-pages\fP.  Popis projektu a
+informace o hlášení chyb najdete na http://www.kernel.org/doc/man\-pages/.

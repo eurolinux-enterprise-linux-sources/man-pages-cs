@@ -1,0 +1,58 @@
+.\" Copyright (c) 1993 Michael Haardt (michael@moria.de),
+.\"     Thu May 20 20:45:48 MET DST 1993
+.\"
+.\" This is free documentation; you can redistribute it and/or
+.\" modify it under the terms of the GNU General Public License as
+.\" published by the Free Software Foundation; either version 2 of
+.\" the License, or (at your option) any later version.
+.\"
+.\" The GNU General Public License's references to "object code"
+.\" and "executables" are to be interpreted as the output of any
+.\" document formatting or typesetting system, including
+.\" intermediate and printed output.
+.\"
+.\" This manual is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public
+.\" License along with this manual; if not, write to the Free
+.\" Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111,
+.\" USA.
+.\"
+.\" Modified Sat Jul 24 17:11:07 1993 by Rik Faith (faith@cs.unc.edu)
+.\" Modified Sun Nov 21 10:49:38 1993 by Michael Haardt
+.\" Modified Sun Feb 26 15:09:15 1995 by Rik Faith (faith@cs.unc.edu)
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH SHELLS 5 1993\-11\-21 "" "Linux \- příručka programátora"
+.SH JMÉNO
+shells \- cesty přihlašovacích shellů
+.SH POPIS
+\fI/etc/shells\fP je textový soubor obsahující plná jména souborů, které
+mohou být použity jako přihlašovací shelly. Tento soubor je
+konzultován programem \fBchsh\fP(1)  a je též možné, že i jinými
+programy.
+.PP
+Pozor, některé programy používají tento soubor, aby zjistily, zda je
+uživatel platným uživatelem. Např. ftp démoni obvykle nepovolí
+přístup uživatelům, jejichž shell není v tomto souboru přítomen.
+.SH SOUBORY
+\fI/etc/shells\fP
+.SH PŘÍKLAD
+\fI/etc/shells\fP může obsahovat tyto cesty:
+.sp
+.RS
+\fI/bin/sh\fP
+.br
+\fI/bin/csh\fP
+.RE
+.SH "DALŠÍ INFORMACE"
+\fBchsh\fP(1), \fBgetusershell\fP(3)
+.SH TIRÁŽ
+Tato stránka je součástí projektu Linux \fIman\-pages\fP.  Popis projektu a
+informace o hlášení chyb najdete na http://www.kernel.org/doc/man\-pages/.

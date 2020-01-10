@@ -1,0 +1,46 @@
+.TH EXP 3  "5.ledna 1997" "GNU" "Linux - příručka programátora"
+.do hla cs
+.do hpf hyphen.cs
+.SH JMÉNO
+exp, log, log10, pow \- exponenciální, logaritmická a mocninná funkce
+.SH SYNTAXE
+.nf
+.B #include <math.h>
+.sp
+.BI "double exp(double " x );
+.sp
+.BI "double log(double " x );
+.sp
+.BI "double log10(double " x );
+.sp
+.BI "double pow(double " x ", double " y );
+.fi
+.SH POPIS
+Funkce \fBexp()\fP vrací hodnotu e (základ přirozených logaritmů) na 
+\fIx\fP.
+.PP
+Funkce \fBlog()\fP vrací hodnotu přirozeného logaritmu čísla \fIx\fP.
+.PP
+Funkce \fBlog10()\fP vrací hodnotu desítkového logaritmu čísla \fIx\fP.
+.PP
+Funkce \fBpow()\fP vrací hodnotu \fIx\fP na \fIy\fP. 
+.SH CHYBY
+Funkce \fBlog()\fP a \fBlog10()\fP mohou vrátit následující chyby:
+.TP
+.B EDOM
+Číslo \fIx\fP je záporné, tedy není z definičního oboru.
+.TP
+.B ERANGE
+Číslo \fIx\fP je 0. Logaritmus nuly není definován.
+.PP
+Funkce \fBpow()\fP může vrátit následující chybu:
+.TP
+.B EDOM
+Číslo \fIx\fP je záporné a \fIy\fP není celočíselná hodnota.  Výsledek by
+byl komplexní číslo.
+.SH SPLŇUJE STANDARDY
+SVID 3, POSIX, BSD 4.3, ISO 9899
+.SH DALŠÍ INFORMACE
+.BR sqrt "(3), " cbrt (3)
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

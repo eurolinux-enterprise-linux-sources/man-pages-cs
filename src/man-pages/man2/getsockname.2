@@ -1,0 +1,52 @@
+.TH GETSOCKNAME 2 "29. března 1997" "BSD Man Page" "Linux - příručka programátora"
+.do hla cs
+.do hpf hyphen.cs
+.SH JMÉNO
+getsockname \- získej jméno (adresu) soketu
+.SH SYNTAXE
+.B "int getsockname(int " s ", struct sockaddr *" name ", int *" namelen )
+.SH POPIS
+.B Getsockname
+vrací současné jméno (adresu soketu) v
+.I name .
+Parametr
+.I namelen
+by měl být inicializován, aby ukazoval množství místa, na které ukazuje 
+.IR name .
+Po návratu bude ukazovat skutečnou velikost vráceného jména (v bajtech).
+.SH NÁVRATOVÁ HODNOTA
+Při úspěchu je vrácena 0, jinak \-1 a proměnná
+.I errno
+je příslušně nastavena.
+.SH CHYBY
+.TP 0.8i
+.B EBADF
+Argument
+.I s
+není platným deskriptorem.
+.TP
+.B ENOTSOCK
+Argument
+.I s
+je soubor, není to deskriptor soketu.
+.TP
+.B ENOBUFS
+Nedostatek systémových zdrojů k provedení operace.
+.TP
+.B EFAULT
+Argument
+.I name
+ukazuje na paměť v neplatné části adresového prostoru procesu.
+.SH SPLŇUJE STANDARDY
+SVr4, 4.4BSD (volání
+.B getsockname
+se poprvé objevilo v 4.2BSD).  SVr4 dokumentuje další chybové kódy ENOMEM
+a ENOSR.
+.SH CHYBY
+Jména soketů v doméně UNIX nejsou přístupná; volání
+.B getsockname
+vrací data o délce 0.
+.SH DALŠÍ INFORMACE
+.BR bind "(2), " socket (2)
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

@@ -1,0 +1,29 @@
+.TH EXPM1 3  "5.ledna 1997" "GNU" "Linux - příručka programátora"
+.do hla cs
+.do hpf hyphen.cs
+.SH JMÉNO
+expm1, log1p \- exponenciální funkce minus 1, logaritmus čísla 1 plus argument
+.SH SYNTAXE
+.nf
+.B #include <math.h>
+.sp
+.BI "double expm1 ( double " x " );"
+.sp
+.BI "double log1p ( double " x " );"
+.fi
+.SH POPIS
+.BI expm1( x )
+vrací číslo odpovídající `exp (\fIx\fP) - 1'. Toto číslo je počítáno
+algoritmem, který je poměrně přesný i v případě, že číslo 
+\fIx\fP je blízko čísla nula. -- v tomto případě bude `exp (\fIx\fP) - 1'
+nevhodné, protože bychom odečítali dvě skoro stejná čísla.
+.PP
+.BI log1p( x )
+vrací hodnotu `log (1 + \fIx\fP)'. Je počítána algoritmem, který je poměrně
+přesný i v případě, kdy je číslo \fIx\fP skoro nula.
+.SH SPLŇUJE STANDARDY
+BSD
+.SH DALŠÍ INFORMACE
+.BR exp "(3), " log (3)
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

@@ -1,0 +1,243 @@
+.TH SIGACTION 2 "18.února 1997" "Linux 1.3" "Linux - příručka programátora"
+.do hla cs
+.do hpf hyphen.cs
+
+.SH JMÉNO
+sigaction, sigprocmask, sigpending, sigsuspend \- Funkce POSIXu
+pro práci se signály.
+
+.SH SYNTAXE
+.B #include <signal.h>
+.sp 2
+.BI "int sigaction(int " signum ", const struct sigaction *" act ","
+.BI "struct sigaction *" oldact );
+.sp
+.BI "int sigprocmask(int " how ", const sigset_t *" set ", "
+.BI "sigset_t *" oldset );
+.sp
+.BI "int sigpending(sigset_t *" set );
+.sp
+.BI "int sigsuspend(const sigset_t *" mask );
+
+.SH POPIS
+Systémovým voláním
+.B sigaction
+se určuje, jakou akci má proces provést při obdržení určitého signálu.
+.PP
+Parametrem
+.I signum
+je určen signál a lze zadat kterýkoli platný signál kromě
+.B SIGKILL
+a
+.BR SIGSTOP .
+.PP
+Je-li hodnota
+.I act
+nenulová, je pro signál
+.I signum
+nainstalována akce
+.IR act.
+Je-li hodnota
+.I oldact
+nenulová, předchozí akce je uložena do
+.IR oldact .
+.PP
+Struktura
+.B sigaction
+je definována jako
+.sp
+.RS
+.nf
+struct sigaction {
+    void (*sa_handler)(int);
+    sigset_t sa_mask;
+    int sa_flags;
+    void (*sa_restorer)(void);
+}
+.fi
+.RE
+.PP
+.I sa_handler
+určuje akci, která má být přiřazena signálu
+.I signum
+a může obsahovat
+.B SIG_DFL
+pro implicitní akci,
+.B SIG_IGN
+pro ignorování signálu, nebo ukazatel na funkci ošetřující signál.
+.PP
+.I sa_mask
+je maska signálů, které mají být zablokovány při obsluze signálu.
+Navíc je zablokován signál, který vyvolal akci, nejsou\-li
+nastaveny příznaky
+.B SA_NODEFER
+nebo
+.B SA_NOMASK .
+.PP
+.I sa_flags
+je množina příznaků, které ovlivňují obsluhu signálu.
+Je to logický součet následujících bitových konstant:
+.RS
+.TP
+.B SA_NOCLDSTOP
+Je-li
+.I signum
+.BR SIGCHLD ", "
+negeneruje se signál při zastavení dětského procesu (tj. dostane-li
+tento proces signál
+.BR SIGSTOP ", " SIGTSTP ", " SIGTTIN
+nebo
+.BR SIGTTOU ")."
+.TP
+.BR SA_ONESHOT " nebo " SA_RESETHAND
+Poté, co je zavolána obslužná funkce, se obsluha signálu vrací do
+implicitního stavu. (Takto se normálně chová systémové volání 
+.BR signal "(2) .)"
+.TP
+.B SA_RESTART
+Nastaví kompatibilní chování s BSD: určitá systémová volání pak
+jsou po zpracování signálu restartována.
+.TP
+.BR SA_NOMASK " neboli " SA_NODEFER
+Umožní příchod dalšího signálu během jeho vlastní obslužné funkce.
+.RE
+.PP
+Pole
+.I sa_restorer
+je neaktuální a nemělo by být používáno.
+.PP
+Systémovým voláním
+.B sigprocmask
+lze měnit seznam momentálně blokovaných signálů. Záleží na parametru
+.IR how ,
+jaká změna nastane:
+.RS
+.TP
+.B SIG_BLOCK
+Nový seznam blokovaných signálů bude obsahovat dosud blokované signály
+a signály v parametru
+.I set .
+.TP
+.B SIG_UNBLOCK
+Signály v parametru
+.I set
+jsou odstraněny ze seznamu blokovaných signálů. 
+Je přípustné uvést v parametru
+.I set
+signál, který není blokován.
+.TP
+.B SIG_SETMASK
+Seznam blokovaných signálů je nastaven na
+.IR set .
+.RE
+.PP
+Je\-li hodnota parametru
+.I oldset
+nenulová, je předchozí seznam blokovaných signálů uložen do
+.IR oldset .
+.PP
+Systémové volání
+.B sigpending
+dovoluje zjistit nevyřízené signály (které přišly při zablokování).
+Maska nevyřízených signálů je uložena do parametru
+.IR set .
+.PP
+Volání
+.B sigsuspend
+přechodně nahradí masku signálů maskou zadanou v parametru
+.I mask
+a poté pozdrží provádění procesu do obdržení signálu.
+
+.SH "NÁVRATOVÉ HODNOTY"
+Funkce
+.BR sigaction ,
+.BR sigprocmask ,
+.B sigpending
+a
+.B sigsuspend
+vrací 0 při úspěšném provedení a -1 při chybě.
+
+.SH "CHYBOVÉ HODNOTY"
+.TP
+.B EINVAL
+Byl zadán neplatný signál. Tato chyba je také generována při pokusu
+změnit obsluhu signálů
+.BR SIGKILL " nebo " SIGSTOP ", "
+které nemohou být zachyceny.
+.TP
+.B EFAULT
+.IR act ", " oldact ", " set 
+nebo 
+.I oldset
+ukazují do oblasti paměti, která nepatří do adresního prostoru procesu.
+.TP
+.B EINTR
+Systémové volání bylo přerušeno.
+
+.SH POZNÁMKY
+Signály
+.BR SIGKILL " or " SIGSTOP
+nelze blokovat voláním
+sigprocmask. Pokusy o to budou v tichosti ignorovány.
+.PP
+Podle normy POSIX není definováno chování procesu poté, co
+ignoruje signál SIGFPE, SIGILL, nebo SIGSEGV, který nebyl generován
+funkcemi \fIkill()\fP nebo \fIraise()\fP.
+Celočíselné dělení nulou dává nedefinovaný výsledek a
+na některých architekturách generuje signál SIGFPE.
+Ignorování tohoto signálu může způsobit zacyklení procesu.
+.PP
+Nastavení akce pro signál
+.B SIGCHLD
+na
+.B SIG_IGN
+způsobí automatický zánik dětských procesů po jejich ukončení.
+.PP
+Norma POSIX definuje pouze příznak
+.BR SA_NOCLDSTOP .
+Používání jiných příznaků v
+.I sa_flags
+je nepřenositelné.
+.PP
+Příznak
+.B SA_RESETHAND
+je kompatibilní se stejnojmenným příznakem v systémech SVr4.
+.PP
+Příznak
+.B SA_NODEFER
+je kompatibilní se stejnojmenným příznakem v SVr4 ve verzích jádra
+1.3.9 a vyšších. Ve starších verzích jádra linuxová implementace
+dovolovala přijetí libovolného signálu, nejen toho který byl instalován
+(což způsobovalo ignorování nastavení
+.I sa_mask
+).
+.PP
+Jména
+.BR SA_RESETHAND " and " SA_NODEFER
+jsou určena pro kompatibilitu se SVr4 a byla zavedena ve verzi knihovny libc
+3.0.9.
+.PP
+Pro zjištění momentálního stavu obsluhy signálů lze volat funkci
+.B sigaction
+s parametrem
+.IR act
+rovným nule.
+Zadáte\-li nulové parametry
+.IR act
+a
+.IR oldact ","
+lze ji použít ke kontrole, je\-li daný signál na tom kterém systému
+použitelný.
+.PP
+Pro podrobnosti o manipulaci se skupinami signálů viz
+.BR sigsetops (3)
+.SH "SPLŇUJE STANDARDY"
+POSIX, SVr4.
+Dokumentace SVr4 se nezmiňuje o chybové hodnotě EINTR.
+
+.SH "DALŠÍ INFORMACE"
+.BR kill "(1), " kill "(2), " killpg "(2), " pause "(2), " raise "(3), " 
+.BR siginterrupt "(3), " signal "(2), " signal "(7), " sigsetops "(3), "
+.BR sigvec (2) 
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

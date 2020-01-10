@@ -1,0 +1,213 @@
+.\"  -*- nroff -*-
+.\"
+.\" ssh-agent.1
+.\"
+.\" Author: Tatu Ylonen <ylo@cs.hut.fi>
+.\"
+.\" Copyright (c) 1995 Tatu Ylonen <ylo@cs.hut.fi>, Espoo, Finland
+.\"                    All rights reserved
+.\"
+.\" Created: Sat Apr 23 20:10:43 1995 ylo
+.\"
+.\" $Id: ssh-agent.1,v 1.8 1998/09/25 03:35:00 kolar Exp $
+.\" $Log: ssh-agent.1,v $
+.\" Translation into Czech 1998/09/25 03:35:00  kolar
+.\" <Petr.Kolar@vslib.cz>
+.\"
+.\" Revision 1.8  1998/07/08 00:40:26  kivinen
+.\" 	Changed to do similar commercial #ifdef processing than other
+.\" 	files.
+.\"
+.\" Revision 1.7  1998/01/02 06:21:20  kivinen
+.\" 	Documented -k option. Renamed SSH_AUTHENCATION_SOCKET to
+.\" 	SSH_AUTH_SOCK.
+.\"
+.\" Revision 1.6  1997/04/27 21:48:50  kivinen
+.\" 	Added F-SECURE stuff.
+.\"
+.\" Revision 1.5  1997/03/25 05:42:01  kivinen
+.\" 	Added comment about ALTSHELL from napo.
+.\" 	Changed ylo's email to @ssh.fi.
+.\"
+.\" Revision 1.4  1997/03/19 17:38:20  kivinen
+.\" 	Added documentation for -c and -s options.
+.\"
+.\" Revision 1.3  1996/11/24 08:26:35  kivinen
+.\" 	Documented new usage of ssh-agent.
+.\"
+.\" Revision 1.2  1996/11/01 15:32:49  ttsalo
+.\"       Updated the manpage
+.\"
+.\" Revision 1.1.1.1  1996/02/18 21:38:13  ylo
+.\" 	Imported ssh-1.2.13.
+.\"
+.\" Revision 1.4  1995/08/31  09:22:32  ylo
+.\" 	Minor cleanup.
+.\"
+.\" Revision 1.3  1995/08/29  22:30:57  ylo
+.\" *** empty log message ***
+.\"
+.\" Revision 1.2  1995/07/13  01:36:44  ylo
+.\" 	Removed "Last modified" header.
+.\" 	Added cvs log.
+.\"
+.\" $Endlog$
+.\"
+.\"
+.\"
+.\"
+.\" #ifndef F_SECURE_COMMERCIAL
+.TH SSH-AGENT 1 "8. listopadu 1995" "SSH" "SSH"
+.do hla cs
+.do hpf hyphen.cs
+.\" #endif F_SECURE_COMMERCIAL
+
+.SH JMÉNO
+ssh-agent \- autentizační agent
+
+.SH POUŽITÍ
+.LP
+.B ssh-agent 
+.I příkaz
+
+.B eval `ssh-agent
+[\c
+.BR \-k \c
+]
+[\c
+.BR \-s \c
+]
+[\c
+.BR \-c \c
+]`
+
+.SH POPIS
+.LP
+Program
+.B ssh-agent
+shromažďuje soukromé autentizační klíče.
+.B Ssh-agent
+by měl být odstartován na začátku X-session nebo login session,
+a všechna okna nebo ostatní programy by měly být startovány jako
+jeho potomci (\fIpříkaz\fR zadaný jako parametr slouží normálně
+ke startu X Window Systemu nebo je uživatelským shellem).
+Programy odstartované z agenta jsou s ním propojeny a automaticky
+jej používají pro RSA autentizaci při přihlašování na jiné
+stroje pomocí
+.BR ssh .
+.LP
+Jestliže je
+.B ssh-agent
+odstartován bez parametrů, poběží jako proces v pozadí.
+Přitom vypíše na stdout příkazy, které mohou být při spuštění
+v příkazu
+.B eval
+v shellech odvozených z sh nebo csh použity pro nastavení
+proměnných prostředí
+.B \s-1SSH_AUTH_SOCK\s0
+a
+.BR \s-1SSH_AGENT_PID\s0 .
+Proměnná prostředí
+.B \s-1SSH_AGENT_PID\s0
+může být použita pro ukončení agenta příkazem kill, když už
+není potřeba (například při odhlašování z X-session atd.).
+Nejsou-li zadány žádné volby,
+.B ssh-agent
+zjistí podle hodnoty proměnné prostředí SHELL, jaký shell
+(z rodiny *csh nebo *sh shellů) je použit. Volba
+.BI \-c
+způsobí vypsání příkazu pro nastavení proměnných prostředí
+ve stylu csh shellu, volba
+.BI \-s
+ve stylu sh shellu.
+.LP
+Pamatujte, že v Unixech odvozených od System V (přinejmenším
+v OS IRIX a Solaris) proměnná prostředí SHELL nemusí obsahovat
+jméno aktuálního shellu, který provádí příkaz eval.
+Jestliže je v /etc/default/login nastavena proměnná prostředí
+ALTSHELL na YES, je proměnná prostředí SHELL nastavena na
+uživatelův login shell.
+.LP
+Volba
+.BI \-k
+může být použita k automatickému ukončení agenta. Zabije agenta
+(pro jeho nalezení použije hodnotu proměnné prostředí
+.BR \s-1SSH_AGENT_PID\s0 )
+a vypíše na stdout příkazy shellu, které
+zruší proměnné prostředí
+.B \s-1SSH_AUTH_SOCKET\s0
+a
+.BR \s-1SSH_AGENT_PID\s0 .
+.LP
+Agent zpočátku nemá žádný soukromý klíč. Klíče jsou přidávány
+příkazy
+.BR ssh-add .
+Příkaz
+.B ssh-add
+při spuštění bez parametrů přidá obsah souboru 
+.IR \&$HOME/\s+2.\s0ssh/identity .
+Jestliže má soubor přístupové heslo, 
+.B ssh-add
+se na něj dotáže (použije malou X11 aplikaci pokud běží pod X11,
+nebo terminál pokud běží bez X). Potom zašle identitu agentovi.
+Agent může obsahovat několik identit; agent z nich vybere správnou
+automaticky.
+Příkaz
+.B "ssh-add \-l
+vypíše seznam identit aktuálně známých agentovi.
+.LP
+Výhodou je fakt, že agent je spuštěn na uživatelově lokálním PC,
+laptopu nebo terminálu. Autentizační data nemusí být uložena na
+žádném jiném stroji, a autentizační přístupová hesla nejsou nikdy
+posílána přes síť. Spojení s agentem je forwardované pomocí
+.BR ssh ,
+takže uživatel může bezpečně používat přístupová práva daná identitami
+kdekoli v síti.
+.LP
+Spojení s agentem je dostupné programům-potomkům. Toto spojení je
+realizováno unix-domain soketem
+(\fI/tmp/ssh-$USER/agent-socket-<pid>\fR), kde <pid> je číslo procesu
+posluchače (agenta nebo sshd démona realizujícího pro agenta proxy).
+Jméno tohoto soketu je uloženo v proměnné prostředí
+.BR \s-1SSH_AUTH_SOCK\s0 .
+Soket je přístupný pouze pro aktuálního uživatele. Tato metoda
+je snadno zneužitelná superuživatelem nebo jinou instancí téhož
+uživatele. Starší verze ssh používaly pro komunikaci s agentem
+zděděné popisovače souborů a unix-domain sokety používaly
+nekompatibilním způsobem.
+.LP
+Jestliže byl jako parametr programu ssh-agent zadán příkaz, agent
+při skončení tohoto příkazu automaticky skončí také. Zadaný příkaz
+bude proveden, i kdyby agent nebyl schopen poskytovat své služby.
+
+.SH SOUBORY
+.TP
+.I \&$HOME/\s+2.\s0ssh/identity
+Obsahuje RSA autentizační identitu uživatele. Tento soubor
+nesmí být čitelný nikým kromě uživatele. Při generování klíče
+je možné zadat přístupové heslo; toto heslo bude použito na
+zašifrování soukromé části souboru. Soubor není používán přímo
+programem
+.BR ssh-agent ,
+ale jeho obsah je příkazem
+.B ssh-add
+přidán do agenta.
+.TP
+.I \&/tmp/ssh-$USER/agent-socket-<pid>
+Unix-domain sokety použité pro spojení s autentizačním
+agentem. Sokety musí být čitelné pouze vlastníkem. Sokety
+musí být při ukončení agenta automaticky zrušeny.
+Nadřízený adresář adresáře ssh-$USER musí mít nastaven
+sticky bit.
+
+.SH AUTOR
+.LP
+Tatu Ylonen <ylo@ssh.fi>
+
+.SH VIZ TÉŽ
+.BR ssh-add (1),
+.BR ssh-keygen (1),
+.BR ssh (1),
+.BR sshd (8)
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

@@ -1,0 +1,50 @@
+.\" t
+.\" (The preceding line is a note to broken versions of man to tell
+.\" them to pre-process this man page with tbl)
+.\" Man page for pmap.
+.\" Licensed under version 2 of the GNU General Public License.
+.\" Written by Albert Cahalan.
+.\"
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH PMAP 1 "26. říjen 2002" Linux "Linux \- Příručka uživatele"
+.SH JMÉNO
+pmap \- vypisuje mapu paměti procesu
+
+.SH POUŽITÍ
+.nf
+pmap [ \-x | \-d ] [ \-q ] PIDs...
+pmap \-V
+
+.fi
+
+.SH POPIS
+\fBpmap\fP vypisuje mapu paměti procesu nebo procesů.
+
+.SH "HLAVNÍ VOLBY"
+.TS
+l l l.
+\-x	extended	Zobrazuje rozšířený formát.
+
+\-d	device	Zobrazuje formát se zařízeními.
+
+\-q	quiet	Nevypisuje záhlaví a zápatí.
+
+\-V	show version	Vypíše verzi programu.
+
+.TE
+
+.SH "DALŠÍ INFORMACE"
+ps(1) pgrep(1)
+
+.SH STANDARDY
+Nevstahují se na něj žádné standardy, ale pmap až příliš vypadá
+jako příkaz ze SunOS.
+
+.SH AUTOR
+Albert Cahalan <albert@users.sf.net> napsal pmap v roce 2002, a v
+současnosti je údržbářem balíku procps.  Chyby týkající se programu
+prosím posílejte na <procps\-feedback@lists.sf.net>.

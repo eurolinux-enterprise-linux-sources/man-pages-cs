@@ -1,0 +1,443 @@
+.\" -*- nroff -*-
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH GS 1 "9. květen 2005" 8.16 Ghostscript
+.\" $Id: gs.1,v 1.4 2005/05/09 22:04:37 Arabidopsis Exp $
+.SH JMÉNO
+gs \- Ghostscript (interpretr a prohlížeč jazyka PostScript a PDF)
+.SH POUŽITÍ
+\fBgs\fP [ \fIvolby\fP ] [ \fIsoubory\fP ] ... \fB(Unix, VMS)\fP
+.br
+\fBgswin32c\fP [ \fIvolby\fP ] [ \fIsoubory\fP ] ... \fB(MS Windows)\fP
+.br
+\fBgswin32\fP [ \fIvolby\fP ] [ \fIsoubory\fP ] ... \fB(MS Windows 3.1)\fP
+.br
+\fBgsos2\fP [ \fIvolby\fP ] [ \fIsoubory\fP ] ... \fB(OS/2)\fP
+.de TQ
+.br
+.ns
+.TP \\$1
+..
+.SH POPIS
+Příkaz \fBgs\fP (\fBgswin32c\fP, \fBgswin32\fP, \fBgsos2\fP)  vyvolá \fBGhostscript\fP,
+interpreter jazyka Adobe Systems' \fBPostScript\fP(tm)  a \fBPortable Document
+Format\fP (PDF).  \fBgs\fP čte "soubory" jeden po druhém a spouští je jako
+Ghostscript programy.  Poté čte ještě navíc ze standardního vstupu
+(obvykle klávesnice) a každý řádek interpretuje samostatně.
+Interpretr se ukončí, pokud narazí na příkaz "quit" (ať už v
+některém ze souborů nebo ze standardního vstupu), na konci souboru, nebo
+přijme\-li signál přerušení (jako například při stisknutí Control\-C
+na klávesnici).
+.PP
+Interpretr rozlišuje mnoho přepínačů, z nichž některé jsou popsány
+níže.  Jejich úplný popis je obsažen v uživatelské
+dokumentaci. Přepínače se mohou objevit kdekoli na příkazové řádce a
+ovlivní všechny soubory, které jsou jmenovány za nimi.  Vyvoláním
+programu Ghostscript s přepínačem \fB\-h\fP nebo \fB\-?\fP se získá výpis
+několika užitečných přepínačů, všech zařízení, která ovládá
+daná verze programu a nastavení cest, na kterých jsou hledány fonty.  V
+systému Unix také zobrazí umístění podrobné dokumentace.
+.PP
+Ghostscript může být zkompilován tak, aby spolupracoval s množstvím
+výstupních zařízení. Pro zobrazení všech výstupních zařízení
+podporovaných aktuálním sestavením programu, spusťte "\fBgs \-h\fP". Pokud
+není zadáno jméno konkrétního zařízení, Ghostscript otevře první z
+nich a směruje na něj výstup, takže pokud je na první pozici to
+zařízení, které chcete použít, zadejte příkaz
+.PP
+.nf
+	gs soubor.ps
+
+.fi
+.PP
+Dostupná zařízení je také možné zjistit přímo z programu
+Ghostscript: spuštěním Ghostscriptu a zadáním
+.PP
+.nf
+	devicenames ==
+.fi
+.PP
+ale první zařízení z takto získaného seznamu nemusí být výchozí
+zařízení, které zjistíte pomocí "\fBgs \-h\fP".  Zadání určitého
+zařízení "AbcXyz" jako výchozího výstupního zařízení se provede
+přidáním přepínače
+.PP
+.nf
+	\-sDEVICE=AbcXyz
+
+.fi
+.PP
+Například pro výstup na tiskárnu Epson je možné použít příkazu
+.PP
+.nf
+	gs \-sDEVICE=epson soubor.ps
+
+.fi
+.PP
+Přepínač "\-sDEVICE=" musí předcházet prvnímu výskytu jména
+zpracovávaného souboru a jedině jeho první použití má nějaký
+účinek.
+.PP
+Je možné také specifikovat výchozí zařízení pomocí proměnné
+prostředí \fBGS_DEVICE\fP.  Pořadí priorit těchto alternativ je od
+nejvyšší do nejnížší takovéto (Ghostscript používá zařízení s
+nejvyšší prioritou v seznamu):
+.PP
+Některé tiskárny umí tisknout v různých rozlišeních (hustotách
+tisku).  K výběru rozlišení takové tiskárny se používá přepínač
+"\-r":
+.PP
+.nf
+	gs \-sDEVICE=<zařízení> \-r<xres>x<yres>
+
+.fi
+.PP
+Například na devítijehličkové Epson kompatibilní tiskárně je možné
+získat mód s nejnižší hustotou (nejrychlejší mód) pomocí
+.PP
+.nf
+	gs \-sDEVICE=epson \-r60x72
+
+.fi
+.PP
+a mód s nejvyšší hustotou (nejlepší výstupní kvalita) za použití
+.PP
+.nf
+	gs \-sDEVICE=epson \-r240x72.
+
+.fi
+.PP
+Pokud je jako výstupní zařízení vybrána tiskárna, Ghostscript také
+umožňuje zvolit, kam se má poslat výstup \-\- v systémech na bázi Unixu
+obvykle do dočasného souboru.  K přesměrování výstupu do souboru
+"něco.xyz", se použije přepínač
+.PP
+.nf
+	\-sOutputFile=něco.xyz
+
+.fi
+.PP
+Někdy je potřeba tisknout jednotlivé strany odděleně. To je možné
+udělat pomocí přesměrování výstupu do řady souborů "něco1.xyz,
+něco2.xyz, ..." pomocí přepínače "\-sOutputFile=" s parametrem "%d" v
+šabloně pro jméno souboru:
+.PP
+.nf
+	\-sOutputFile=něco%d.xyz
+
+.fi
+.PP
+Každý výsledný soubor bude obsahovat jednu stranu výstupu a soubory
+budou očíslovány popořadě.  "%d" je zde standartní formátovací
+značka funkce printf.  Je možné také použít jiné její varianty jako
+např. "%02d".
+.PP
+V Unixových systémech a MS Windows je také možné přesměrovat výstup
+do roury.  Například lze výstup přes rouru směrovat do programu
+"\fBlpr\fP" (který jej na mnoha Unixových systémech předá tiskárně),
+pomocí přepínače
+.PP
+.nf
+	\-sOutputFile=%pipe%lpr
+
+.fi
+.PP
+V MS Windows musejí být znaky '%' zdvojeny, aby je neměnil interpretr
+příkazového řádku.
+.PP
+Také je možné výstup směrovat na standardní výstup přepínačem
+.PP
+.nf
+	\-sOutputFile=\-
+.fi
+nebo
+.nf
+        \-sOutputFile=%stdout%
+
+.fi
+.PP
+V takovém případě je nutné použít zároveň přepínač \fB\-q\fP, aby
+Ghostscript nevypisoval zprávy na standardní výstup.
+.PP
+K volbě určité velikosti papíru se z příkazové řádky používá
+přepínač
+.PP
+.nf
+	\-sPAPERSIZE=<známá_velikost_papíru>
+
+.fi
+.PP
+například
+.PP
+.nf
+	\-sPAPERSIZE=a4
+
+.fi
+nebo
+.nf
+	\-sPAPERSIZE=legal
+
+.fi
+.PP
+Ghostscript umí rozeznává většinu ISO a US velikostí papíru. Další
+informace jsou v uživatelské dokumentaci nebo v inicializačním souboru
+"gs_statd.ps".
+.PP
+Ghostscript umí mnoho dalších věcí než jen tisk nebo prohlížení
+souborů formátu PostScript nebo PDF.  Například, pokud je potřeba
+zjistit velikost ohraničujícího obdélníku nějakého souboru formátu
+PostScript (nebo EPS), nabízí program Ghostscript speciální
+"zařízení", které nedělá nic jiného, než že vypíše tuto
+informaci.
+.PP
+Například použití s jedním vzorovým souborem dodávaným v balíku
+Ghostscript,
+.PP
+.nf
+	gs \-sDEVICE=bbox golfer.ps
+
+.fi
+.PP
+vypíše toto:
+.PP
+.nf
+	%%BoundingBox: 0 25 583 732
+	%%HiResBoundingBox: 0.808497 25.009496 582.994503 731.809445
+
+.fi
+.SH VOLBY
+.TP 
+\fB\-\-\fP\fI soubor arg1 ...\fP
+Použije další argument jako jméno souboru obvyklým způsobem, ale
+všechny následující argumenty (i když mají syntaxi přepínačů)
+vezme a definuje jméno "ARGUMENTS" v "userdict" (nikoli v "systemdict")
+jako pole řetězců s jednotlivými argumenty.  To provede ještě \fBpřed\fP
+spuštěním daného souboru.  Po zpracování souboru se Ghostscript
+ukončí.
+.TP 
+\fB\-D\fP\fIjméno\fP\fB=\fP\fItoken\fP
+.TQ
+\fB\-d\fP\fIjméno\fP\fB=\fP\fItoken\fP Definuje "jméno" v "systemdict" podle dané
+definice.  Token musí být právě jeden token (jak je definováno
+operátorem "token") a nesmí obsahovat žádné prázdné znaky (mezery,
+tabelátory ...).
+.TP 
+\fB\-D\fP\fIjméno\fP
+.TQ
+\fB\-d\fP\fIjméno\fP Definuje "jméno" v "systemdict" s hodnotou=null.
+.TP 
+\fB\-S\fP\fIjméno\fP\fB=\fP\fIřetězec\fP
+.TQ
+\fB\-s\fP\fIjméno\fP\fB=\fP\fIřetězec\fP Definuje "jméno" v "systemdict" s daným
+řetězcem jako hodnotou.  Toto se liši od \fB\-d\fP.  Například
+\fB\-djméno=35\fP je stejné jako takováto část programu
+.br
+    /jméno 35 def
+.br
+zatímco \fB\-sname=35\fP představuje
+.br
+    /jméno (35) def
+.TP 
+\fB\-q\fP
+Tichý start: potlačí obvyklé počáteční zprávy. Je stejné jako
+\fB\-dQUIET\fP.
+.TP 
+\fB\-g\fP\fIčíslo1\fP\fBx\fP\fIčíslo2\fP
+Stejné jako \fB\-dDEVICEWIDTH=\fP\fIčíslo1\fP a \fB\-dDEVICEHEIGHT=\fP\fIčíslo2\fP.
+Slouží jako podpora zařízení (jako např. X11 windows), která
+požadují (nebo povolují) nastavení šírky a výšky.
+.TP 
+\fB\-r\fP\fIčíslo\fP
+.TQ
+\fB\-r\fP\fIčíslo1\fP\fBx\fP\fIčíslo2\fP Stejné jako
+\fB\-dDEVICEXRESOLUTION=\fP\fIčíslo1\fP a \fB\-dDEVICEYRESOLUTION=\fP\fIčíslo2\fP.
+Slouží jako podpora takových zařízení jako např. tiskárny, které
+podporují vícero rozlišení v ose X a Y. Pokud je zadáno jen jedno
+číslo, bude použito pro nastavení rozlišení v obou směrech, X i Y.
+.TP 
+\fB\-I\fP\fIadresáře\fP
+Přídá dvojtečkou oddělený seznam adresářů na začátek seznamu cest
+pro soubory knihoven.
+.TP 
+\fB\-\fP
+Toto není skutečný přepínač, ale značí pro GhostScript, že
+standartní vstup přichází ze souboru nebo roury a není tedy
+interaktivně zadáván z příkazové řádky. Ghostscript čte standartní
+vstup, dokud nedosáhne konce souboru a zpracovává jej jako každý jiný
+soubor. Poté pokračuje se zpracováním ostatních parametrů zadaných z
+příkzové řádky. Když jsou všechny parametry zpracovány, Ghostscript
+se ukončí a nepřepíná se už do svého interaktivního módu.
+.PP
+Standartní inicializační soubor "gs_init.ps" nastaví "systemdict" pouze
+pro čtení, takže hodnoty klíčů definované pomocí \fB\-D\fP, \fB\-d\fP, \fB\-S\fP
+nebo \fB\-s\fP nemohou být změněny (přestože mohou být samozřejmě
+nahrazeny definicemi v "userdict" nebo jiných slovnících)
+.SH "SPECIÁLNÍ JMÉNA"
+.TP 
+\fB\-dDISKFONTS\fP
+Způsobí, že definice jednotlivých znaků se budou nahrávat z disku a to
+teprve tehdy, kdy bude zaznamenán první takový znak. (Normálně
+Ghostscript nahraje tvary všech znaků, když nahrává font.)  To může
+dovolit nahrát více fontů do operační paměti za cenu pomalejšího
+renderingu.
+.TP 
+\fB\-dNOCACHE\fP
+Zakáže používání vyrovnávací paměťi pro znaky. Užitečné pouze
+pro ladění a odstraňování chyb.
+.TP 
+\fB\-dNOBIND\fP
+Zakáže operátor "bind". Užitečné pouze pro ladění a odstraňování
+chyb.
+.TP 
+\fB\-dNODISPLAY\fP
+Potlačí normální inicializaci výstupního zařízení.  Užitečné
+pouze pro ladění a odstraňování chyb.
+.TP 
+\fB\-dNOPAUSE\fP
+Zakáže čekání na konci každé strany.  To může být žádoucí v
+aplikacích kde jiný program řídí Ghostscript.
+.TP 
+\fB\-dNOPLATFONTS\fP
+Zakáže použití fontů nabízených danou platformou (například X
+Windows).  To může být vhodné, pokud fonty dané platformy vypadají
+příliš odlišně než fonty s nastavitelnou velikostí.
+.TP 
+\fB\-dSAFER\fP
+Zakáže operátory "deletefile" a "renamefile" a schopnost otevírat
+soubory v jakémkoli jiném módu než jen pro čtení.  To může být
+žádoucí pro citlivá prostředí a úlohy, kde musí být zamezeno
+špatně napsaným nebo zlým PostScriptovým programům měnit nebo mazat
+důležité soubory.
+.TP 
+\fB\-dWRITESYSTEMDICT\fP
+Nechá práva na zápis do "systemdict".  To je nezbytné když se spouští
+zvláštní programy jako například \fBfont2c\fP a \fBpcharstr\fP, které musí
+překonat normální ochranu přístupových práv PostScriptu.
+.TP 
+\fB\-sDEVICE=\fP\fIzařízení\fP
+Vybere jiné počáteční výstupní zařízení, jak bylo popsáno výše.
+.TP 
+[přibližně] \fB\-sOutputFile=\fP\fIsoubor\fP
+Vybere výstupní soubor (nebo rouru) pro počáteční výstupní
+zařízení, jak bylo výše popsáno.
+.SH SOUBORY
+.PP
+Umístění mnoha souborů potřebných pro správný běh programu
+Ghostscript bylo zakompilováno přímo do kódu programu. V systému Unix
+se nacházejí zpravidla v \fB/usr/local\fP, ale ve vašem systému tomu může
+být jinak.  V systému DOS jsou obvykle umístěny v \fBC:\eGS\fP, ale mohou
+být i jinde, zvláště jestli byl Ghostscript instalován s programem
+\fBGSview\fP.  Spuštěním "\fBgs \-h\fP" je možné zjistit umístění
+dokumentace programu Ghostscript ve vašem systému, která obsahuje více
+podrobností.
+.TP 
+\fB/usr/local/share/ghostscript/#.##/*\fP
+Inicializační soubory, pomůcky a základní definice fontů
+.TP 
+\fB/usr/local/share/ghostscript/fonts/*\fP
+Další definice fontů
+.TP 
+\fB/usr/local/share/ghostscript/#.##/examples/*\fP
+Ukázkové soubory používající Ghostscript
+.TP 
+\fB/usr/local/share/ghostscript/#.##/doc/*\fP
+Rozličné soubory dokumentací
+.SH "INICIALIZAČNÍ SOUBORY"
+Když vyhledává inicializační soubory "gs_*.ps", soubory vztahující se
+k fontům nebo soubor pro operátor "run", Ghostscript se nejprve pokusí
+otevřít tyto soubory pod zadaným jménem v aktuálním pracovním
+adresáři (pokud nebyl zadán žádný adresář).  Při neuspěchu a pokud
+soubor neudává určitý adresář nebo disk (tzn. v Unixových systémech
+neobsahuje "/" nebo neobsahuje "\e" v systémech MS Windows), zkouší
+Ghostscript adresáře v tomto pořadí:
+.TP  4
+1.
+adresáře udané přepínači \fB\-I\fP z příkazové řádky (pokud byly
+nějaké zadány)
+.TP 
+2.
+adresáře udané v proměnné prostředí \fBGS_LIB\fP (pokud je nastavena)
+.TP 
+3.
+adresáře udané makrem \fBGS_LIB_DEFAULT\fP v souboru makefile v době
+kompilace programu GhostScript.  Když byl \fBgs\fP kompilován pro systém
+Unix, makro \fBGS_LIB_DEFAULT\fP má obvykle hodnotu
+"/usr/local/share/ghostscript/#.##:/usr/local/share/ghostscript/fonts" kde
+"#.##" představuje číslo verze programu Ghostscript.
+.PP
+Každý z těchto parametrů (\fBGS_LIB_DEFAULT\fP, \fBGS_LIB\fP i parametr \fB\-I\fP)
+může být buď jeden adresář, anebo seznam adresářů oddělených
+znakem ":".
+.SH PROSTŘEDÍ
+.TP 
+\fBGS_OPTIONS\fP
+Řetězec voleb, které se mají zpracovat před volbami z příkazové
+řádky.
+.TP 
+\fBGS_DEVICE\fP
+Používá se k zadání výstupního zařízení.
+.TP 
+\fBGS_FONTPATH\fP
+Cesty na kterých se mají hledat fonty.
+.TP 
+\fBGS_LIB\fP
+Cesty, na kterých se mají hledat inicializační soubory a fonty.
+.TP 
+\fBTEMP\fP
+Kam se mají ukládat dočasné soubory.
+.SH "X RESOURCES"
+Ghostscript používá následující resources pod jménem "Ghostscript":
+.TP 
+\fBborderWidth\fP
+Šířka okraje udaná v bodech (default = 1).
+.TP 
+\fBborderColor\fP
+Jméno barvy okraje (default = black).
+.TP 
+\fBgeometry\fP
+Velikost okna a jeho umístění, WxH+X+Y (default je NULL).
+.TP 
+\fBxResolution\fP
+Počet bodů v ose x na jeden palec (default je vypočítán z
+\fBWidthOfScreen\fP a \fBWidthMMOfScreen\fP).
+.TP 
+\fByResolution\fP
+Počet bodů v ose x na jeden palec (default je vypočítán z
+\fBHeightOfScreen\fP a \fBHeightMMOfScreen\fP).
+.TP 
+\fBuseBackingPixmap\fP
+Rozhodne, jestli je použit backing store na uložení původního obsahu
+okna (default = true).
+.PP
+Kompletní seznam resources je obsažen v uživatelské dokumentaci.
+Nastavení těchto parametrů se v Unixových systémech provádí
+přidáním do souboru, jako je např. "~/.Xresources", v následujícím
+tvaru:
+.PP
+.nf
+        Ghostscript*geometry:    612x792\-0+0
+        Ghostscript*xResolution: 72
+        Ghostscript*yResolution: 72
+
+.fi
+.PP
+Poté je potřeba vmísit tato nastavení do X server's resource database:
+.PP
+.nf
+        % xrdb \-merge ~/.Xresources
+
+.fi
+.SH "DALŠÍ INFORMACE"
+Různé soubory dokumentace programu Ghostscript (viz výše), zvláště
+soubor \fBUse.htm\fP.
+.SH CHYBY
+Viz Usenet news group comp.lang.postscript.
+.SH VERZE
+Tento dokument byl naposledy revidován pro Ghostscript verze 8.16.
+.SH AUTOR
+artofcode LLC a Artifex Software, bug\-gs at ghostscript.com, jsou hlavními
+udržovateli programu Ghostscript.  Russell J. Lang, gsview at
+ghostgum.com.au, je autorem většiny MS Windows kódu Ghostscriptu.

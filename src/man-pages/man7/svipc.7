@@ -1,0 +1,277 @@
+.\" Copyright 1993 Giorgio Ciucci (giorgio@crcc.it)
+.\"
+.\" Permission is granted to make and distribute verbatim copies of this
+.\" manual provided the copyright notice and this permission notice are
+.\" preserved on all copies.
+.\"
+.\" Permission is granted to copy and distribute modified versions of this
+.\" manual under the conditions for verbatim copying, provided that the
+.\" entire resulting derived work is distributed under the terms of a
+.\" permission notice identical to this one.
+.\"
+.\" Since the Linux kernel and libraries are constantly changing, this
+.\" manual page may be incorrect or out-of-date.  The author(s) assume no
+.\" responsibility for errors or omissions, or for damages resulting from
+.\" the use of the information contained herein.  The author(s) may not
+.\" have taken the same level of care in the production of this manual,
+.\" which is licensed free of charge, as they might when working
+.\" professionally.
+.\"
+.\" Formatted or processed versions of this manual, if unaccompanied by
+.\" the source, must acknowledge the copyright and authors of this work.
+.\"
+.\" FIXME There is now duplication of some of the information
+.\" below in semctl.2, msgctl.2, and shmctl.2 -- MTK, Nov 04
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH SVIPC 7 1993\-11\-01 Linux "Linux \- příručka programátora"
+.SH JMÉNO
+svipc \- System V meziprocesový komunikační mechanismus
+.SH POUŽITÍ
+.nf
+\fB#include <sys/types.h>\fP
+\fB#include <sys/ipc.h>\fP
+\fB#include <sys/msg.h>\fP
+\fB#include <sys/sem.h>\fP
+\fB#include <sys/shm.h>\fP
+.fi
+.SH POPIS
+Tato manuálová stránka popisuje implementaci System V meziprocesových
+komunikačních mechanismů v Linuxu: fronty zpráv, sady semaforů a
+sdílenou paměť.  V následujícím textu slovo \fIresource\fP znamená
+instanci jednoho z těchto mechanismů.
+.SS "Přístupová práva pro Resource"
+Pro každé resource používá systém společnou strukturu typu \fIstruct
+ipc_perm\fP pro ukládání informací potřebných k určení práva na
+provedení ipc operace.  Struktura \fIipc_perm\fP definovaná v systémovém
+hlavičkovém souboru \fI<sys/ipc.h>\fP, obsahuje následující
+členy:
+.in +4n
+.nf
+
+struct ipc_perm {
+    uid_t    cuid; /* uid toho, kdo objekt vytvořil */
+    gid_t    cgid; /* gid toho, kdo objekt vytvořil */
+    uid_t    uid;  /* uid vlastníka */
+    gid_t    gid;  /* gid vlastníka */
+    unsigned short mode;  /* práva pro čtení/zápis */
+};
+
+.fi
+.in
+.PP
+Člen \fImode\fP ze struktury \fIipc_perm\fP definuje ve svých spodních 9 bitech
+přístupová práva pro resource pro proces vykonávající systémové
+voláni ipc takto:
+.sp
+.nf
+        0400    Uživatel smí číst.
+    0200    Uživatel smí zapisovat.
+
+.sp .5
+        0040    Skupina smí číst.
+    0020    Skupina smí zapisovat.
+
+.sp .5
+        0004    Kdokoli smí číst.
+    0002    Kdokoli smí zapisovat.
+
+.fi
+.PP
+Bity 0100, 0010 a 0001 (právo na spuštění) nejsou použity.  Navíc,
+"zápis" ve skutečnosti znamená "změnu" pro sadu semaforů.
+.PP
+Tentýž hlavičkový soubor definuje také následující symbolické
+konstanty:
+.TP  14
+\fBIPC_CREAT\fP
+Vytvoř, neexistuje\-li.
+.TP 
+\fBIPC_EXCL\fP
+Ukonči chybou, existuje\-li.
+.TP 
+\fBIPC_NOWAIT\fP
+Způsobí chybu, má\-li se čekat.
+.TP 
+\fBIPC_PRIVATE\fP
+Privátní klíč.
+.TP 
+\fBIPC_RMID\fP
+Vymaž resource.
+.TP 
+\fBIPC_SET\fP
+Nastav parametry pro resource.
+.TP 
+\fBIPC_STAT\fP
+Zjisti nastavení resource.
+.PP
+Poznamenejme, že \fBIPC_PRIVATE\fP je typu \fIkey_t\fP, zatímco všechny
+ostatní symbolické konstanty jsou vlajky, které lze logickým součtem
+kombinovat do proměnné typu \fIint\fP.
+.SS "Fronty zpráv"
+Fronta událostí je jednoznačně identifikována kladným celým číslem
+(jejím \fImsqid\fP)  a má asociovanou datovou strukturu typu \fIstruct
+msquid_ds\fP, definovanou v \fI<sys/msg.h>\fP, obsahující
+následující členy:
+.in +4n
+.nf
+
+struct msqid_ds {
+    struct ipc_perm msg_perm;
+    msgqnum_t       msg_qnum;   /*počet zpráv ve frontě */
+    msglen_t        msg_qbytes; /*max počet bytů ve frontě */
+    pid_t           msg_lspid;  /*PID posledního volání msgsnd(2) */
+    pid_t           msg_lrpid;  /*PID posledního volání msgrcv(2) */
+    time_t          msg_stime;  /*čas posledního volání msgsnd(2) */
+    time_t          msg_rtime;  /*čas posledního volání msgrcv(2) */
+    time_t          msg_ctime;  /*čas poslední změny */
+};
+
+.fi
+.in
+.TP  11
+Struktura
+\fImsg_perm\fP typu \fIipc_perm\fP specifikuje přístupová práva pro frontu
+událostí.
+.TP 
+\fImsg_qnum\fP
+Počet zpráv ve frontě.
+.TP 
+\fImsg_qbytes\fP
+Maximální počet bytů ve zprávě pro tuto frontu.
+.TP 
+\fImsg_lspid\fP
+ID procesu, který poslední vykonal systémové volání \fBmsgsnd\fP(2).
+.TP 
+\fImsg_lrpid\fP
+ID procesu, který poslední vykonal systémové volání \fBmsgrcv\fP(2).
+.TP 
+\fImsg_stime\fP
+Čas posledního volání systémové služby \fBmsgsnd\fP(2).
+.TP 
+\fImsg_rtime\fP
+Čas posledního volání systémové služby \fBmsgrcv\fP(2).
+.TP 
+\fImsg_ctime\fP
+Čas poslední volání systémové služby, která změnila členy
+struktury \fImsqid_ds\fP.
+.SS "Sady semaforů"
+Sada semaforů je jednoznačně identifikována kladným celým číslem
+(jejím \fIsemid\fP)  a má asociovanou datovou strukturu typu \fIstruct
+semid_ds\fP, definovanou v \fI<sys/sem.h>\fP, obsahující následující
+členy:
+.in +4n
+.nf
+
+struct semid_ds {
+    struct ipc_perm sem_perm;
+    time_t          sem_otime; /* čas poslední operace */
+    time_t          sem_ctime; /* čas poslední změny */
+    unsigned long   sem_nsems; /* počet semaforů v sadě */
+};
+
+.fi
+.in
+.TP  11
+Struktura
+\fIsem_perm\fP typu \fIipc_perm\fP specifikuje přístupová práva pro sadu
+semaforů.
+.TP 
+\fIsem_otime\fP
+Čas posledního volání systémové služby \fBsemop\fP(2).
+.TP 
+\fIsem_ctime\fP
+Čas posledního volání systémové služby \fBsemctl\fP(2), která změnila
+předchozí strukturu nebo hodnotu některého ze semaforů ze sady.
+.TP 
+\fIsem_nsems\fP
+Počet semaforů v sadě.  Každý semafor je identifikován nezáporným
+číslem od \fB0\fP do \fIsem_nsems\-1\fP.
+.PP
+Semafor je datová struktura typu \fIstruct sem\fP obsahující tyto členy:
+.in +4n
+.nf
+
+.\"    unsigned short semncnt; /* nr awaiting semval to increase */
+.\"    unsigned short semzcnt; /* nr awaiting semval = 0 */
+struct sem {
+    int semval; /* hodnota semaforu */
+    int sempid; /* PID poslední operace */
+}
+
+.fi
+.in
+.TP  11
+\fIsemval\fP
+Hodnota semaforu, nezáporné číslo.
+.TP 
+\fIsempid\fP
+.\".TP
+.\".I semncnt
+.\"Number of processes suspended awaiting for
+.\".I semval
+.\"to increase.
+.\".TP
+.\".I semznt
+.\"Number of processes suspended awaiting for
+.\".I semval
+.\"to become zero.
+ID procesu, který naposledy měnil hodnotu tohoto semaforu.
+.SS "Segmenty sdílené paměti"
+Segment sdílené paměti je jednoznačně identifikován kladným celým
+číslem (jeho \fIshmid\fP)  a má asociovanou datovou strukturu typu \fIstruct
+shmid_ds\fP, definovanou v \fI<sys/shm.h>\fP, obsahující následující
+členy:
+.in +4n
+.nf
+
+struct shmid_ds {
+    struct ipc_perm shm_perm;
+    size_t          shm_segsz;  /* velikost segmentu */
+    pid_t           shm_cpid;   /* PID tvůrce segmentu */
+    pid_t           shm_lpid;   /* PID, poslední operace */
+    shmatt_t        shm_nattch; /* počet připojených */
+    time_t          shm_atime;  /* čas posledního připojení */
+    time_t          shm_dtime;  /* čas posledního odpojení */
+    time_t          shm_ctime;  /* čas poslední změny */
+};
+
+.fi
+.in
+.TP  11
+Struktura
+\fIshm_perm\fP typu \fIipc_perm\fP specifikuje přístupová práva pro segment
+sdílené paměti.
+.TP 
+\fIshm_segsz\fP
+Velikost segmentu v bytech.
+.TP 
+\fIshm_cpid\fP
+ID procesu, který tento segment vytvořil.
+.TP 
+\fIshm_lpid\fP
+ID procesu, který naposledy volal systémovou službu \fBshmat\fP(2)  nebo
+\fBshmdt\fP(2).
+.TP 
+\fIshm_nattch\fP
+Počet připojených procesů.
+.TP 
+\fIshm_atime\fP
+Čas posledního volání systémové služby \fBshmat\fP(2).
+.TP 
+\fIshm_dtime\fP
+Čas posledního volání systémové služby \fBshmdt\fP(2).
+.TP 
+\fIshm_ctime\fP
+Čas posledního volání systémové služby \fBshmctl\fP(2), která změnila
+hodnotu \fIshmid_ds\fP.
+.SH "DALŠÍ INFORMACE"
+\fBipc\fP(2), \fBmsgctl\fP(2), \fBmsgget\fP(2), \fBmsgrcv\fP(2), \fBmsgsnd\fP(2),
+\fBsemctl\fP(2), \fBsemget\fP(2), \fBsemop\fP(2), \fBshmat\fP(2), \fBshmctl\fP(2),
+\fBshmdt\fP(2), \fBshmget\fP(2), \fBftok\fP(3)
+.SH TIRÁŽ
+Tato stránka je součástí projektu Linux \fIman\-pages\fP.  Popis projektu a
+informace o hlášení chyb najdete na http://www.kernel.org/doc/man\-pages/.

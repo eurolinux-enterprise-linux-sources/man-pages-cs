@@ -1,0 +1,48 @@
+.\" Copyright (c) 2000 Christoph J. Thompson <obituary@linuxbe.org>
+.\"
+.\" This is free documentation; you can redistribute it and/or
+.\" modify it under the terms of the GNU General Public License as
+.\" published by the Free Software Foundation; either version 2 of
+.\" the License, or (at your option) any later version.
+.\"
+.\" This manual is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public
+.\" License along with this manual; if not, write to the Free
+.\" Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111,
+.\" USA.
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH FTPUSERS 5 2000\-08\-27 Linux "Linux \- příručka programátora"
+.SH JMÉNO
+ftpusers \- seznam uživatelů, kteří se nesmí přihlásit pomocí FTP
+démona
+.SH POPIS
+Textový soubor \fBftpusers\fP obsahuje seznam uživatelů, kteří se nesmí
+přihlásit do systému pomocí démona FTP serveru. Tento soubor se
+používá nejen pro administraci systému, ale i pro zvýšení
+bezpečnosti v prostředí TCP/IP sítí. Obvykle obsahuje seznam
+uživatelů, kteří nemají používat ftp nebo mají příliš mnoho
+oprávnění, aby jim bylo umožněno přihlásit se pomocí démona FTP
+serveru.  Těmito uživateli jsou obvykle root, daemon, bin, uucp a news.
+Pokud váš démon FTP serveru nepoužívá soubor \fBftpusers\fP, tak by mělo
+být v jeho dokumentaci uvedeno, jak zamezit některým uživatelům
+přístup.  Washington University FTP server Daemon (wuftpd) a Professional
+FTP Daemon (proftpd) soubor \fBftpusers\fP používají.
+.SS Formát
+Formát souboru \fBftpusers\fP je jednoduchý. Na každém řádku je jeden
+název účtu (nebo uživatelské jméno). Řádky začínající # jsou
+ignorovány.
+.SH SOUBORY
+\fI/etc/ftpusers\fP
+.SH "DALŠÍ INFORMACE"
+\fBpasswd\fP(5), \fBproftpd\fP(8), \fBwuftpd\fP(8)
+.SH TIRÁŽ
+Tato stránka je součástí projektu Linux \fIman\-pages\fP.  Popis projektu a
+informace o hlášení chyb najdete na http://www.kernel.org/doc/man\-pages/.

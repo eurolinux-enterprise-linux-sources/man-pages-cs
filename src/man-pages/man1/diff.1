@@ -1,0 +1,452 @@
+.\" Date: Fri, 11 Sep 1998 19:13:45 +0100
+.\" From: Edward Betts <edward@hairnet.demon.co.uk>
+.\"
+.\" Derived from the GNU diff info page.
+.\" May be distributed under the GPL.
+.TH DIFF 1 22.září 1993 "Nástroje GNU" "Nástroje GNU"
+.SH JMÉNO
+diff \- najde rozdíly mezi dvěma soubory
+.SH POUŽITÍ
+.B diff
+[volby] ze-souboru do-souboru
+.SH POPIS
+V nejjednodušším případě program 
+.I diff
+porovnává obsahy souborů
+.I ze-souboru
+a
+.IR do-souboru .
+Jméno souboru
+.B \-
+znamená text čtený ze standardního vstupu. Jako zvláštní
+případ
+.B "diff \- \-"
+porovná kopii standardního vstupu samu se sebou.
+.\" ugh, snad je tomu rozumět
+
+Pokud je
+.I ze souboru
+adresářem a
+.I do-souboru
+nikoliv,
+.I diff
+porovnává soubor v
+.I ze-souboru
+jehož jméno je stejné jako
+.IR do-souboru ,
+a naopak. Soubor, který není adresářem, však nesmí být
+.BR \- .
+
+Pokud jsou oba
+.I ze-souboru
+a
+.I do-souboru
+adresáři, program
+.I diff
+porovnává odpovídající soubory v obou adresářích, v abecedním pořadí; toto
+porovnávání není rekurzivní, ledaže je použita volba
+.B \-r
+nebo
+.BR \-\-recursive .
+Program
+.I diff
+nikdy neporovnává skutečný obsah adresáře, jako by to byl soubor. Soubor,
+který je úplně určený nemůže být standardní vstup, protože standardní vstup
+je bezejmenný a zápis ``soubor se stejným jménem'' se na tento případ nevztahuje.
+Volby programu
+.B diff
+začínají znakem
+.BR \- ,
+takže za běžných okolností
+.I ze-souboru
+a
+.I do-souboru
+nemohou začínat na
+.BR \- .
+Nicméně argumenty uvedené za
+.B \-\-
+jsou považovány za jména souborů i v případě, že začínají na
+.BR \- .
+.SS Volby
+Následuje souhrn všech voleb, které GNU
+.I diff
+akceptuje.
+Většina voleb má dvě rovnocenná jména; první jako jediné písmeno, kterému
+předchází
+.BR \- 
+a druhé - dlouhé jméno, kterému předchází
+.BR \-\- .
+Více jednopísmenných voleb (pokud nevyžadují argument) může být spojeno do
+jednoho slova:
+.B \-ac
+je rovnocenné zápisu
+.BR "\-a \-c" .
+Dlouhá jména voleb mohou být zkrácena na jakýkoliv jedinečný začátek svého jména.
+Hranaté závorky
+.RB ( [
+a
+.BR ] )
+označují že volba může být doplněna argumentem.
+.TP
+.BI \- počet
+Zobrazí
+.I počet
+(celé číslo) řádků kontextu.  
+Tato volba sama o sobě neurčuje výstupní formát a projeví se jen v kombinaci s
+.B \-c
+nebo
+.BR \-u .
+Tato volba je zastaralá. Aby mohl program
+.I patch
+správně fungovat, potřebuje obvykle nejméně dva řádky kontextu.
+.TP
+.B \-a
+Považuje všechny soubory za textové a porovnává je řádek po řádku, i když
+textové nejsou.
+.TP
+.B \-b
+Ignoruje změny v objemu white space.
+.TP
+.B \-B
+Ignoruje změny, které pouze vloží nebo vypustí prázdné řádky.
+.TP
+.B \-\-brief
+Pouze oznámí, zda se soubory liší, bez podrobností o změnách.
+.TP
+.B \-c
+Použije kontextový výstupní formát.
+.TP
+.BI "\-C " řádků
+.br
+.ns
+.TP
+.BI \-\-context[= řádků ]
+Použije kontextový výstupní formát se zobrazením zadaného počtu
+.I řádků
+(celé číslo) kontextu. Není-li počet
+.I řádků
+určen, jsou zobrazeny tři.
+Aby mohl program
+.I patch
+správně fungovat, potřebuje obvykle nejméně dva řádky kontextu.
+.TP
+.BI \-\-changed\-group\-format= formát
+Použije
+.I formát
+k vypsání skupiny řádek, obsahující lišící se řádky z obou souborů ve tvaru
+if-then-else.
+.TP
+.B \-d
+Změní algoritmus tak, že může najít i menší sadu změn. Program
+.I diff
+se tak zpomalí (někdy výrazně).
+.TP
+.BI "\-D " jméno
+Způsobí výstup ve spojeném formátu if-then-else, v závislosti na
+.I jménu
+makra preprocesoru.
+.TP
+.B \-e
+.br
+.ns
+.TP
+.B \-\-ed
+Vzniklý výstup je validním skriptem programu
+.IR ed .
+.TP
+.BI \-\-exclude= vzor
+Při porovnávání adresářů ignoruje soubory a podadresáře, jejichž basenames
+odpovídají tomuto
+.IR vzoru .
+.TP
+.BI \-\-exclude\-from= soubor
+Při porovnávání adresářů ignoruje soubory a podadresáře, jejichž basenames
+odpovídají jakémukoliv vzoru obsaženému v
+.IR souboru .
+.TP
+.B \-\-expand\-tabs
+Ve výstupu převede tabulátory na mezery, aby zachoval zarovnání tabulátorů ze
+vstupních souborů
+.TP
+.B \-f
+Výstup zhruba připomíná skript programu
+.IR ed ,
+ale obsahuje změny v pořadí, v jakém se v souboru objevují.
+.TP
+.BI "\-F " regulární_výraz
+Při použití kontextového nebo sjednoceného formátu ukazuje pro každý soubor změn
+tu část z předcházejícího řádku, která odpovídá
+.IR regulárnímu_výrazu .
+.TP
+.B \-\-forward\-ed
+Výstup zhruba připomíná skript programu
+.BR ed ,
+ale obsahuje změny v pořadí, v jakém se v souboru objevují.
+.TP
+.B \-h
+Tato volba nemá v současnosti žádný význam, je přítomna pro kompatibilitu s
+Unixem.
+.TP
+.B \-H
+Používá heuristiku pro urychlení práce s velkými soubory, které obsahují mnoho
+rozptýlených malých změn.
+.TP
+.BI \-\-horizon\-lines= n
+Nezahazuje posledních
+.I n
+řádků společného prefixu a prvních
+.I n
+řádků společnéhu suffixu.
+.TP
+.B \-i
+Ignoruje změny ve velikosti písmen; Považuje malá a velká písmena za rovnocenná.
+.TP
+.BI "\-I " regulární_výraz
+Ignoruje změny, které pouze vloží nebo smažou řádky odpovídající
+.IR regulárnímu_výrazu .
+.TP
+.BI \-\-ifdef= jméno
+Způsobí výstup ve spojeném formátu if-then-else, v závislosti na
+.I jménu
+makra preprocesoru.
+.TP
+.B \-\-ignore\-all\-space
+Při porovnávání řádků ignoruje white space.
+.TP
+.B \-\-ignore\-blank\-lines
+Ignoruje změny, které pouze vloží nebo smažou prázdné řádky.
+.TP
+.B \-\-ignore\-case
+Ignoruje změny ve velikosti písmen; Považuje malá a velká písmena za rovnocenná.
+.TP
+.BI \-\-ignore\-matching\-lines= regexp
+Ignoruje změny, které pouze vloží nebo smažou řádky odpovídající
+.IR regulárnímu_výrazu .
+.TP
+.B \-\-ignore\-space\-change
+Ignoruje změny v objemu white space.
+.TP
+.B \-\-initial\-tab
+U normálního nebo kontextového formátu vypíše před textem na řádce místo mezery
+tabulátor. Díky tomu bude zarovnání tabulátorů na řádce vypadat normálně.
+.TP
+.B \-l
+Zpracuje výstup programem
+.IR pr ,
+aby jej rozdělil na stránky.
+.TP
+.BI "\-L " label
+.br
+.ns
+.TP
+.BI \-\-label= label
+Použije
+.I label
+namísto jména souboru v hlavičkách kontextového a sjednoceného formátu.
+.TP
+.B \-\-left\-column
+V případě formátu "side by side" vypíše u dvou společných řádků pouze levý
+sloupec.
+.TP
+.BI \-\-line\-format= formát
+Použije
+.I formát
+pro vypsání všech vstupních řádků ve formátu if-then-else.
+.TP
+.B \-\-minimal
+Změní algoritmus tak, že může najít i menší sadu změn. Program
+.I diff
+se tak zpomalí (někdy výrazně).
+.TP
+.B \-n
+Výstupem jsou rozdíly ve formátu RCS; podobně jako´s volbou
+.BR \-f ,
+ale každý příkaz určuje počet dotčených řádků.
+.TP
+.B \-N
+.br
+.ns
+.TP
+.B \-\-new\-file
+Při porovnávání adresářů, je-li soubor obsažen pouze v jednom z nich, je
+v tom druhém považován za existující a prázdný.
+.TP
+.BI \-\-new\-group\-format= formát
+Použije
+.I format
+pro vypsání skupiny řádků ze druhého souboru ve formátu if-then-else.
+.TP
+.BI \-\-new\-line\-format= formát
+Použije
+.I formát
+pro vypsání řádky ze druhého souboru ve formátu if-then-else.
+.TP
+.BI \-\-old\-group\-format= formát
+Použije
+.I formát
+pro vypsání skupiny řádků z prtvního souboru ve formátu if-then-else.
+.TP
+.BI \-\-old\-line\-format= formát
+Použije
+.I formát
+pro vypsání řádky z prvního souboru ve formátu if-then-else.
+.TP
+.B \-p
+Ukáže, v jaké funkci jazyka C je každá změna.
+.TP
+.B \-P
+Při porovnávání adresářů, je-li soubor obsažen pouze v druhém z nich, je
+v tom prvním považován za existující a prázdný.
+.TP
+.B \-\-paginate
+Zpracuje výstup programem
+.IR pr ,
+aby jej rozdělil na stránky.
+.TP
+.B \-q
+Pouze oznámí, zda se soubory liší, bez podrobností o změnách.
+.TP
+.B \-r
+Při porovnávání adresářů jsou rekurzivně prohledávány všechny nalezené
+podadresáře.
+.TP
+.B \-\-rcs
+Výstupem jsou rozdíly ve formátu RCS; podobně jako´s volbou
+.BR \-f ,
+ale každý příkaz určuje počet dotčených řádků.
+.TP
+.B \-\-recursive
+Při porovnávání adresářů jsou rekurzivně prohledávány všechny nalezené
+podadresáře.
+.TP
+.B \-\-report\-identical\-files
+.br
+.ns
+.TP
+.B \-s
+Pokud jsou dva sobory shodné, oznámí to.
+.TP
+.BI "\-S " soubor
+Při porovnávání adresářů začne souborem
+.IR soubor .
+To se používá pro obnovení přerušeného porovnávání.
+.TP
+.B \-\-sdiff\-merge\-assist
+Vypíše další informace pro pomoc programu
+.IR sdiff .
+Program
+.I sdiff
+používá tuto volbu, když spouští program
+.IR diff .
+Tato volba není míněna pro přímé používání uživateli.
+.TP
+.B \-\-show\-c\-function
+Ukáže, v jaké funkci jazyka C je každá změna.
+.TP
+.BI \-\-show\-function\-line= regulární_výraz
+Při použití kontextového nebo sjednoceného formátu ukazuje pro každý soubor změn
+tu část z předcházejícího řádku, která odpovídá
+.IR regulárnímu_výrazu .
+.TP
+.B \-\-side\-by\-side
+Použije výstupní formát "side by side".
+.TP
+.B \-\-speed\-large\-files
+Používá heuristiku pro urychlení práce s velkými soubory, které obsahují mnoho
+rozptýlených malých změn.
+.TP
+.BI \-\-starting\-file= soubor
+Při porovnávání adresářů začne souborem
+.IR soubor .
+To se používá pro obnovení přerušeného porovnávání.
+.TP
+.B \-\-suppress\-common\-lines
+Při použití formátu "side by side" netiskne shodné řádky.
+.TP
+.B \-t
+Ve výstupu převede tabulátory na mezery, aby zachoval zarovnání tabulátorů ze
+vstupních souborů.
+.TP
+.B \-T
+U normálního nebo kontextového formátu vypíše před textem na řádce místo mezery
+tabulátor. Díky tomu bude zarovnání tabulátorů na řádce vypadat normálně.
+.TP
+.B \-\-text
+Považuje všechny soubory za textové a porovnává je řádek po řádku, i když
+textové nejsou.
+.TP
+.B \-u
+Použije sjednocený výstupní formát.
+.TP
+.BI \-\-unchanged\-group\-format= formát
+Použije
+.I format
+k vypsání skupiny řádků společné oběma souborům ve formátu if-then-else.
+.TP
+.BI \-\-unchanged\-line\-format= formát
+Použije
+.I formát
+k vypsání řádku společného oběma souborům ve formátu if-then-else.
+.TP
+.B \-\-unidirectional\-new\-file
+Při porovnávání adresářů, je-li soubor obsažen pouze v druhém z nich, je
+v tom prvním považován za existující a prázdný.
+.TP
+.BI "\-U " počet
+.br
+.ns
+.TP
+.BI \-\-unified[= počet ]
+Použije sjednocený formát výstupu se zobrazením určeného
+.I počtu
+(celé číslo) řádků kontextu nebo tří řádků, pokud nebyl
+.I počet
+určen.
+Aby mohl program
+.I patch
+správně fungovat, potřebuje obvykle nejméně dva řádky kontextu.
+.TP
+.B \-v
+.br
+.ns
+.TP
+.B \-\-version
+Vypíše číslo verze programu
+.IR diff .
+.TP
+.B \-w
+Při porovnávání řádků ignoruje white space.
+.TP
+.BI "\-W " sloupců
+.br
+.ns
+.TP
+.BI \-\-width= sloupců
+Při použití formátu "side by side" použije jako šířku výstupu zadaný počet
+.IR sloupců .
+.TP
+.BI "\-x " vzor
+Při porovnávání adresářů ignoruje soubory a podadresáře, jejichž basenames
+odpovídají
+.IR vzoru .
+.TP
+.BI "\-X " soubor
+Při porovnávání adresářů ignoruje soubory a podadresáře, jejichž basenames
+odpovídají jakémukoliv vzoru obsaženému v
+.IR souboru .
+.TP
+.B \-y
+Použije výstupní formát "side by side"
+.SH "DALŠÍ INFORMACE"
+.BR cmp (1),
+.BR comm (1),
+.BR diff3 (1),
+.BR ed (1),
+.BR patch (1),
+.BR pr (1),
+.BR sdiff (1).
+.SH DIAGNOSTIKA
+Návratový kód 0 znamená, že nebyly nalezeny žádné rozdíly, 1 znamená, že rozdíly
+nalezeny byly a 2 znamená problémy.
+.\" Přeloženo z:man-pages-2.32
+.\" MD5 originálu:af1e1a93df24c2c696eeb517694e9138

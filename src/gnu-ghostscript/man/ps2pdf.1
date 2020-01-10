@@ -1,0 +1,54 @@
+.\" -*- nroff -*-
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH PS2PDF 1 "9. květen 2005" 8.16 Ghostscript
+.\" $Id: ps2pdf.1,v 1.4 2005/05/09 22:04:37 Arabidopsis Exp $
+.SH JMÉNO
+\fBps2pdf\fP \- převede PostScript na PDF pomocí programu ghostscript
+.br
+\fBps2pdf12\fP \- převede PostScript na PDF\ 1.2 (Acrobat\ 3 a výše
+kompatibilní) pomocí programu ghostscript
+.br
+\fBps2pdf13\fP \- převede PostScript na PDF\ 1.3 (Acrobat\ 4 a výše
+kompatibilní) pomocí programu ghostscript
+.SH POUŽITÍ
+\fBps2pdf\fP [volby...] {vstup.[e]ps|\-} [výstup.pdf|\-]
+.br
+\fBps2pdf12\fP [volby...] {vstup.[e]ps|\-} [výstup.pdf|\-]
+.br
+\fBps2pdf13\fP [volby...] {vstup.[e]ps|\-} [výstup.pdf|\-]
+.SH POPIS
+Všechny skripty \fBps2pdf\fP pracují v téměř celé funkčnosti (kromě
+uživatelského rozhraní) stejně jako produkt Adobe's Acrobat(TM)
+Distiller(TM): konvertují soubory formátu PostScript na soubory formátu
+Portable Document Format (PDF).
+.PP
+Tyto tři skripty se liší takto:
+.IP \-
+\fBps2pdf12\fP produkuje vždy PDF 1.2 výstup (kompatibilní s Acrobat 3 a
+vyšší).
+.IP \-
+\fBps2pdf13\fP produkuje vždy PDF 1.3 výstup (kompatibilní s Acrobat 4 a
+vyšší).
+.IP \-
+\fBps2pdf\fP produkuje momentálně PDF 1.2 výstup (kompatibilní s Acrobat 3
+a vyšší).  Přesto, toto se může v budoucnosti změnit. Pokud vám
+záleží na úrovni kompatibility výstupu, použijte \fBps2pdf12\fP nebo
+\fBps2pdf13\fP, anebo použijte přepínač \fB\-dCompatibility=1.x\fP z
+příkazové řádky.
+.PP
+Existují určitá omezení \fBps2pdf\fP konverze. Pro více informací
+prostudujte HTML dokumentaci.
+.SH "DALŠÍ INFORMACE"
+gs(1), ps2pdfwr(1),
+.br
+Ps2pdf.htm v dokumentaci balíku Ghostscript
+.SH VERZE
+Tento dokument byl naposledy revidován pro Ghostscript verze 8.16.
+.SH AUTOR
+artofcode LLC a Artifex Software, bug\-gs at ghostscript.com, jsou hlavními
+udržovateli programu Ghostscript.  Tuto manuálovou stránku napsal George
+Ferguson.

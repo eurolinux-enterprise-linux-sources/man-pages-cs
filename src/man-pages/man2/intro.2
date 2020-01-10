@@ -1,0 +1,114 @@
+.TH ÚVOD 2 "18.ledna 1997" "Linux 1.2.13" "Linux - příručka programátora"
+.do hla cs
+.do hpf hyphen.cs
+.SH JMÉNO
+intro \- Úvod do volání jádra
+.SH POPIS
+Tato kapitolka popisuje volání jádra v Linuxu.
+.SS "Přímé volání"
+Ve většině případů není třeba volat systémové volání přímo, ale existují
+případy, kdy standardní knihovna jazyka C neobsahuje vhodnou funkci, která
+volání provede.
+.SS "Syntaxe"
+.B #include <linux/unistd.h>
+
+makro _syscall
+
+předpokládané volání jádra
+
+.SS Implementace
+Důležitou věcí, kterou je třeba o systémovém volání vědět, je jeho prototyp.
+Budete-li chtít toto volání použít, potřebujete vědět kolik má parametrů a
+jakého typu, jaký typ vrací.
+Je definováno šest maker, která usnadňují skutečná volání jádra.
+Mají tento tvar:
+.sp
+.RS
+.RI _syscall X ( typ , jméno , typ1 , arg1 , typ2 , arg2 ,...)
+.RS
+.HP
+kde \fIX\fP je 0\(en5, což je počet argumentů pro dané systémové volání.
+.HP
+\fItyp\fP je návratový typ volání
+.HP
+\fIjméno\fP je jméno volání
+.HP
+\fItypN\fP je typ N-tého argumentu
+.HP
+\fIargN\fP je jméno N-tého argumentu
+.RE
+.RE
+.sp
+Tato makra vytvoří funkci se jménem \fIname\fP s Vámi specifikovanými
+argumenty. Jestliže vložíte _syscall() do Vašeho zdrojového souboru, budete
+moci používat systémové volání pod jménem \fIname\fP.
+.SH PŘÍKLAD
+.nf
+.sp
+#include <stdio.h>
+/* zde jsou definována makra _syscallX() */
+#include <linux/unistd.h>
+/* definice struct sysinfo */
+#include <linux/kernel.h>
+_syscall1(int, sysinfo, struct sysinfo *, info);
+/* Poznámka: jestliže budete tento příklad kopírovat přímo ze
+zdrojového textu této manuálové stránky, nezapomeňte odstranit
+přebytečná obrácená lomítka u znaku \\n */
+
+int main(void)
+{
+   struct sysinfo s_info;
+   int error;
+
+   error = sysinfo(&s_info);
+   printf("code error = %d\\n", error);
+   printf("Uptime = %ds\\nLoad: 1min %d / 5min %d / 15min %d\\n"
+      "RAM: total %d / free %d / shared %d\\n"
+      "Memory in buffers = %d\\nSwap: total %d / free %d\\n"
+      "Number of processes = %d\\n",
+      s_info.uptime, s_info.loads[0],
+      s_info.loads[1], s_info.loads[2],
+      s_info.totalram, s_info.freeram,
+      s_info.sharedram, s_info.bufferram,
+      s_info.totalswap, s_info.freeswap,
+      s_info.procs);
+   return(0);
+}
+.fi
+.SH "Příklad výstupu"
+.nf
+code error = 0
+uptime = 502034s
+Load: 1min 13376 / 5min 5504 / 15min 1152
+RAM: total 15343616 / free 827392 / shared 8237056
+Memory in buffers = 5066752
+Swap: total 27881472 / free 24698880
+Number of processes = 40
+.fi
+.SH POZNÁMKY
+Makro _syscall() nevytváří prototyp. Musíte si jej vytvořit, což platí
+hlavně pro C++.
+.sp
+Systémová volání nemusí vracet kladné nebo záporné chybové kódy.
+Musíte si přečíst jejich zdrojový text, abyste se ujistili, co mohou vrátit.
+Obvykle je to opačná hodnota standardní chyby, např. \-\fBEPERM\fP.
+Makra _syscall() vrací hodnotu \fIr\fP systémového volání , je-li nezáporná,
+jinak vrací \-1 a nastaví hodnotu 
+.I errno
+na \-\fIr\fP.
+.sp
+Některá systémová volání, jako např. 
+.BR mmap ,
+požadují více než pět argumentů. Toto se obchází umístěním argumentů na
+vrchol zásobníku. Potom jako argument volání použijeme ukazatel na blok
+argumentů.
+.sp
+Při definici volání jádra MUSÍ být argumenty volány hodnotou nebo odkazem
+(pro struktury).
+.SH SOUBORY
+.I /usr/include/linux/unistd.h
+.SH AUTOŘI
+Autory a podmínky pro šíření a kopírování najdete v záhlaví každé manuálové
+stránky. Všimněte si, že se mohou stránku od stránky lišit.
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

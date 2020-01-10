@@ -1,0 +1,88 @@
+.\" Copyright (c) 1989, 1993
+.\"	The Regents of the University of California.  All rights reserved.
+.\"
+.\" This code is derived from software contributed to Berkeley by
+.\" Jef Poskanzer and Craig Leres of the Lawrence Berkeley Laboratory.
+.\"
+.\" Redistribution and use in source and binary forms, with or without
+.\" modification, are permitted provided that the following conditions
+.\" are met:
+.\" 1. Redistributions of source code must retain the above copyright
+.\"    notice, this list of conditions and the following disclaimer.
+.\" 2. Redistributions in binary form must reproduce the above copyright
+.\"    notice, this list of conditions and the following disclaimer in the
+.\"    documentation and/or other materials provided with the distribution.
+.\" 3. All advertising materials mentioning features or use of this software
+.\"    must display the following acknowledgement:
+.\"	This product includes software developed by the University of
+.\"	California, Berkeley and its contributors.
+.\" 4. Neither the name of the University nor the names of its contributors
+.\"    may be used to endorse or promote products derived from this software
+.\"    without specific prior written permission.
+.\"
+.\" THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+.\" ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+.\" IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+.\" ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+.\" FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+.\" DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+.\" OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+.\" HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+.\" LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+.\" OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+.\" SUCH DAMAGE.
+.\"
+.\"     @(#)write.1	8.1 (Berkeley) 6/6/93
+.\"
+.\" Modified for Linux, Sun Mar 12 10:21:01 1995, faith@cs.unc.edu
+.\"
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH WRITE 1 "12.březen 1995" "" "Linux \- příručka programátora"
+.SH JMÉNO
+write \- pošle zprávu jinému uživateli
+.SH POUŽITÍ
+[přibližně] \fBwrite\fP\fI uživatel \fP\fB[\fP\fIjméno_tty\fP\fB]\fP
+.SH POPIS
+\fBWrite\fP vám umožňuje komunikovat s ostatními uživateli, pomocí
+kopírování řádků z vašeho terminálu na jejich.
+.PP
+Když spustíte příkaz \fBwrite\fP,  uživatel, kterému píšete, dostane
+zprávu ve formě:
+.PP
+.RS
+Zpráva od vaše_jméno@váš_počítač na vaše_tty v hh:mm ...
+.RE
+.PP
+Každé další napsané řádky se zkopírují na určený uživatelský
+ terminál.  Pokud chce druhý uživatel odpovědět, musí také spustit
+\fBwrite\fP.
+.PP
+Když chcete skončit, vložte znak konce souboru (end\-of\-file, tj.
+ CTRL+d) nebo přerušovací znak (CTRL+c). Druhý uživatel uvidí zprávu
+\fBEOF\fP ukazující, že konverzace skončila.
+.PP
+Psaní na svůj terminál můžete ostatním (kromě roota) zakázat pomocí
+příkazu \fBmesg\fP(1). Některé příkazy, např. \fBnroff\fP(1), a \fBpr\fP(1),
+mohou výpisy zakázat automaticky, takže váš terminál nebude zprávou
+přepsán.
+.PP
+Pokud je uživatel, kterému chcete psát, přihlášen na více
+terminálech, můžete určit, na který terminál se bude psát zadáním
+jména terminálu
+ jako druhého parametru za příkazem \fBwrite\fP. Můžete také nechat
+program \fBwrite\fP vybrat jeden z terminálů \- vybere se ten s nejkratší
+časovou prodlevou (idle time). Pokud je tedy uživatel přihlášen v
+práci a zároveň je připojen z domova, zpráva dojde na správný
+terminál.
+.PP
+Tradiční dohoda při psaní je, že značka `\-o', buď na konci řádku
+nebo na vlastním řádku, znamená, že je řada na druhé osobě. Znaky
+`oo' znamenají, že osoba předpokládá, že konverzace skončila.
+.SH "DALŠÍ INFORMACE"
+\fBmesg\fP(1), \fBtalk\fP(1), \fBwho\fP(1)
+.SH HISTORIE
+Příkaz \fBwrite\fP se objevil v AT&T UNIXu verze 6.

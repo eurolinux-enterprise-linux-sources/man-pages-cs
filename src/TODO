@@ -1,0 +1,24 @@
+Move the below pages to OmegaT:
+./man1/diff.1                                 
+./man1/pkill.1                                
+./man1/snice.1                                
+./man1/ssh-add.1                              
+./man1/ssh-agent.1                            
+./man1/ssh-keygen.1                           
+./man1/ssh.1                                  
+./man1/time.1                                 
+./man1/top.1                                  
+./man1/watch.1                                
+./man5/exports.5                              
+./man7/ascii.7
+./man8/lilo.8
+./man8/saned.8
+./man8/sshd.8
+
+fix translation of 'pollable' in man-pages/man5/proc.5
+fix translation of 'deprecated' in man-pages/man5/proc.5
+part of man-pages/man5/proc.5 still english
+part of man-pages/man7/suffixes.7 in english
+part of man-pages/man7/signal.7 in english
+part of man-pages/man7/utf-8.7 in english
+

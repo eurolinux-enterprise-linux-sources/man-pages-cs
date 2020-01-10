@@ -1,0 +1,1034 @@
+.\" Copyright (c) 1995,1997 Paul Gortmaker and Andries Brouwer
+.\"
+.\" This is free documentation; you can redistribute it and/or
+.\" modify it under the terms of the GNU General Public License as
+.\" published by the Free Software Foundation; either version 2 of
+.\" the License, or (at your option) any later version.
+.\"
+.\" The GNU General Public License's references to "object code"
+.\" and "executables" are to be interpreted as the output of any
+.\" document formatting or typesetting system, including
+.\" intermediate and printed output.
+.\"
+.\" This manual is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public
+.\" License along with this manual; if not, write to the Free
+.\" Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111,
+.\" USA.
+.\"
+.\" This man page written 950814 by aeb, based on Paul Gortmaker's HOWTO
+.\" (dated v1.0.1, 15/08/95).
+.\" Major update, aeb, 970114.
+.\" FIXME ? The use of quotes on this page is inconsistent with the
+.\" rest of man-pages.
+.\"
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH BOOTPARAM 7 2007\-12\-16 Linux "Linux \- příručka programátora"
+.SH JMÉNO
+bootparam \- Úvod do parametrů pro zavedení jádra Linuxu
+.SH POPIS
+Jádro operačního systému Linux akceptuje \(aqparametry na příkazové
+řádce\(aq neboli \(aqparametry pro zavedení operačního systému\(aq
+při startu systému.  Obecně, takto lze jádru předat informace o
+hardware, které si jádro nemůže zjistit samo nebo aby se předešlo
+chybné detekci ze strany jádra.
+
+Když se jádro zavádí pomocí BIOSu (například z diskety, kam bylo
+jádro kopírováno příkazem 'cp zImage /dev/fd0'), není žádná
+možnost zaváděcí parametry nastavit. Proto, aby bylo možno tyto
+parametry specifikovat, je nutno použít speciální program, jako je LILO
+nebo loadlin. Navíc je možno zapsat některé parametry přímo do jádra
+pomocí rdev, viz \fBrdev\fP(8).
+
+Program LILO (LInux LOader) napsaný Wernerem Almesbergerem je
+nejpoužívanějším zaváděcím programem. Poskytuje možnost zavádět
+několik různých jader a ukládá si své nastavení do textového
+souboru. (Viz \fBlilo\fP(8)  a \fBlilo.conf\fP(5).)  LILO umí zavádět DOS, OS/2
+Linux, FreeBSD, atd., a je poměrně flexibilní.
+
+Dalším významným zavaděčem je 'LoadLin', což je DOSovský program,
+který umožňuje spustit Linuxové jádro z DOSu (včetně parametrů),
+přičemž předpokládá, že určité prostředky nezbytné pro start jsou
+dostupné.  Tento přístup je výhodný, chcete\-li startovat Linux z DOSu.
+
+Toto je také výhodné, jestliže používáte hardware, které je nutno
+nastavit speciálním DOSovým ovladačem před použitím. Obvyklým
+příkladem jsou zvukové karty 'SoundBlaster Compatible', na kterých
+DOSový ovladač nastaví několik interních registrů pro SB kompatibilní
+režim. Zavedení DOSu včetně ovladače a poté zavedení Linuxu loadlinem
+zabrání resetu karty při startu počítače.
+.SS "Seznam parametrů"
+Příkazová řádka jádra je rozdělena na řetězce (parametry)
+oddělené čárkami, Většina parametrů má tvar:
+.IP
+jméno[=hodnota_1][,hodnota_2]...[,hodnota_10]
+.LP
+kde 'jméno' je jednoznačné klíčové slovo, použité pro rozpoznání,
+pro kterou část jádra se případné hodnoty (jsou\-li uvedeny),
+použijí. Povšimněte si, že hodnota 10 je skutečným limitem, protože
+současný kód neumí zpracovat více než 10 hodnot oddělených čárkami
+pro jedno klíčové slovo. (Ve zvlášť složitých případech však
+můžete použít totéž klíčové slovo s dalšími parametry, pokud je
+to podporováno danou setup funkcí ovladače.)
+
+Většinu rozpoznávání lze najít v linux/init/main.c. Jádro nejprve
+hledá speciální parametry jako 'root=', 'nfsroot=', 'nfsaddrs=', 'ro',
+\&'rw', \&'debug' a 'init'. Jejich význam je popsán níže.
+
+Dále pak prochází seznamem setup funkcí (v poli bootsetups), kde
+kontroluje, zda zadaný řetězec (řekněme 'foo') je propojen s funkcí
+('foo_setup()')  pro určitý ovladač či část jádra. Jestliže
+předáte jádru řádek foo=3,4,5,6 tak jádro prohledá pole bootsetups,
+aby zjistilo, zda je řetězec registrován.  Jestliže ano, je zavolána
+funkce k 'foo' přidružená (foo_setup()) a jsou jí předány parametry 3,
+4, 5 a 6 tak, jak se objevily na příkazové řádce.
+
+Cokoli ve tvaru 'foo=bar', co není akceptováno jako parametr, se bude
+interpretovat jako proměnná prostředí, která má být
+nastavena. Příkladem budiž použití 'TERM=vt100' jako zaváděcí
+parametr.
+
+Všechny parametry, které nebyly použity jádrem, ani nebyly použity pro
+nastavení proměnných prostředí, jsou předány procesu jedna jako jeho
+parametry (tímto procesem je obvykle init). Nejobvyklejším takovým
+parametrem je slovo single, které říká programu init, aby nastavil
+jednouživatelský režim a nespouštěl obvyklé démony. Prohlédněte si
+manuálovou stránku o verzi programu init, který máte instalován, abyste
+získali seznam parametrů, které akceptuje.
+.SS "Obecné zaváděcí parametry (nespojené s ovladači)"
+.TP 
+\&\fB'init=...'\fP
+Nastavuje příkaz pro proces jedna, který bude spuštěn po natažení
+jádra.  Jestliže není uvedeno (nebo jej nelze najít), jádro zkusí
+nejprve \fI/sbin/init\fP, potom \fI/etc/init\fP, pak \fI/bin/init\fP, potom
+\fI/bin/sh\fP a vyhlásí kernel panic, selže\-li i poslední varianta.
+.TP 
+\&\fB'nfsaddrs=...'\fP
+Nastavuje zaváděcí adresu pro nfs na daný řetězec. Je použita při
+zavádění ze sítě (net boot).
+.TP 
+\&\fB'nfsroot=...'\fP
+Nastavuje jméno nfs kořenu na daný řetězec. Jestliže řetězec
+nezačíná \&'/' nebo ',' nebo číslicí, pak se před něj připíše
+\&'/tftpboot/'. Toto jméno se použije při zavádění ze sítě.
+.TP 
+\&\fB'no387'\fP
+(Pouze bylo\-li definováno \fBCONFIG_BUGi386\fP.)  Některé čipy koprocesoru
+i387 mají chybu, která se projeví v chráněném režimu
+procesoru. Například, některé z prvních ULSI\-387 mohou kompletně
+zamrznout systém při operacích v pohyblivé řádové čárce. Je\-li
+použit parametr 'no387', pak Linux ignoruje koprocesor, i v případě, že
+jej nalezne. V tomto případě je nutno přeložit jádro s emulací
+koprocesoru!
+.TP 
+\&\fB'no\-hlt'\fP
+(Pouze bylo\-li definováno \fBCONFIG_BUGi386\fP.)  Některé z prvních
+i486DX\-100 mají problémy s instrukcí 'hlt', protože se neumějí vrátit
+do operačního režimu po jejím provedení. Jestliže použijete 'no\-hlt'
+Linux místo instrukce hlt použije nekonečnou smyčku a nebude CPU
+zastavovat. Toto umožňuje použít Linux i majitelům takto chybných
+čipů.
+.TP 
+\&\fB'root=...'\fP
+Tento parametr říká jádru, které zařízení má být použito jako
+kořenový souborový systém pro zavedení systému. Implicitně se tento
+parametr nastavuje v době překladu jádra jako kořenové zařízení, na
+kterém je jádro překládáno. Na překrytí tohoto implicitního
+nastavení na druhou disketovou jednotku použijte 'root=/dev/fd1'.
+(Kořenové zařízení lze nastavit také příkazem \fBrdev\fP(8).)
+
+Kořenové zařízení lze zadat symbolicky nebo číselně. Symbolické
+zadání má tvar /dev/XXYN, kde XX určuje typ zařízení ('hd' pro ST\-506
+kompatibilní harddisk, kde Y je v rozmezí \&'a'\-'d'; 'sd' pro SCSI
+kompatibilní disk, kde Y je mezi 'a'\-'e'; \&'ad' pro Atari ACSI disk, kde Y
+je mezi 'a'\-'e', \&'ez' pro a Syquest EZ135 výměnný disk na paralelním
+portu, kde Y='a', \&'xd' pro XT kompatibilní disk, kde Y je buď 'a' nebo
+\&'b'; 'fd' pro disketu, kde Y číslo disketové jednotky \(em fd0 bude
+DOSová jednotka 'A:', fd1 bude 'B:'), Y je písmeno nebo číslo jednotky a
+N je (desítkové) číslo oblasti na tomto disku (neplatí pro diskety).
+Novější jádra dovolují mnoho jiných typů (nejvíce pro CDROMy: nfs,
+ram, scd, mcd, cdu535, aztcd, cm206cd, gscd, sbpcd, sonycd a bpcd.  (Typ nfs
+určuje síťové zavedení; ram odkazuje na ram disk.)
+
+Poznamenejme, že tato jména nemají nic společného se zařízeními v
+adresáři /dev; to je jen čirá konvence.
+
+Komplikovanější a méně přenositelná specifikace kořenového
+zařízení sestává z čísel zařízení major/minor. (Příklad:
+/dev/sda3 má major 8, minor 3, takže \&'root=0x803' je alternativní
+zápis.)
+.TP 
+\&\fB'ro'\fPa \fB'rw'\fP
+Parametr 'ro' říká jádru, aby připojilo kořenový souborový systém
+pouze pro čtení, takže může proběhnout kontrola konzistence
+souborového systému (pomocí fsck). Žádný proces nemůže na tento
+souborový systém psát dokud není 'pře\-připojen' i pro zápis,
+například příkazem \&'mount \-w \-n \-o remount /'. (Viz také
+\fBmount\fP(8).)
+
+Parametr 'rw' říká jádru, aby připojilo kořenový souborový systém
+pro čtení i zápis; toto je implicitní nastavení.
+
+Parametry rw a ro lze nastavit i pomocí \fBrdev\fP(8).
+.TP 
+\&\fB'reserve=...'\fP
+Ochrana intervalu V/V adres před testováním. Parametry mají tvar:
+.IP
+\fBreserve=\fP\fIiobase,extent[,iobase,extent]...\fP
+.sp
+Na některých počítačích je třeba zakázat ovladačům přístup při
+hledání zařízení (auto\-probing) do vybraného intervalu adres. Tím lze
+obejít zařízení, které špatně reaguje na automatickou detekci, nebo
+lze zabránit nesprávné detekci či identifikaci, nebo dosáhnout
+například zakázání přístupu na zařízení, které nechceme jádrem
+inicializovat.
+
+Parametr reserve určuje rozsah V/V adres, který nemá být procházen při
+hledání. Žádný ovladač nesmí na dané adresy přistupovat, ledaže by
+mu tak bylo explicitně řečeno jiným zaváděcím parametrem.
+
+Například parametry:
+.IP
+reserve=0x300,32 bla=0x300
+.IP
+říkají všem ovladačům, aby, kromě ovladače 'bla', vynechaly adresy
+od 0x300 do 0x31f.
+.TP 
+\&\fB'mem=...'\fP
+Služba BIOSu, daná specifikací PC, je schopna ohlásit nejvýše 64MB
+RAM.  Linux tuto službu používá, aby při startu systému zjistil
+množství instalované paměti. Jestliže máte více 64MB RAM, použijte
+tento parametr pro předání její skutečné velikosti. Hodnotu lze zadat
+desítkově nebo šestnáctkově (s předponou 0x), navíc je možno
+použít přípony 'k' (* 1024) a 'M' (* 1048576). Zde je Linusův
+komentář k parametru \&'mem='.
+
+.in +0.5i
+Jádro bude akceptovat jakoukoli hodnotu parametru 'mem=xx', kterou mu
+podstrčíte. Jestliže mu zalžete, systém dříve nebo později
+zhavaruje.  Tento parametr určuje nejvyšší použitelnou adresu RAM,
+takže například \&'mem=0x1000000' znamená, že máte 16MB RAM. Pro
+počítač s 96MB RAM zadejte 'mem=0x6000000'.
+
+POZOR POZOR POZOR: některé počítače používají vršek paměti pro
+BIOS, takže je možné, že nelze adresovat celých 96MB. Naopak také
+může nastat, že RAM překrytá ROM BIOSem se mapuje za fyzický konec
+paměti; pak byste měli poslední přístupnou adresu na 96MB+
+384kB. Jestliže řeknete Linuxu, že má více paměti, než je
+skutečnost, systém zhavaruje. Možná ne hned, ale nakonec určitě.
+.in
+
+Můžete také použít parametr 'mem=nopentium' k vypnutí 4 MB pagetables
+pro jádra nakonfigurovaná pro IA32 systémy s procesorem pentium či
+novějším.
+.TP 
+\&\fB'panic=N'\fP
+Nastane\-li kernel panic, systém se implicitně nebude pokoušet znovu
+startovat, nastavíte\-li však tento parametr, pak bude jádro znovu
+startovat po uplynutí N vteřin (je\-li N > 0). Toto lze nastavit také
+pomocí "echo N > /proc/sys/kernel/panic".
+.TP 
+\&\fB'reboot=[warm|cold][,[bios|hard]]'\fP
+(Pouze bylo\-li definováno \fBCONFIG_BUGi386\fP.)  Od verze 2.0.22 je reboot
+implicitně studeným startem. Chcete\-li použít starší implicitní
+chování, použijte 'reboot=warm'. (Studený start může být vyžadován
+pro reset nějakého hardware, naproti tomu může zničit ještě
+nezapsaná data z vyrovnávací paměti. Teplý start může být
+rychlejší.) Implicitně je reboot typu hard (řadič klávesnice je
+požádán o vygenerování signálu RESET, nicméně existuje nejméně
+jeden motherboard, kde toto nefunguje. Pak je nutno použít variantu
+\&'reboot=bios', která místo toho požádá BIOS o reboot.
+.TP 
+\&\fB'nosmp'"\fPa \fB'maxcpus=N'\fP
+(Pouze je\-li definováno __SMP__.)  Parametr 'nosmp' či 'maxcpus=0'
+zakáže podporu více procesorů; parametr \&'maxcpus=N' omezí počet
+aktivních procesorů na N.
+.SS "Parametry pro vývojáře jádra"
+.TP 
+\&\fB'debug'\fP
+Zprávy od jádra jsou posílány démonu klogd a tak mohou být
+zaznamenány na disk. Zprávy s prioritou větší než \fIconsole_loglevel\fP
+jsou současně poslány na konzolu. (Definice priorit viz
+\fI<linux/kernel.h>\fP.)  Implicitně je tato proměnná nastavena tak,
+aby zapisovala na disk cokoli důležitějšího než jsou trasovací
+zprávy (debug). Tento parametr způsobí, že budou zaznamenány i zprávy
+s prioritou DEBUG.  Toto nastavení lze rovněž měnit za běhu systému
+pomocí parametru pro \fBklogd\fP(8).
+.TP 
+\&\fB'profile=N'\fP
+Je možno zapnout tzv. kernel profiling, jestliže chceme zjistit, kde
+jádro spotřebovává čas CPU. Profiling je zapnut nastavením proměnné
+\fIprof_shift\fP na nenulovou hodnotu. Toho lze dosáhnout buď nastavením
+\fBCONFIG_PROFILE\fP při překladu jádra nebo parametrem
+\&'profile='. Povšimněte si, že hodnota \fIprof_shift\fP bude buďto zadaná
+hodnota nebo hodnota proměnné prostředí \fBCONFIG_PROFILE_SHIFT\fP (je\-li
+nastavena) nebo implicitně 2. Význam této hodnoty je přesnost takového
+počítání: každý takt (pokud je CPU aktivní v jádře)  zvětšuje
+počítadlo:
+.IP
+profile[address >> prof_shift]++;
+.sp
+Neupravenou informaci o profilingu lze za běhu získat čtením
+\fI/proc/profile\fP.  Pro porozumění této informaci lze použít například
+readprofile.c.  Zápis do \fI/proc/profile\fP vynuluje počítadla.
+.TP 
+\&\fB'swap=N1,N2,N3,N4,N5,N6,N7,N8'\fP
+Nastaví parametry pro algoritmy swapu (virtuální paměťi). Hodnoty jsou
+přiřazeny po řadě jako max_page_age, page_advance, page_decline,
+page_initial_age, age_cluster_fract, age_cluster_min, pageout_weight,
+bufferout_weight. Využitelné jen pro vývojáře nebo testery jádra.
+.TP 
+\&\fB'buff=N1,N2,N3,N4,N5,N6'\fP
+Nastaví parametry pro vyrovnávací paměť jádra. Hodnoty jsou
+přiřazeny po řadě jako max_buff_age, buff_advance, buff_decline,
+buff_initial_age, bufferout_weight, buffermem_grace. Využitelné jen pro
+vývojáře nebo testery jádra.
+.SS "Parametry pro využití ramdisku"
+(Pouze je\-li jádro přeloženo s \fBCONFIG_BLK_DEV_RAM\fP.)  Obecně není
+dobrý nápad používat ramdisk pod Linuxem \(em systém umí využít
+volnou paměť daleko efektivněji. Na druhou stranu při startu (nebo při
+vytváření zaváděcích disket) bývá výhodné nahrát obsah diskety do
+ramdisku. Dále muže být vyžadováno, aby některé moduly byly nahrány
+do jádra předtím, než se poprvé přistoupí na hlavní disk.
+
+Ve verzi jádra 1.3.48 se významně změnila implementace
+ramdisku. Předtím byla paměť alokována staticky (jako parametr
+\&'ramdisk=N'; toto lze nastavit při překladu nebo pomocí \fBrdev\fP(8).)
+Nyní používá ramdisk vyrovnávací paměť a jeho velikost se mění
+podle potřeby.  Pro podrobnější informace (např. jak použít
+\fBrdev\fP(8)  v rámci nového chování ramdisku) viz
+\fI/usr/src/linux/Documentation/ramdisk.txt\fP.
+
+Jsou zde čtyři parametry, dvě logické hodnoty a dvě celá čísla.
+.TP 
+\&\fB'load_ramdisk=N'\fP
+Jestliže je N=1, nahraj ramdisk, jestliže N=0, nenahrávej jej (toto je
+implicitní nastavení).
+.TP 
+\&\fB'prompt_ramdisk=N'\fP
+Pro N=1, jádro požádá o vložení diskety (implicitní nastavení).  Pro
+N=0 jádro o nic nežádá. (tento parametr není nikdy potřeba)
+.TP 
+\&\fB'ramdisk_size=N'"\fPnebo \fB(zastaralé)\fP'ramdisk=N'
+Nastaví maximální velikost ramdisku(ů) na N kB. Implicitně 4096 (4 MB).
+.TP 
+\&\fB'ramdisk_start=N'\fP
+Nastaví číslo počátečního bloku (offset na disketě odkud bude
+ramdisk nahráván) na N.  Toto má význam například pokud tatáž
+disketa obsahuje jak jádro tak ramdisk.
+.TP 
+\&\fB'noinitrd'\fP
+(Pouze je\-li jádro přeloženo s \fBCONFIG_BLK_DEV_RAM\fP a
+\fBCONFIG_BLK_DEV_INITRD\fP.)  Nyní je možno přeložit jádro s podporou
+initrd. Jestliže je tato varianta povolena, při startu systému se nahraje
+jak jádro tak iniciální ramdisk, který jádro poté změní na
+\&'normální' ramdisk připojený pro čtení i zápis jako kořenový
+svazek. Poté je je spuštěn program /linuxrc; nato je připojen skutečný
+kořenový svazek a initrd je připojeno jako /initrd; nakonec je
+aktivována obvyklá posloupnost zavádění (tj. spuštění /sbin/init).
+
+Pro podrobnější informaci viz \fI/usr/src/linux/Documentation/initrd.txt\fP.
+
+Parametr 'noinitrd' zakazuje použití initrd i v případě, že jádro
+bylo přeloženou s podporou initrd. Data z initrd jsou přístupná přes
+\fI/dev/initrd\fP.  (Toto zařízení může být použito jen jednou: data
+jsou uvolněna z paměti, jakmile poslední proces uzavře \fI/dev/initrd\fP.)
+.SS "Zaváděcí parametry pro zařízení SCSI"
+Notace použitá v této sekci:
+
+\fIiobase\fP \-\- první V/V port použitý SCSI adaptérem. Jsou uváděny v
+šestnáctkové soustavě, obvykle leží v intervalu od 0x200 do 0x3ff.
+
+\fIirq\fP \-\- číslo přerušení, která je nastaveno při konfiguraci karty.
+Správné hodnoty závisí na typu karty, obvykle se jedná o jednu z hodnot
+5, 7, 9, 10, 11, 12 a 15. Ostatní hodnoty jsou použity jinými obvyklými
+zařízeními jako IDE disky, diskety, sériové porty aj.
+
+\fIscsi\-id\fP \-\- ID, kterým se SCSI zařízení jednoznačně identifikuje v
+rámci jedné SCSI sběrnice. Pouze některé karty povolují tuto hodnotu
+nastavit, ostatní ji mají permanentně nastavenou bez možnosti
+změny. Obvyklá hodnota je 7, ale například karty Seagate and Future
+Domain TMC\-950 používají 6.
+
+\fIparity\fP \-\- zda SCSI adaptér očekává, že připojená zařízení
+používají paritu při komunikaci. Nastavení parametru na jedna kontrolu
+parity povolí, nula ji zakáže. Opět, ne všechny adaptéry povolují
+toto nastavit jako parametr.
+.TP 
+\&\fB'max_scsi_luns=...'\fP
+Každé SCSI zařízení může vnitřně obsahovat několik
+\&'podzařízení'. Jako příklad uveďme některou z novějších SCSI
+CD\-ROM, které jsou schopny pracovat s několika disky najednou. Každý
+jednotlivý disk je pak adresován jako 'Logical Unit Number' (LUN \- číslo
+logické jednotky) pro dané SCSI zařízení. Na druhou stranu, drtivá
+většina zařízení (např. pevné disky nebo pásky) mají jenom jeden
+LUN, který má hodnotu LUN 0.
+
+Některá špatně navržená SCSI zařízení nejsou schopna pracovat jako
+jednotky s nenulovým LUN. Jestliže není při překladu jádra nastaveno
+\fBCONFIG_SCSI_MULTI_LUN\fP, pak bude jádro při startu testovat pouze LUN=0.
+
+Pomocí parametru 'max_scsi_luns=n' lze při startu nastavit, kolik LUN se
+má testovat. Povolené hodnoty jsou od jedné do osmi. Hodnota n=1 zakazuje
+zkoušet jiné LUN než 0.
+.TP 
+\fBNastavení SCSI pásky\fP
+Některé parametry pro SCSI páskový ovladač lze zadat následovně:
+.IP
+\fBst=\fP\fIbuf_size[,write_threshold[,max_bufs]]\fP
+.sp
+První dvě čísla jsou hodnoty v kB. Implicitní hodnota \fIbuf_size\fP je
+32kB, přičemž maximální hodnota, kterou lze zadat je až 16384kB.
+\fIwrite_threshold\fP je prahová hodnota obsazení vyrovnávací paměti pro
+provedení zápisu na pásku, implicitně je nastavena na 30kB. Hodnota
+\fImax_bufs\fP určuje největší povolený počet vyrovnávacích pamětí
+pro dané zařízení (implicitní hodnota je dvě).  Příklad:
+.IP
+st=32,30,2
+.IP
+Podrobnosti jsou uvedeny v souboru \fIDocumentation/scsi/st.txt\fP (nebo v
+případě starších jader \fIdrivers/scsi/README.st\fP)  ve zdrojovém kódu
+jádra.
+.TP 
+\fBNastavení Adaptecu aha151x, aha152x, aic6260, aic6360, SB16\-SCSI\fP
+Čísla za aha odpovídají kartám, kdežto aic určují typ SCSI čipu
+(včetně SoundBlaster\-16 SCSI).
+
+Testovací kód pro tyto adaptéry hledá nainstalovaný BIOS, a není\-li
+nalezen, pak není nalezena ani karta. Zaváděcí parametry mají tuto
+formu:
+.IP
+\fBaha152x=\fP\fIiobase[,irq[,scsi\-id[,reconnect[,parity]]]]\fP
+.IP
+Jestliže je ovladač přeložen s povoleným laděním, šestý parametr
+určuje úroveň výpisu hlášení (debug_level).
+
+Všechny tyto parametry jsou popsány na začátku této sekce, navíc
+parametr \fIreconnect\fP povoluje použít SCSI příkazy disconnect/reconnect,
+má\-li tento parametr nenulovou hodnotu. Příklad použití:
+.IP
+aha152x=0x340,11,7,1
+.IP
+Pořadí parametrů je závazné, chcete\-li nastavit paritu, musíte také
+nastavit iobase, irq, scsi\-id a reconnect.
+.TP 
+\fBNastavení Adaptecu aha154x\fP
+Série aha1542 obsahují na desce disketový řadič i82077, zatímco
+aha1540 nikoli. Toto jsou karty jsou tzv. busmastering (řízení přístupu
+ke sběrnici)  a jejich parametry jsou určeny k zadaní pravidel pro
+používání sběrnice.  Parametry:
+.IP
+\fBaha1542=\fP\fIiobase[,buson,busoff[,dmaspeed]]\fP
+.IP
+Povolené hodnoty iobase jsou: 0x130, 0x134, 0x230, 0x234, 0x330,
+0x334. Klony mohou používat i jiné hodnoty.
+
+Hodnoty \fIbuson\fP, \fIbusoff\fP určují dobu v mikrosekundách, po kterou karta
+ovládá sběrnici ISA. Implicitně je nastaveno buson 11us a busof 4us,
+takže i jiné karty (např. ISA LANCE Ethernet card) mají možnost k ISA
+sběrnici přistupovat.
+
+Hodnota \fIdmaspeed\fP určuje rychlost (v MB/s), kterou smí DMA (Direct
+Memory Access \- přímý přístup do paměti bez použití CPU)
+přistupovat do paměti. Implicitně je to 5MB/s.  Novější varianty lze
+nastavit softwarově, starší mají jumpery. Povoleny jsou hodnoty až do
+10MB/s (předpokládejme, že jej váš motherboard zvládne), nicméně s
+hodnotami nad 5 MB/s experimentujte opatrně.
+.TP 
+\fBNastavení Adaptecu aha274x, aha284x, aic7xxx\fP
+Tyto karty akceptují parametry v následující formě:
+.IP
+\fBaic7xxx=\fP\fIextended,no_reset\fP
+.IP
+Nenulová hodnota \fIextended\fP indikuje, že je povolen rozšířený
+překlad adres pro větší disky. Nenulová hodnota \fIno_reset\fP signalizuje
+adaptéru, aby neresetoval SCSI sběrnici při startu systému.
+.TP 
+\fBNastavení AdvanSys SCSI ('advansys=')\fP
+Ovladač AdvanSys akceptuje nejvýše čtyři v/v adresy, na kterých bude
+hledat kartu AdvanSys. Tyto hodnoty se použijí pro vyhledávání na
+sběrnicích ISA a VLB, nemají tedy žádný vliv na hledání na
+sběrnicích EISA nebo PCI.  Jestliže byl ovladač přeložen pro ladění,
+lze zadat ještě další parametr ve tvaru 0xdeb, kde deb je z intervalu
+0\-f a nastavuje úroveň (množství zpráv).
+.TP 
+\fBAM53C974\fP
+.IP
+\fBAM53C974=\fP\fIhost\-scsi\-id,target\-scsi\-id,max\-rate,max\-offset\fP
+.TP 
+\fBNastavení BusLogic SCSI ('BusLogic=')\fP
+.IP
+\fBBusLogic=\fP\fIN1,N2,N3,N4,N5,S1,S2,...\fP
+.IP
+Pro vyčerpávající popis nastavení karty BusLogic viz
+\fI/usr/src/linux/drivers/scsi/BusLogic.c\fP.  Níže uvedený text je jen jeho
+velmi zkrácený výtah.
+
+Parametry N1 \- N5 jsou celá čísle, S1, ... jsou řetězce.  N1 je V/V
+adresa, na které se karta nachází.  N2 je 'Tagged Queue Depth' pro
+zařízení, které tuto funkci podporují.  N3 je 'bus settle time' ve
+vteřinách. (doba, kterou má adaptér čekat po resetování sběrnice
+před vysláním prvního příkazu.)  N4 je lokální nastavení (pro tento
+adaptér).  N5 je globální nastavení (pro všechny adaptéry).
+
+Řetězcové parametry jsou použity pro řízení Tagged Queuing
+(TQ:Default, TQ:Enable, TQ:Disable, TQ:<Per\-Target\-Spec>), pro Error
+Recovery (ER:Default, ER:HardReset, ER:BusDeviceReset, ER:None,
+ER:<Per\-Target\-Spec>), a pro způsob vyhledávání adaptéru
+(NoProbe, NoProbeISA, NoSortPCI).
+.TP 
+\fBNastavení EATA/DMA\fP
+Implicitní seznam v/v portů pro hledání lze změnit pomocí
+.IP
+\fBeata=\fP\fIiobase,iobase,...\fP\fB.\fP
+.TP 
+\fBNastavení Future Domain TMC\-16x0\fP
+.IP
+\fBfdomain=\fP\fIiobase,irq[,adapter_id]\fP
+.TP 
+\fBNastavení Great Valley Products (GVP) SCSI řadiče\fP
+.IP
+\fBgvp11=\fP\fIdma_transfer_bitmask\fP
+.TP 
+\fBNastavení Future Domain TMC\-8xx, TMC\-950\fP
+.IP
+\fBtmc8xx=\fP\fImem_base,irq\fP
+.IP
+Hodnota \fImem_base\fP je adresou, kam se mapuje v/v oblast, kterou tento
+adaptér používá.  Obvykle jedna z hodnot: 0xc8000, 0xca000, 0xcc000,
+0xce000, 0xdc000, 0xde000.
+.TP 
+\fBNastavení IN2000\fP
+.IP
+\fBin2000=\fP\fIS\fP
+.IP
+kde S je čárkou oddělovaný seznam ve tvaru klíčové_slovo[:hodnota].
+Rozpoznávaná slova jsou ioport:addr, noreset, nosync:x, period:ns,
+disconnect:x, debug:x, proc:x. Pro vysvětlení viz
+\fI/usr/src/linux/drivers/scsi/in2000.c\fP.
+.TP 
+\fBNastavení NCR5380 and NCR53C400\fP
+Parametry mají tvar:
+.IP
+\fBncr5380=\fP\fIiobase,irq,dma\fP
+.IP
+nebo
+.IP
+\fBncr53c400=\fP\fIiobase,irq\fP
+.IP
+Jestliže adaptér nepoužívá přerušení, pak hodnota IRQ 255 (0xff)
+zakáže přerušení. Hodnota 254 znamená automatickou detekci.
+Podrobnosti jsou uvedeny v souboru \fIDocumentation/scsi/g_NCR5380.txt\fP (nebo
+v případě starších jader \fIdrivers/scsi/README.g_NCR5380\fP)  ve
+zdrojovém kódu jádra.
+.TP 
+\fBNastavení NCR53C8xx\fP
+.IP
+\fBncr53c8xx=\fP\fIS\fP
+.IP
+kde S je čárkou oddělovaný seznam ve tvaru klíčové_slovo[:hodnota].
+Rozpoznávaná slova jsou: mpar (master_parity), spar (scsi_parity), disc
+(disconnection), specf (special_features), ultra (ultra_scsi), fsn
+(force_sync_nego), tags (default_tags), sync (default_sync), verb (verbose),
+debug (debug), burst (burst_max).  Blíže viz
+\fI/usr/src/linux/drivers/scsi/ncr53c8xx.c\fP.
+.TP 
+\fBNastavení NCR53c406a\fP
+.IP
+\fBncr53c406a=\fP\fIiobase[,irq[,fastpio]]\fP
+.IP
+Irq = 0 pro režim bez použití přerušení. Fastpio = 1 pro rychlý pio
+režim, 0 pro pomalý.
+.TP 
+\fBNastavení Pro Audio Spectrum\fP
+PAS16 používá čip NC5380 SCSI, přičemž novější modely podporují
+softwarové nastavení. Parametry mají tvar:
+.IP
+\fBpas16=\fP\fIiobase,irq\fP
+.IP
+Jediným neobvyklým nastavením může být hodnota IRQ 255, což zakáže
+adaptéru používat přerušení (s pochopitelnou ztrátou výkonnosti).
+Hodnota iobase je obvykle 0x388.
+.TP 
+\fBNastavení Seagate ST\-0x\fP
+Jestliže není adaptér automaticky rozpoznán při startu, je třeba zadat
+parametry ve tvaru:
+.IP
+\fBst0x=\fP\fImem_base,irq\fP
+.IP
+Hodnota \fImem_base\fP je adresou, kam se mapuje v/v oblast, kterou tento
+adaptér používá.  Obvykle jedna z hodnot: 0xc8000, 0xca000, 0xcc000,
+0xce000, 0xdc000, 0xde000.
+.TP 
+\fBNastavení Trantor T128\fP
+Tento adaptér je založen na čipu NCR5380 a akceptuje tyto parametry:
+.IP
+\fBt128=\fP\fImem_base,irq\fP
+.IP
+Povolené hodnoty pro \fImem_base\fP jsou: 0xcc000, 0xc8000, 0xdc000, 0xd8000.
+.TP 
+\fBNastavení UltraStor 14F/34F\fP
+Implicitní seznam v/v portů pro hledání lze změnit pomocí
+.IP
+\fBeata=\fP\fIiobase,iobase,...\fP\fB.\fP
+.TP 
+\fBNastavení WD7000\fP
+.IP
+\fBwd7000=\fP\fIirq,dma,iobase\fP
+.TP 
+\fBNastavení řadiče Commodore Amiga A2091/590\fP
+.IP
+\fBwd33c93=\fP\fIS\fP
+.IP
+kde S je seznam parametrů oddělených čárkami. Rozpoznávané hodnoty
+jsou: nosync:bitmask, nodma:x, period:ns, disconnect:x, debug:x, clock:x,
+next. Viz také \fI/usr/src/linux/drivers/scsi/wd33c93.c\fP.
+.SS "Pevné disky"
+.TP 
+\fBParametry pro IDE Disky/CD\-ROM\fP
+Ovladač IDE akceptuje řadu parametrů, od geometrie disku až po
+obcházení chyb specifických zařízení. Specifické parametry jsou
+zadány pomocí \&'hdX=' kde X je v intervalu 'a'\-'h'.
+
+Parametry společné několika zařízením mají prefix 'hd='. Kombinace
+obou způsobů zadávání funguje podle očekávání.
+
+Poznamenejme, že parametr \&'hd=' může ve skutečnosti odkazovat na
+následující disk v seznamu (a, ..., h). Podrobnosti jsou uvedeny v
+souboru \fIDocumentation/ide.txt\fP (nebo v případě starších jader
+\fIdrivers/block/README.ide\fP)  ve zdrojovém kódu jádra.
+.TP 
+\fBParametry 'hd=cyls,heads,sects[,wpcom[,irq]]'\fP
+Specifikace fyzické geometrie disku. Pouze první tři parametry jsou
+povinné. Stopa/hlava/sektory jsou ty, které používá program fdisk.
+Hodnota wcomp (předkompenzace pro zápis) se pro IDE disky
+nevyužívá. IRQ je hodnota přerušení pro ovladač, na nějž je
+zařízení připojeno. (Toto není parametr specifický pro disk.)
+.TP 
+\fBParametr 'hd=serialize'\fP
+Dvojité IDE rozhraní CMD\-640 obsahuje chybu, která může za určitých
+okolností (na obě rozhraní se používají v tutéž chvíli) může
+zničit vaše data. Tento parametr říká, že požadavky na obě rozhraní
+se budou řadit do fronty, a tedy nikdy nebudou oslovena najednou obě
+rozhraní.
+.TP 
+\fBParametr 'hd=dtc2278'\fP
+Tento parametr říká jádru, že máte rozhraní DTC\-2278D. Ovladač se
+poté pokusí použít specifické příkazy pro povolení druhého IDE
+rozhraní a rychlejšího modu přenosu dat.
+.TP 
+\fBParametr 'hd=noprobe'\fP
+Netestuj dané zařízení. Např.
+.IP
+hdb=noprobe hdb=1166,7,17
+.IP
+zakáže testování, ale nastaví geometrii, a tak je toto zařízení
+stane použitelné pro operační systém.
+.TP 
+\fBParametr 'hd=nowerr'\fP
+Některá zařízení mají chybně stále nastavený příznak
+\fBWRERR_STAT\fP.  Tento parametr povoluje obejití této chyby.
+.TP 
+\fBParametr 'hd=cdrom'\fP
+Tento parametr říká, že namísto disku je připojena ATAPI
+CD\-ROM. Obvykle je CD\-ROM detekována a rozpoznána automaticky, ale v
+případě že se tak nestalo, toto je možná pomoc.
+.TP 
+\fBStandardní parametry pro ST\-506 Disk Driver ('hd=')\fP
+Standardní ovladač akceptuje geometrii podobně jako IDE driver;
+očekává však přesně tři hodnoty (Stopa/Hlava/Sektory), v případě
+jiného počtu vás potichu ignoruje.  Navíc rozumí pouze 'hd=' jako
+parametru, tedy 'hda=' není povolený zápis. Formát:
+.IP
+hd=cyls,heads,sects
+.IP
+Jestliže máte instalovány dva disky, opakujte parametry pro druhý disk.
+.TP 
+\fBParametry pro XT Disk Driver ('xd=')\fP
+Jste\-li jeden z těch nešťastníků, který používá tuto starou
+8\-bitovou kartu, která přenáší data 125kB/s, toto je příběh pro
+vás. Pokud není vaše karta rozpoznána automaticky, je třeba zadat tyto
+parametry:
+.IP
+xd=type,irq,iobase,dma_chan
+.IP
+.\" 1.1.50, 1.3.81, 1.3.99, 2.0.34, 2.1.67, 2.1.78, 2.1.127
+Hodnota type je specifická pro výrobce, překrývající autodetekci (viz
+zdrojový kód jádra \fIdrivers/block/xd.c\fP).  Hodnota type je index seznamu
+\fIxd_sigs\fP a v průběhu času byly typy přidávány a ubírány, takže se
+všechna čísla měnila.  Dnes (Linux 2.5.0) jsou typy 0=generic; 1=DTC
+5150cx; 22,3=DTC 5150x; 4,5=Western Digital; 6,7,8=Seagate; 9=Omti;
+10=XEBEC.
+
+Funkce xd_setup() tyto hodnoty nekontroluje a navíc předpokládá, že
+jste zadali všechny čtyři. Zde je příklad pro řadič WD1002 se
+zakázaným BIOSem a s implicitními parametry:
+.IP
+xd=2,5,0x320,3
+.TP 
+\fBVýměnné disky Syquest's EZ*\fP
+.IP
+\fBez=\fP\fIiobase[,irq[,rep[,nybble]]]\fP
+.SS "ZAŘÍZENÍ IBM MCA BUS"
+Viz \fI/usr/src/linux/Documentation/mca.txt\fP.
+.TP 
+\fBPevné disky PS/2 ESDI\fP
+V době startování je možné zadat geometrii:
+.IP
+\fBed=\fP\fIcyls,heads,sectors.\fP
+.IP
+Pro Think\-Pad, přidejte parametr
+.IP
+\fBtp720=1\fP.
+.TP 
+\fBNastavení IBM Microchannel SCSI Subsystem\fP
+.IP
+\fBibmmcascsi=\fP\fIN\fP
+.IP
+kde N je \fIpun\fP (SCSI ID) daného subsystému.
+.TP 
+\fBRozhraní Aztech\fP
+Syntaxe pro tento typ adaptérů je:
+.IP
+aztcd=iobase[,magic_number]
+.IP
+Jestliže nastavíte magic_number na 0x79, pak ovladač vyzkouší a spustí
+se i v případě, že nepozná verzi firmware. Jiné hodnoty jsou
+ignorovány.
+.TP 
+\fBCD\-ROMy přes paralelní port\fP
+Syntaxe:
+.IP
+pcd.driveN=prt,pro,uni,mod,slv,dly
+.br
+pcd.nice=nice
+.IP
+kde 'port' je základní adresou, 'pro' je číslo protokolu, 'uni' slouží
+k výběru jednotky (pro zřetězená zařízení), 'mod' je mód (nebo \-1
+pro automatický výběr nejlepšího), 'slv' je 1 pokud má být slave, a
+\&'dly' je small integer pro zpomalení přístupu na porty. Parametr \&'nice'
+ovládá využívání volného času CPU ovladačem, zčásti na úkor
+rychlosti.
+.TP 
+\fBCDU\-31A and CDU\-33A Sony Interface\fP
+Toto rozhraní je na některých zvukových kartách Pro Audio Spectrum a na
+ostatních rozhraních formy Sony. Syntaxe:
+.IP
+cdu31a=iobase,[irq[,is_pas_card]]
+.IP
+Zadáním hodnoty IRQ 0 zakazujete použití přerušení (některé PAS
+karty je nepodporují). Jestliže vaše karta přerušení podporuje, měli
+byste jej využívat, protože snižuje zatížení CPU ovladačem.
+
+Hodnota \fIis_pas_card\fP má být pouze 'PAS', jestliže používáte kartu
+Pro Audio Spectrum, jinak nesmí být zadáno nic.
+.TP 
+\fBCDU\-535 Sony Interface\fP
+Syntaxe pro toto CD\-ROM rozhraní je:
+.IP
+sonycd535=iobase[,irq]
+.IP
+Je možno použít 0 jako implicitní hodnotu pro iobase, jestliže chcete
+zadat pouze IRQ.
+.TP 
+\fBRozhraní GoldStar\fP
+Syntaxe pro toto CD\-ROM rozhraní je:
+.IP
+gscd=iobase
+.TP 
+\fBRozhraní ISP16 CD\-ROM\fP
+Syntaxe:
+.IP
+isp16=[iobase[,irq[,dma[,type]]]]
+.IP
+(tři čísla a řetězec). Je\-li zadán jako 'noisp16', rozhraní nebude
+konfigurováno. Ostatní povolené hodnoty": 'Sanyo", 'Sony', 'Panasonic' a
+\&'Mitsumi'.
+.TP 
+\fBRozhraní Mitsumi\fP
+Syntaxe pro toto CD\-ROM rozhraní je:
+.IP
+mcd=iobase,[irq[,wait_value]]
+.IP
+Hodnota \fIwait_value\fP je použita jako interní timeout pro ty, kteří
+mají problémy s jejich mechanikou (její použití lze povolit i zakázat
+při překladu jádra).  Mitsumi FX\-400 je IDE/ATAPI CD\-ROM, který
+nepoužívá ovladač mcd.
+.TP 
+\fBRozhraní Mitsumi XA/MultiSession\fP
+Toto je tentýž hardware jako výše, ale ovladač má některá
+rozšíření.  Syntaxe:
+.IP
+mcdx=iobase[,irq]
+.TP 
+\fBRozhraní Optics Storage\fP
+Syntaxe pro tento typ adaptérů je:
+.IP
+optcd=iobase
+.TP 
+\fBRozhraní Phillips CM206\fP
+Syntaxe pro tento typ adaptérů je:
+.IP
+cm206=[iobase][,irq]
+.IP
+Ovladač předpokládá hodnoty mezi 3 a11 jako hodnoty IRQ a čísla mezi
+0x300 a 0x370 jako adresy v/v portů, takže lze zadat jednu či obě
+hodnoty v jakémkoli pořadí. Také lze napsat 'cm206=auto' pro autoprobe.
+.TP 
+\fBRozhraní Sanyo\fP
+Syntaxe pro tento typ adaptérů je:
+.IP
+sjcd=iobase[,irq[,dma_channel]]
+.TP 
+\fBRozhraní SoundBlaster Pro\fP
+Syntaxe pro tento typ adaptérů je:
+.IP
+sbpcd=iobase,type
+.IP
+kde typ je jeden z následujících (rozlišují se velká a malá
+písmena): \&'SoundBlaster', 'LaserMate', or 'SPEA'. Hodnota iobase je ta,
+která patří k rozhraní, nikoli ta pro zvukovou kartu.
+.SS Ethernet
+Různé ovladače mají různé parametry, ale obecně mají všechny IRQ,
+V/V adresu a jméno. Takže základní forma parametrů je:
+.IP
+ether=irq,iobase[,param_1[,...param_8]],name
+.IP
+První nečíselný parametr je chápán jako jméno. Hodnoty param_n
+(jsou\-li použity) mají různý význam pro různé adaptéry. Typicky
+určují adresu sdílené paměti, výběr rozhraní, kanál DMA aj.
+
+Obvykle se používá tento parametr pro autoprobe druhé síťově karty
+(implicitně se hledá jen první):
+.IP
+ether=0,0,eth1
+.IP
+Poznamenejme, že hodnoty 0 pro IRQ a iobase nutí ovladače k autodetekci.
+
+Dokument Ethernet\-HOWTO poskytuje dokumentaci a informace o tom, jak
+používat více síťových karet a také popis jednotlivých param_n pro
+různé adaptéry.
+.SS "Ovladač pro řadič disketové jednotky"
+Ovladač pro diskety má mnoho parametrů, všechny jsou zmíněny v
+\fIDocumentation/floppy.txt\fP (nebo v případě starších jader
+\fIdrivers/block/README.fd\fP)  ve zdrojovém kódu jádra.  Tato informace
+pochází přímo odtud.
+.TP 
+\fBfloppy=mask,allowed_drive_mask\fP
+Nastavuje bitovou masku povolených jednotek. Implicitně jsou povoleny
+jednotky 0 a 1 na každém ovladači. Důvodem je, že některé
+nestandardní motherboardy (ASUS PCI) posílají signály chybně do
+klávesnice jestliže se přistupuje na jednotky 2 a 3. Tento parametr je
+částečně překryt parametrem cmos.
+.TP 
+\fBfloppy=all_drives\fP
+Povoluje hledání všech jednotek. Použijte, máte\-li více než dvě
+floppy jednotky.
+.TP 
+\fBfloppy=asus_pci\fP
+Nastavuje prohledávání na jednotky 0 a 1 (implicitní nastavení).
+.TP 
+\fBfloppy=daring\fP
+Říká ovladači, že máte kvalitní řadič, což dovoluje
+efektivnější a plynulejší činnost, ale na některých řadičích
+může havarovat. Může zrychlit funkci jednotky.
+.TP 
+[přibližně] \fBfloppy=daring\fP
+Říká ovladači, že nemáte 'daring' řadič (viz výše).
+.TP 
+\fBfloppy=one_fdc\fP
+Sděluje ovladači, že máte jen jeden floppy řadič (implicitní
+nastavení).
+.TP 
+\fBfloppy=two_fdc"\fPnebo \fBfloppy=adresa,two_fdc\fP
+Sděluje ovladači, že máte dva řadiče. O druhém se předpokládá, že
+je na adrese adresa, není\-li zadána, vezme se 0x370.
+.TP 
+\fBfloppy=thinkpad\fP
+Sděluje ovladači, že máte Thinkpad (ten používá obrácenou konvenci
+pro signál diskchange).
+.TP 
+[přibližně] \fBfloppy=thinkpad\fP
+Sděluje ovladači, že nemáte Thinkpad.
+.TP 
+\fBfloppy=drive,type,cmos\fP
+Nastavuje cmos typ jednotky. Navíc povolí tuto jednotku v masce. To je
+výhodné, máte\-li více než dvě jednotky (do cmos lze napsat pouze dvě)
+nebo používá\-li váš BIOS nestandardní CMOS typ. Zadáte\-li hodnotu
+cmos jako 0, pak se skutečná hodnota přečte z CMOS.
+.TP 
+\fBfloppy=unexpected_interrupts\fP
+Vypiš varování, je\-li zachyceno neočekávané přerušení
+(implicitně).
+.TP 
+\fBfloppy=no_unexpected_interrupts"\fPnebo \fBfloppy=L40SX\fP
+Nevypisuje nic při neočekávaném přerušení. Toto je požadováno
+např. pro laptop IBM L40SX v některých videomódech (vypadá to jako
+interakce mezi řadičem video a řadičem disket). Tato přerušení lze
+ignorovat, mají vliv pouze na rychlost.
+.SS "Ovladač zvukových karet"
+I ovladač zvukové karty akceptuje startovací parametry pro překrytí
+implicitních hodnot. Není to však doporučováno, protože se jedná o
+nastavení poměrně komplexní a složité. Popis lze najít v souboru
+\fIDocumentation/sound/oss/README.OSS\fP ve zdrojovém kódu jádra
+(\fIdrivers/sound/Readme.linux\fP ve starších verzích).  Akceptuje parametry
+ve tvaru:
+.IP
+sound=device1[,device2[,device3...[,device10]]]
+.IP
+kde každá hodnota deviceN má tvar 0xTaaaId"
+
+T \- typ zařízení: 1=FM, 2=SB, 3=PAS, 4=GUS, 5=MPU401, 6=SB16,
+7=SB16\-MPU401
+
+aaa \- V/V adresa (šestnáctkově).
+
+I \- IRQ šestnáctkově (tj. 10=a, 11=b, ...)
+
+d \- kanál DMA.
+
+Jak vidíte, je to poměrně zmatečné, takže lepší přeložit jádro s
+konkrétními hodnotami. Parametr ve tvaru \&'sound=0' zakáže použití
+zvukové karty.
+.SS "Ovladače ISDN"
+.TP 
+\fBOvladač ICN ISDN\fP
+Syntaxe:
+.IP
+icn=iobase,membase,icn_id1,icn_id2
+.IP
+kde icn_id1 a icn_id2 jsou dva řetězce, které budou kartu identifikovat v
+hlášeních jádra.
+.TP 
+\fBOvladač PCBIT ISDN\fP
+Syntaxe:
+.IP
+pcbit=membase1,irq1[,membase2,irq2]
+.IP
+kde membaseN je sdílená paměť N\-té karty a irqN je její IRQ
+nastavení.  Implicitně je IRQ 5 a membase 0xD0000.
+.TP 
+\fBOvladač Teles ISDN\fP
+Syntaxe:
+.IP
+teles=iobase,irq,membase,protocol,teles_id
+.IP
+kde iobase je v/v adresa karty, membase adresa její sdílené paměti, irq
+číslo přerušení a teles_id je jednoznačný ASCII identifikátor.
+.SS "Ovladač sériového portu"
+.TP 
+\fBOvladač RISCom/8 Multiport Serial ('riscom8=')\fP
+Syntaxe:
+.IP
+riscom=iobase1[,iobase2[,iobase3[,iobase4]]]
+.IP
+Detaily lze najít v \fI/usr/src/linux/Documentation/riscom8.txt\fP.
+.TP 
+\fBOvladač DigiBoard ('digi=')\fP
+Je\-li tento parametr zadán, musí mít přesně šest hodnot.  Syntaxe:
+.IP
+digi=status,type,altpin,numports,iobase,membase
+.IP
+Parametry je možno zadat jako čísla nebo řetězce. Jsou\-li použity
+řetězce, pak iobase a membase musí být zadány šestnáctkově.
+Číselné parametry jsou (nemusí se zadat vždy všechny) v pořadí:
+status (povol(1) nebo zakaž(0) tuto kartu), type (PC/Xi(0), PC/Xe(1),
+PC/Xeve(2), PC/Xem(3)), altpin (povol(1) nebo zakaž(0) alternativní
+uspořádání pinů), numports (počet portů na této kartě), iobase (V/V
+port, na který je karta nastavena), membase (adresa sdílené paměti).
+Tedy, následují nastavení jsou ekvivalentní:
+.IP
+digi=E,PC/Xi,D,16,200,D0000
+.br
+digi=1,0,0,16,0x200,851968
+.IP
+Detaily lze najít v \fI/usr/src/linux/Documentation/digiboard.txt\fP.
+.TP 
+\fBBaycom Serial/Parallel Radio Modem\fP
+Syntaxe:
+.IP
+baycom=iobase,irq,modem
+.IP
+Jsou zde přesně tři parametry; pro více adaptérů, zadejte více
+parametrů \&'baycom='. Modemový parametr je řetězec, který má jednu z
+hodnot ser12, ser12*, par96, par96*. Zde * znamená softwarové DCD a
+ser12/par96 přepíná mezi podporovanými typy modemů.  Podrobnosti jsou
+uvedeny v souboru \fIDocumentation/networking/baycom.txt\fP (nebo v případě
+starších jader \fIdrivers/net/README.baycom\fP)  ve zdrojovém kódu jádra.
+.TP 
+\fBOvladač Soundcard radio modem\fP
+Syntaxe:
+.IP
+soundmodem=iobase,irq,dma[,dma2[,serio[,pario]]],0,mode
+.IP
+Všechny parametry až na poslední jsou přirozená čísla; nevýznamná 0
+je vyžadována kvůli chybě v nastavovacím kódu. Parametr mod je
+řetězec ve formě hw:modem, kde hw je jeden z sbc, wss, wssfdx a modem je
+jeden z afsk1200, fsk9600.
+.SS "Ovladač tiskárny"
+.TP 
+\&\fB'lp='\fP
+Syntaxe:
+.IP
+lp=0
+.br
+lp=auto
+.br
+lp=reset
+.br
+lp=port[,port...]
+.IP
+Můžete říct ovladači tiskárny, které porty má používat a které
+ne.  Druhá možnost se hodí, pokud nechcete, aby ovladač tiskárny zabral
+všechny dostupné paralelní porty, takže je mohou využívat jiné
+ovladače (např. PLIP, PPA).
+
+Formát parametru je vícero jmen portů. Například lp=none,parport0
+použije první paralelní port pro lp1 a zakáže lp0. Pro úplný zákaz
+ovladače tiskárny je možno použít lp=0.
+.TP 
+\fBOvladač WDT500/501\fP
+Syntaxe:
+.IP
+wdt=io,irq
+.SS "Ovladače myši"
+.TP 
+\&\fB'bmouse=irq'\fP
+Ovladač busmouse očekává jeden parametr, a to číslo přerušení.
+.TP 
+\&\fB'msmouse=irq'\fP
+Totéž platí pro ovladač msmouse.
+.TP 
+\fBNastavení myši ATARI\fP
+.IP
+atamouse=threshold[,y\-threshold]
+.IP
+Je\-li zadán jen jeden parametr, je použit jak pro x\-threshold, tak pro
+y\-threshold. Jinak je první hodnota x\-threshold, a druhá y\-threshold.
+Povolené hodnoty jsou od 1 do 20, implicitně 2.
+.SS "Video hardware"
+.TP 
+\&\fB'no\-scroll'\fP
+.\" .SH AUTHORS
+.\" Linus Torvalds (and many others)
+Tento parametr říká ovladači konzole aby neinstaloval hardwarový posun
+(kdy je posun řešen posouváním adresy začátku obrazovky místo posuvu
+dat). Vyžadováno některými Braillovými konzolami.
+.SH "DALŠÍ INFORMACE"
+\fBlilo.conf\fP(5), \fBklogd\fP(8), \fBlilo\fP(8), \fBmount\fP(8), \fBrdev\fP(8)
+
+Významné části této manuálové stránky jsou odvozeny z Boot Parameter
+HOWTO (verze 1.0.1) napsaného Paulem Gortmakerem.  V tomto (či
+novějším) HOWTO můžete najít více informací.  Aktuální zdroj
+informací je \fI/usr/src/linux/Documentation/kernel\-parameters.txt\fP.
+.SH TIRÁŽ
+Tato stránka je součástí projektu Linux \fIman\-pages\fP.  Popis projektu a
+informace o hlášení chyb najdete na http://www.kernel.org/doc/man\-pages/.

@@ -1,0 +1,156 @@
+.Id $Id$
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH AT 1 "Nov 1996" local "Linux \- příručka programátora"
+.SH JMÉNO
+at, batch, atq, atrm \- umisťuje do fronty, zobrazuje či maže úlohy
+určené pro pozdější provedení
+.SH POUŽITÍ
+\fBat\fP [\fB\-V\fP] [\fB\-q\fP \fIfronta\fP] [\fB\-f\fP \fIsoubor\fP] [\fB\-mldbv\fP] \fBČAS\fP
+.br
+\fBat \-c\fP \fIúloha\fP [\fIúloha...\fP]
+.br
+\fBatq\fP [\fB\-V\fP] [\fB\-q\fP \fIfronta\fP]
+.br
+\fBatrm\fP [\fB\-V\fP] \fIúloha\fP [\fIúloha...\fP]
+.br
+\fBbatch\fP
+.SH POPIS
+\fBat\fP a \fBbatch\fP načítají ze standardního vstupu nebo daného souboru
+příkazy, které mají být provedeny později za použití \fB/bin/sh\fP.
+.TP  8
+\fBat\fP
+provádí příkazy v určeném čase.
+.TP  8
+\fBatq\fP
+vypisuje uživatelovy čekající úlohy, kromě situace, kdy uživatelem je
+superuživatel; v tom případě se vypíší úlohy všech
+uživatelů. Formát řádků výstupu (každá úloha na jeden řádek) je:
+Číslo úlohy, datum, hodina, fronta a uživatelské jméno.
+.TP  8
+\fBatrm\fP
+maže úlohy označené jejich číslem.
+.TP  8
+\fBbatch\fP
+provádí příkazy, když to zátěž systému dovolí; jinými slovy,
+když průměrná zátěž klesne pod 0.8, nebo hodnotu určenou při
+vyvolání příkazu \fBatd\fP.
+.PP
+\fBAt\fP dovoluje dosti složité určení času, přesahující standard
+POSIX.2. Přijímá časy v podobě \fBHH:MM,\fP aby spustil úlohu v určitém
+čase (pokud čas již uplynul, předpokládá se následující den).  Lze
+také zadat \fBmidnight\fP (půlnoc), \fBnoon\fP (poledne)  nebo \fBteatime\fP (16
+hod)  nebo také čas doplněný \fBAM\fP nebo \fBPM\fP pro spuštění dopoledne
+nebo odpoledne.  Lze také zadat den, ve kterém se úloha spustí tak, že
+se zadá datum v podobě \fBnázev měsíce\fP \fBden\fP s volitelným \fBrok\fP nebo
+zadáním data v podobě \fBMMDDYY\fP nebo \fBMM/DD/YY\fP nebo \fBDD.MM.YY.\fP
+Zadání data \fImusí\fP odpovídat specifikaci denní doby.  Lze také zadat
+časy jako \fBnow\fP (nyní)  \fB\+\fP \fIpočet\fP \fIčasových jednotek,\fP kde
+časové jednotky mohou být \fBminuty,\fP \fBhodiny,\fP \fBdny\fP nebo \fBtýdny\fP a
+lze zadat programu \fBat\fP, aby spustil úlohu dnes tak, že se za čas
+připíše \fBtoday\fP nebo aby ji spustil zítra připsáním \fBtomorrow\fP.
+.PP
+Například, aby se úloha spustila za tři dny v 16 hodin, lze zadat \fBat
+4pm + 3 days\fP, aby se spustila v 10:00 31. července \fBat 10am Jul 31\fP a pro
+spuštění úlohy v 1:00 zítra, \fBat 1am tomorrow\fP.
+.PP
+Přesný popis časové specifikace lze nalézt v
+\fI/usr/share/doc/at/timespec\fP.
+.PP
+Pro oba programy \fBat\fP a \fBbatch\fP se příkazy načtou ze standardního
+vstupu nebo souboru určeného s přepínačem \fB\-f\fP a jsou provedeny.
+Pracovní adresář, proměnné prostředí (kromě proměnných \fBTERM\fP,
+\fBDISPLAY\fP a \fB_\fP)  a umask jsou uchovány z času vyvolání.  Příkaz
+\fBat \fP\- nebo \fBbatch \fP\- vyvolaný ze \fBsu\fP(1)  shellu si zachovají
+aktuální ID uživatele.  Pokud program zapíše něco na standardní
+výstup nebo standardní chybový výstup, zašlou se tyto poštou
+uživateli.  Pošta se zasílá výchozím MTA (obvykle
+\fB/usr/sbin/sendmail\fP).  Pokud se \fBat\fP spustí ze \fBsu\fP(1)  shellu, pošta
+přijde majiteli login shellu.
+.PP
+Superuživatel může používat tyto příkazy kdykoliv.  Pro jiné
+uživatele se povolení pro použití at určuje soubory \fI/etc/at.allow\fP a
+\fI/etc/at.deny\fP.
+.PP
+Pokud soubor \fI/etc/at.allow\fP existuje, mohou příkaz \fBat\fP používat jen
+uživatelé, kteří jsou v něm uvedeni.
+.PP
+Pokud \fI/etc/at.allow\fP neexistuje, zkontroluje se \fI/etc/at.deny\fP a každý
+uživatel, který v něm není uveden, smí příkaz \fBat\fP použít.
+.PP
+Pokud neexistuje ani jeden z těchto souborů, smí používat příkaz
+\fBat\fP jen superuživatel.
+.PP
+Prázdný soubor \fI/etc/at.deny\fP znamená, že každý uživatel smí
+používat tyto příkazy, což je standardní nastavení.
+.SH VOLBY
+.TP  8
+\fB\-V\fP
+vypíše na standardní chybový výstup číslo verze.
+.TP  8
+\fB\-q\fP\fI fronta\fP
+použije určenou frontu.  Označení fronty sestává z jednoho písmene;
+platná označení fronty sahají od \fBa\fP do \fBz\fP.  a \fBA\fP do \fBZ\fP.  Fronta
+\fBa\fP je přednastavená pro \fBat\fP a fronta \fBb\fP pro \fBbatch\fP.  Fronty s
+vyššími písmeny běží se zvýšeným nice. Speciální fronta "=" je
+rezervována pro aktuálně bežící úlohy.
+.P
+Pokud je úloha vložená do fronty označené velkým písmenem, je s ní
+naloženo, jako by byla v tom čase vložena do batch. Jakmile nastane
+zadaný čas, budou platit pravidla pro zpracování batch týkající se
+zátěže.  Pokud se k \fBatq\fP zadá konkrétní fronta, zobrazí pouze
+úlohy čekající v této frontě.
+.TP  8
+\fB\-m\fP
+Zašle poštou oznámení o ukončení úlohy, i když úloha nemá žádný
+výstup.
+.TP  8
+\fB\-f\fP\fI soubor\fP
+Načte úlohu ze souboru \fBsoubor\fP místo ze standardního vstupu.
+.TP  8
+\fB\-l\fP
+Alias pro \fBatq\fP.
+.TP 
+\fB\-d\fP
+Alias pro \fBatrm\fP.
+.TP 
+.TP 
+\fB\-v\fP
+Zobrazí čas, kdy se úloha provede před jejím přečtením.
+.P
+Zobrazený čas bude ve formátu "Thu Feb 20 14:50:00 1997".
+.TP 
+\fB\-c\fP
+vypíše úlohy z příkazové řádky na standardní výstup.
+.SH SOUBORY
+\fI/var/spool/cron/atjobs\fP
+.br
+\fI/var/spool/cron/atspool\fP
+.br
+\fI/proc/loadavg\fP
+.br
+\fI/var/run/utmp\fP
+.br
+\fI/etc/at.allow\fP
+.br
+\fI/etc/at.deny\fP
+.SH "DALŠÍ INFORMACE"
+\fBcron\fP(1), \fBnice\fP(1), \fBsh\fP(1), \fBumask\fP(2), \fBatd\fP(8).
+.SH CHYBY
+Správné fungování příkazu \fBbatch\fP pro Linux závisí na přítomnosti
+adresáře typu \fIproc\fP připojeného do adresáře \fI/proc\fP.
+.PP
+Pokud není soubor \fI/var/run/utmp\fP dostupný nebo je poškozený, nebo
+pokud uživatel není přihlášený v okamžiku spuštění \fBat\fP, pošta
+se zašle uživateli nalezenému v proměnné prostředí \fBLOGNAME\fP.  Pokud
+tato není definována nebo je prázdná, předpokládá se aktuální
+uživatelské ID.
+.PP
+\fBAt\fP a \fBbatch\fP v současné implementaci nejsou vhodné, pokud uživatelé
+soupeří o zdroje.  Pokud je toto váš případ, můžete chtít zvážit
+jiný dávkový systém, například \fBnqs\fP.
+.SH AUTOR
+At byl z většiny napsán Thomasem Koenigem, ig25@rz.uni\-karlsruhe.de.

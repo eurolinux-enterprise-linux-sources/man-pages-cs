@@ -1,0 +1,447 @@
+.\" grep man page
+.if !\n(.g \{\
+.	if !\w|\*(lq| \{\
+.		ds lq ``
+.		if \w'\(lq' .ds lq "\(lq
+.	\}
+.	if !\w|\*(rq| \{\
+.		ds rq ''
+.		if \w'\(rq' .ds rq "\(rq
+.	\}
+.\}
+.de Id
+.ds Dt \\$4
+..
+.Id $Id: grep.1,v 1.23 2002/01/22 13:20:04 bero Exp $
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH GREP 1 \*(Dt "Projekt GNU" 
+.SH JMÉNO
+grep, egrep, fgrep \- tiskne řádky, které odpovídají zadanému vzoru
+.SH POUŽITÍ
+\fBgrep\fP [\fIvolby\fP] \fIVZOR\fP [\fISOUBOR\fP.\|.\|.]
+.br
+\fBgrep\fP [\fIvolby\fP] [\fB\-e\fP \fIVZOR\fP | \fB\-f\fP \fISOUBOR\fP] [\fISOUBOR\fP.\|.\|.]
+.SH POPIS
+.PP
+\fBGrep\fP prohledává zadaný vstup \fISOUBOR\fP (nebo standardní vstup, pokud
+nejsou zadány žádné soubory nebo je zadán soubor \fB\-\fP)  a hledá
+řádky obsahující zadaný \fIVZOR\fP.  Ve výchozím nastavení \fBgrep\fP
+vypisuje řádky, které vzoru odpovídají.
+.PP
+Dostupné jsou navíc dvě varianty programu \- \fBegrep\fP a \fBfgrep\fP.
+Chování programu \fBegrep\fP je stejné jako \fBgrep\ \-E\fP, chování programu
+\fBfgrep\fP je stejné jako \fBgrep\ \-F\fP.
+.SH VOLBY
+.TP 
+\fB\-A\fP\fI POČET\fP,\fB \-\^\-after\-context=\fP\fIPOČET\fP
+Tiskni \fIPOČET\fP řádků, které následují po platném (odpovídajícím)
+řádku.  Mezi souvislé platné výsledky vkládá řádky obsahující
+\fB\-\^\-\fP.
+.TP 
+\fB\-a\fP, \fB\-\^\-text\fP
+Pracuj s binárním souborem jako by to byl text; ekvivalentní k volbě
+\fB\-\^\-binary\-files=text\fP.
+.TP 
+\fB\-B\fP\fI POČET\fP,\fB \-\^\-before\-context=\fP\fIPOČET\fP
+Tiskni \fIPOČET\fP řádků které předcházejí platnému řádku.  Mezi
+souvislé platné výsledky vkládá řádky obsahující \fB\-\^\-\fP.
+.TP 
+\fB\-C\fP\fI POČET\fP,\fB \-\^\-context=\fP\fIPOČET\fP
+Tiskni \fIPOČET\fP řádků ke každému platnému řádku.  Mezi souvislé
+platné výsledky vkládá řádky obsahující \fB\-\^\-\fP.
+.TP 
+\fB\-b\fP, \fB\-\^\-byte\-offset\fP
+Tiskni offset bajtu ve vstupním souboru před každým řádkem výstupu.
+.TP 
+\fB\-\^\-binary\-files=\fP\fITYP\fP
+Jestliže podle prvních několika bajtů obsahuje soubor binární data,
+předpokládej, že je typu \fITYP\fP.  Výchozím nastavením \fITYP\fP je
+\fBbinary\fP a \fBgrep\fP standardně vypíše buď jednořádkovou zprávu, že
+binární soubor odpovídá, nebo žádnou zprávu pokud neodpovídá.
+Jestliže je \fITYP\fP \fBwithout\-match\fP, \fBgrep\fP předpokládá, že binární
+soubory neodpovídají; je to stejné jako volba \fB\-I\fP.  Jestliže je \fITYP\fP
+\fBtext\fP, \fBgrep\fP zpracovává binární soubor, jako by to byl text; stejné
+jako volba \fB\-a\fP.  \fIPozor:\fP \fBgrep \-\^\-binary\-files=text\fP může způsobit,
+že se budou vypisovat nesmyslné binární znaky, což může mít
+nepříjemné vedlejší účinky pokud je výstupem terminál a ovladač
+terminálu začne některé znaky interpretovat jako příkazy.
+.TP 
+\fB\-\^\-colour[=\fP\fIKDY\fP]\fI, \fP\fB\-\^\-color[=\fP\fIKDY\fP]
+Obklopí platný řetězec značkou z proměnné prostředí \fBGREP_COLOR\fP.
+KDY může být `never', `always' nebo `auto'
+.TP 
+\fB\-c\fP, \fB\-\^\-count\fP
+Potlač normální výstup; místo toho napiš počet odpovídajících
+řádků pro každý vstupní soubor.  S volbou \fB\-v\fP, \fB\-\^\-invert\-match\fP
+(viz níže), počítej neodpovídající řádky.
+.TP 
+\fB\-D\fP\fI AKCE\fP,\fB \-\^\-devices=\fP\fIAKCE\fP
+Pokud je vstupním souborem zařízení, FIFO nebo socket, použij \fIAKCI\fP k
+jeho zpracování. Výchozím nastavením \fIAKCE\fP je \fBread\fP, to znamená,
+že zařízení se čtou jako by to byly běžné soubory.  Jestliže
+\fIAKCE\fP je \fBskip\fP, zařízení se mlčky přeskočí.
+.TP 
+\fB\-d\fP\fI AKCE\fP,\fB \-\^\-directories=\fP\fIAKCE\fP
+Pokud je vstupním souborem adresář, použij \fIAKCI\fP k jeho
+zpracování. Výchozím nastavením \fIAKCE\fP je \fBread\fP, to znamená, že
+adresáře se čtou jako by to byly běžné soubory.  Jestliže \fIAKCE\fP je
+\fBskip\fP, adresáře se mlčky přeskočí.  Jestliže \fIAKCE\fP je \fBrecurse\fP,
+\fBgrep\fP čte rekurzivně všechny soubory v každém adresáři; je to
+stejné jako volba \fB\-r\fP.
+.TP 
+\fB\-E\fP, \fB\-\^\-extended\-regexp\fP
+Považuj \fIVÝRAZ\fP za rozšířený regulární výraz (viz níže).
+.TP 
+\fB\-e\fP\fI VÝRAZ\fP,\fB \-\^\-regexp=\fP\fIVÝRAZ\fP
+Jako vzor použij \fIVÝRAZ\fP; užitečné pro zachování vzorů
+začínajících \fB\-\fP.
+.TP 
+\fB\-F\fP, \fB\-\^\-fixed\-strings\fP
+Považuj \fIVÝRAZ\fP za seznam pevných řetězců oddělených znaky konce
+řádku, ze kterých může odpovídat kterýkoliv.  \fB\-P\fP,
+\fB\-\^\-perl\-regexp\fP Považuj \fIVÝRAZ\fP za regulární výraz Perlu.
+.TP 
+\fB\-f\fP\fI SOUBOR\fP,\fB \-\^\-file=\fP\fISOUBOR\fP
+Načte vzory ze souboru \fISOUBOR\fP, na každém řádku jeden.  Prázdný
+soubor obsahuje nula vzorů a tedy neodpovídá ničemu.
+.TP 
+\fB\-G\fP, \fB\-\^\-basic\-regexp\fP
+Považuj \fIVÝRAZ\fP za základní regulární výraz (viz níže). Toto je
+výchozí nastavení.
+.TP 
+\fB\-H\fP, \fB\-\^\-with\-filename\fP
+Tiskni jméno souboru pro každou shodu.
+.TP 
+\fB\-h\fP, \fB\-\^\-no\-filename\fP
+Potlač vkládání jmen souborů do výstupu při prohledávání více
+souborů.
+.TP 
+\fB\-\^\-help\fP
+Vytiskni stručnou nápovědu.
+.TP 
+\fB\-I\fP
+Zpracuj binární soubor jako by neobsahoval shody; to je stejné jako volba
+\fB\-\^\-binary\-files=without\-match\fP.
+.TP 
+\fB\-i\fP, \fB\-\^\-ignore\-case\fP
+Nerozlišuj velká a malá písmena ve \fIVÝRAZU\fP ani ve vstupních
+souborech.
+.TP 
+\fB\-L\fP, \fB\-\^\-files\-without\-match\fP
+Potlač normální výstup; místo toho tiskni jméno každého souboru, ze
+kterého by se jinak žádný výstup netiskl. Prohledávání skončí s
+první shodou.
+.TP 
+\fB\-l\fP, \fB\-\^\-files\-with\-matches\fP
+Potlač normální výstup; místo toho tiskni jméno každého souboru, ze
+kterého by se jinak tiskl nějaký výstup. Prohledávání skončí s
+první shodou.
+.TP 
+\fB\-m\fP\fI POČET\fP,\fB \-\^\-max\-count=\fP\fIPOČET\fP
+Přestaň číst soubor po dosažení \fIPOČTU\fP odpovídajících
+řádků. Je\-li vstupem standardní vstup z obyčejného souboru, a je
+vytištěno \fIPOČET\fP odpovídajících řádků, \fBgrep\fP zajistí, že
+standardní vstup bude před ukončením nastaven právě po posledním
+odpovídajícím řádku, bez ohledu na přítomnost následujících
+řádků kontextu.  Tak je možné, aby volající proces hledání
+obnovil.  Když \fBgrep\fP po dosažení \fIPOČTU\fP odpovídajících řádků
+zastaví, vypíše řádky kontextu, které následují.  Pokud je zároveň
+použita volba \fB\-c\fP nebo \fB\-\^\-count\fP, program \fBgrep\fP nevypíše více
+shod než je \fIPOČET\fP.  Pokud je zároveň použita volba \fB\-v\fP nebo
+\fB\-\^\-invert\-match\fP program, \fBgrep\fP skončí po vypsání \fIPOČTU\fP
+neodpovídajících řádků.
+.TP 
+\fB\-\^\-mmap\fP
+Pokud je to možné, použij systémové volání \fBmmap\fP(2)  ke čtení
+vstupních dat, místo výchozího \fBread\fP(2).  V některých případech
+může \fB\-\^\-mmap\fP zlepšit výkon. Na druhou stranu \fB\-\^\-mmap\fP může
+způsobit nedefinované chování (včetně core dump), jestliže se
+vstupní soubor za běhu programu \fBgrep\fP zmenší nebo pokud nastane chyba
+vstupu/výstupu.
+.TP 
+\fB\-n\fP, \fB\-\^\-line\-number\fP
+Před každý řádek výstupu přidej jeho číslo v příslušném
+vstupním souboru.
+.TP 
+\fB\-o\fP, \fB\-\^\-only\-matching\fP
+Vypisuj jen tu část odpovídajícího řádku, která je odpovídá
+\fIVZORU.\fP
+.TP 
+\fB\-\^\-label=\fP\fILABEL\fP
+Zobrazuj vstup pocházející ze standardního vstupu jakoby pocházel ze
+souboru \fILABEL.\fP To je zvláště užitečné pro nástroje jako je zgrep,
+např.  \fBgzip \-cd foo.gz |grep \-\-label=foo něco\fP
+.TP 
+\fB\-\^\-line\-buffering\fP
+Použij line buffering, může negativně ovlivnit výkon.
+.TP 
+\fB\-q\fP, \fB\-\^\-quiet\fP, \fB\-\^\-silent\fP
+Tiše; potlač normální výstup. Prohledávání skončí s první shodou,
+s návratovou hodnotou nula, i když byla detekována nějaká chyba.  Viz
+také volba \fB\-s\fP nebo \fB\-\^\-no\-messages\fP uvedená dále.
+.TP 
+\fB\-R\fP, \fB\-r\fP, \fB\-\^\-recursive\fP
+Rekurzivně načti všechny soubory v každém adresáři; to je stejné
+jako volba \fB\-d recurse\fP.
+.TP 
+  \fB \-\^\-include=\fPVZOR
+Rekurzivně procházej adresáře, prohledávej pouze soubory
+odpovídající \fIVZORU.\fP
+.TP 
+  \fB \-\^\-exclude=\fPVZOR
+Rekurzivně procházej adresáře, přeskoč soubory odpovídající
+\fIVZORU.\fP
+.TP 
+\fB\-s\fP, \fB\-\^\-no\-messages\fP
+Potlač chybové hlášky o neexistujících nebo nečitelných souborech.
+Poznámka o přenositelnosti: na rozdíl od \s-1GNU\s0 \fBgrepu\fP, tradiční
+\fBgrep\fP neodpovídal specifikaci \s-1POSIX.2\s0, protože neměl volbu \fB\-q\fP
+a jeho volba \fB\-s\fP se chovala jako volba \fB\-q\fP \s-1GNU\s0 \fBgrepu.\fP
+Shellové skripty které mají být přenositelné na tradiční \fBgrep\fP, by
+se měly voleb \fB\-q\fP a \fB\-s\fP vyvarovat a přesměrovat místo toho výstup
+do /dev/null.
+.TP 
+\fB\-U\fP, \fB\-\^\-binary\fP
+Pracuj se soubory jako s binárními. Normálně typ souboru pod MS\-DOS a
+MS\-Windows určuje \fBgrep\fP tak, že se podívá na prvních 32KB dat
+přečtených ze souboru. Když \fBgrep\fP rozhodne, že soubor je textový,
+vynechá z původního obsahu znaky CR (aby nepřestaly správně fungovat
+regulární výrazy obsahující \fB^\fP a \fB$\fP ). Uvedením volby \fB\-U\fP se
+toto pravidlo ruší a všechny soubory se předají porovnávacímu
+mechanismu doslovně. Pokud obsahuje soubor text s páry CR/LF na koncích
+řádků, způsobí to, že některé regulární výrazy přestanou
+fungovat. Tato volba nemá žádný účinek na platformách jiných než
+MS\-DOS a MS\-Windows.
+.TP 
+\fB\-u\fP, \fB\-\^\-unix\-byte\-offsets\fP
+Hlásit offsety jako v Unixu. Tento přepínač zajistí, že \fBgrep\fP bude
+tisknout offsety bajtů jako by soubor byl textový soubor v Unixu, tedy bez
+znaků CR.  To znamená, že výsledky \fBgrep\fP budou stejné jako v systému
+Unix. Tato volba nemá žádný efekt bez současného použití volby
+\fB\-b\fP; také nemá efekt na platformách jiných než MS\-DOS a MS\-Windows.
+.TP 
+\fB\-V\fP, \fB\-\^\-version\fP
+Vytiskni verzi programu \fBgrep\fP na chybový výstup. Verze by měla být
+uvedena ve všech hlášeních chyb (viz níže).
+.TP 
+\fB\-v\fP, \fB\-\^\-invert\-match\fP
+Převrať význam shody \- vyberou se řádky, které vzoru neodpovídají.
+.TP 
+\fB\-w\fP, \fB\-\^\-word\-regexp\fP
+Vyber jen řádky ve kterých se shoduje celé samostatné slovo.
+Odpovídající řetězec musí být buď na začátku řádku nebo mít
+před sebou znak který se nebere jako součást slova. Podobně musí
+řetězec být buď na konci řádku nebo za ním musí následovat znak
+který se nebere jako součást slova. Znaky které se považují za části
+slov jsou písmena, číslice a podtržítko.
+.TP 
+\fB\-x\fP, \fB\-\^\-line\-regexp\fP
+Vyber jen shody zahrnující celý řádek.
+.TP 
+\fB\-y\fP
+Zastaralá alternativa pro \fB\-i\fP.
+.TP 
+\fB\-Z\fP, \fB\-\^\-null\fP
+Vytiskni nulový bajt (znak \s-1ASCII\s0 \fBNUL\fP)  místo znaku, který
+normálně následuje po jménech souborů. Například \fBgrep \-lZ\fP píše
+nulový bajt po každém názvu souboru místo obvyklého znaku konce
+řádku.  Tato volba zajistí jednoznačnost výstupu i v případě, že
+názvy souborů obsahují neobvyklé znaky jako znaky konce řádku. Tuto
+volbu lze použít pro příkazy jako \fBfind \-print0\fP, \fBperl \-0\fP, \fBsort
+\-z\fP a \fBxargs \-0\fP, ke zpracování libovolných jmen souborů včetně
+těch, které obsahují znaky konce řádku.
+.SH "REGULÁRNÍ VÝRAZY"
+.PP
+Regulární výraz je vzor, který popisuje množinu řetězců. Regulární
+výrazy se píší (podobně jako aritmetické výrazy) pomocí různých
+operátorů, které dávají dohromady menší výrazy.
+.PP
+\fBGrep\fP zná dvě různé verze syntaxe pro regulární výrazy:
+\*(lqzákladní\*(rq a \*(lqrozšířené.\*(rq Pro \s-1GNU\s0\ \fBgrep\fP není v těchto
+dvou verzích žádný rozdíl co se týče funkčnosti. V jiných
+implementacích jsou základní regulární výrazy slabší. Následující
+popis platí pro rozšířené regulární výrazy; rozdíly pro základní
+regulární výrazy jsou uvedeny na konci.
+.PP
+Základním stavebním kamenem jsou regulární výrazy, které odpovídají
+jedinému znaku. Většina znaků, včetně všech písmen a číslic, jsou
+samy o sobě regulárními výrazy, které se shodují samy se
+sebou. Kterýkoli metaznak se zvláštním významem může být uveden ve
+svém původním významu tak, že se před něj napíše zpětné lomítko.
+.PP
+Seznam znaků v \fB[\fP a \fB]\fP odpovídá jakémukoli jednotlivému znaku ze
+seznamu; když je prvním znakem seznamu stříška \fB^\fP, potom seznam
+odpovídá jakémukoli znaku který v seznamu \fInení\fP.  Například
+regulární výraz \fB[0123456789]\fP odpovídá jedné libovolné číslici.
+.PP
+Rozsah znaků lze specifikovat prvním a posledním znakem, oddělenými
+pomlčkou. Odpovídá jednomu znaku, který je mezi uvedenými dvěma znaky
+včetně, za použití řazení a znakové sady podle locale.  Např. ve
+výchozím locale C je \fB[a\-d]\fP ekvivalentní zápisu \fB[abcd]\fP.  V mnoha
+locale jsou znaky tříděny slovníkově a typicky v nich \fB[a\-d]\fP není
+ekvivalentní \fB[abcd]\fP; může být např. ekvivalentní \fB[aBbCcDd]\fP.  Pro
+použití tradiční interpretace těchto výrazů je možné použít C
+locale nastavením proměnné prostředí \fBLC_ALL\fP na hodnotu \fBC\fP.
+.PP
+Jsou také přednastaveny některé skupiny znaků: \fB[:alnum:]\fP,
+\fB[:alpha:]\fP, \fB[:cntrl:]\fP, \fB[:digit:]\fP, \fB[:graph:]\fP, \fB[:lower:]\fP,
+\fB[:print:]\fP, \fB[:punct:]\fP, \fB[:space:]\fP, \fB[:upper:]\fP a \fB[:xdigit:]\fP jsou
+postupně písmena a číslice, písmena, kontrolní znaky, číslice,
+obrázkové znaky, malá písmena, tisknutelné znaky, interpunkční
+znaménka, mezery, velká písmena a číslice šestnáctkové soustavy.
+Například \fB[[:alnum:]]\fP je stejné jako \fB[0\-9A\-Za\-z]\fP, až na to, že
+druhý vzor závisí na C locale kódování znaků \s-1ASCII\s0, zatímco
+první je nezávislý na locale i znakové sadě (závorky v názvech skupin
+jsou součástí jejich symbolických jmen a musí být uvedené uvnitř
+závorek uzavírajících seznam).  Většina metaznaků ztrácí v
+seznamech svůj zvláštní význam. K přidání znaku \fB]\fP do seznamu
+stačí uvést ho jako první. Podobně znak \fB^\fP stačí uvést na jiném
+než prvním místě. Konečně znak \fB\-\fP se uvede jako poslední.
+.PP
+Tečka \fB.\fP odpovídá jednomu libovolnému znaku.  Znak \fB\ew\fP je synonymem
+pro \fB[[:alnum:]]\fP a \fB\eW\fP je synonymem pro \fB[^[:alnum]]\fP.
+.PP
+Stříška \fB^\fP a znak dolaru \fB$\fP jsou metaznaky, které odpovídají
+prázdnému řetězci na začátku, resp. na konci řádku.  Symboly
+\fB\e<\fP a \fB\e>\fP označují prázdné řetězce na začátku,
+resp. na konci slova.  Symbol \fB\eb\fP odpovídá prázdnému řetězci na
+hranici slova a \fB\eB\fP odpovídá prázdnému řetězci který \fInení\fP na
+hranici slova.
+.PP
+Regulární výraz může mít za sebou jeden z opakovacích operátorů:
+.PD 0
+.TP 
+\fB?\fP
+Předcházející položka je volitelná a obsažená nejvýše jednou
+(tj. jednou nebo ani jednou).
+.TP 
+\fB*\fP
+Předcházející položka je volitelná a obsažená v libovolném počtu
+(tj. nula\- nebo vícekrát).
+.TP 
+\fB+\fP
+Předcházející položka je obsažena jednou nebo vícekrát.
+.TP 
+\fB{\fP\fIn\fP\fB}\fP
+Předcházející položka je obsažena právě \fIn\fP krát.
+.TP 
+\fB{\fP\fIn\fP\fB,}\fP
+Předcházející položka je obsažena \fIn\fP nebo vícekrát.
+.TP 
+\fB{\fP\fIn\fP\fB,\fP\fIm\fP\fB}\fP
+Předcházející položka je obsažena alespoň \fIn\fP krát, ale ne více
+než \fIm\fP krát.
+.PD
+.PP
+Dva regulární výrazy se dají přímo spojit; výsledný regulární
+výraz odpovídá libovolnému řetězci vzniklému spojením dvou jiných,
+které odpovídají původním dvěma regulárním výrazům.
+.PP
+Dva regulární výrazy lze složit pevným operátorem \fB|\fP; výsledný
+regulární výraz odpovídá řetězci, který se shoduje s kterýmkoliv z
+uvedených regulárních výrazů.
+.PP
+Opakování má přednost před spojením, které má zase přednost před
+střídáním.  Celý podvýraz stačí uzavřít do závorek aby se tato
+přednost zrušila.
+.PP
+Zpětný odkaz \fB\e\fP\fIn\fP\&, kde \fIn\fP je číslice, odpovídá podřetězci,
+který byl předtím porovnáván a vyhodnocen jako shodný s \fIn\fP\-tým
+podvýrazem odděleným závorkami od zbytku regulárního výrazu.
+.PP
+V základních regulárních výrazech ztrácejí metaznaky \fB?\fP, \fB+\fP,
+\fB{\fP, \fB|\fP, \fB(\fP, a \fB)\fP své zvláštní významy; místo nich se dají
+použít verze se zpětným lomítkem \fB\e?\fP, \fB\e+\fP, \fB\e{\fP, \fB\e|\fP,
+\fB\e(\fP, a \fB\e)\fP.
+.PP
+Tradiční \fBegrep\fP nepodporoval metaznak \fB{\fP a některé implementace
+\fBegrep\fP místo toho podporovaly \fB\e{\fP.  Přenositelné skripty by tedy
+neměly \fB{\fP ve vzorech pro \fBegrep\fP používat a místo toho k porovnání
+se znakem \fB{\fP používat seznam s jediným znakem \fB[{]\fP.
+.PP
+\s-1GNU\s0 \fBegrep\fP se snaží tradiční způsob použití podporovat tak,
+že \fB{\fP nebere jako metaznak, pokud by měl být začátkem chybné
+specifikace rozsahu.  Například příkaz \fBegrep '{1'\fP hledá dvouznakový
+řetězec \fB{1\fP místo toho, aby hlásil chybu syntaxe v regulárním
+výrazu.  \s-1POSIX.2\s0 dovoluje toto chování jako rozšíření, ale
+přenositelné skripty by na něj neměly spoléhat.
+.SH "PROMĚNNÉ PROSTŘEDÍ"
+Hování grepu je ovlivněno následujícími proměnnými prostředí:
+.PP
+Locale \fBLC_\fP\fIfoo\fP je určeno prozkoumáním proměnných prostředí
+\fBLC_ALL\fP, \fBLC_\fP\fIfoo\fP, \fBLANG\fP, v uvedeném pořadí.  První z nich,
+která je nastavená, určí locale.  Například pokud není nastavena
+\fBLC_ALL\fP, ale \fBLC_MESSAGES\fP je nastavena na \fBpt_BR\fP, je pro
+\fBLC_MESSAGES\fP locale použita brazilská portugalština.  C locale je
+použito pouze tehdy, když není nastavena žádná z těchto proměnných
+prostředí nebo pokud není nainstalován katalog locale nebo pokud byl
+\fBgrep\fP zkompilován bez podpory národních jazyků (\s-1NLS\s0).
+.TP 
+\fBGREP_OPTIONS\fP
+Tato proměnná nastavuje výchozí volby, které se přidají na začátek
+dalších dodatečných voleb. Například kdyby \fBGREP_OPTIONS\fP bylo
+\&\fB'\-\^\-binary\-files=without\-match \-\^\-directories=skip'\fP, \fBgrep\fP by se
+choval, jako kdyby volby \fB\-\^\-binary\-files=without\-match\fP a
+\fB\-\^\-directories=skip\fP byly uvedené před ostatními dodatečnými
+volbami.  Nastavení voleb jsou oddělená bílými znaky (např. mezerami
+nebo tabulátory).  Zpětné lomítko escapuje znaky, takže jej lze
+použít pro volbu obsahující bílé znaky nebo zpětná lomítka.
+.TP 
+\fBGREP_COLOR\fP
+Určuje značku pro zvýrazňování.
+.TP 
+\fBLC_ALL\fP, \fBLC_COLLATE\fP, \fBLANG\fP
+Tyto proměnné nastavují locale \fBLC_COLLATE\fP, které určuje řazení
+používané při interpretaci výrazů s rozsahy jako \fB[a\-z]\fP.
+.TP 
+\fBLC_ALL\fP, \fBLC_CTYPE\fP, \fBLANG\fP
+Tyto proměnné nastavují locale \fBLC_CTYPE\fP, které určuje typy znaků,
+např. které znaky jsou bílé znaky.
+.TP 
+\fBLC_ALL\fP, \fBLC_MESSAGES\fP, \fBLANG\fP
+Tyto proměnné nastavují locale \fBLC_MESSAGES\fP určující jazyk, kterým
+bude \fBgrep\fP tisknout hlášení.  Výchozí C locale používá americkou
+angličtinu.
+.TP 
+\fBPOSIXLY_CORRECT\fP
+Pokud je nastaveno, \fBgrep\fP se chová podle požadavků \s-1POSIX.2\s0;
+jinak se \fBgrep\fP chová více jako ostatní programy \s-1GNU\s0.
+\s-1POSIX.2\s0 vyžaduje, aby volby následující za jmény souborů byly
+brány už jen jako jména souborů; normálně se takové volby přesunou
+na začátek seznamu parametrů a berou se jako volby. \s-1POSIX.2\s0 dále
+vyžaduje aby se neznámé volby pokládaly za \*(lqilegální\*(rq, ale protože
+nejsou tak úplně protizákonné, normálně se prohlásí za
+\*(lqinvalidní\*(rq.  \fBPOSIXLY_CORRECT\fP také ruší
+\fB_\fP\fIN\fP\fB_GNU_nonoption_argv_flags_\fP popsané dále.
+.TP 
+\fB_\fP\fIN\fP\fB_GNU_nonoption_argv_flags_\fP
+(Zde \fIN\fP je číslo procesu \fBgrep\fP).  Jestliže hodnota \fIi\fP\-tého znaku
+této proměnné je \fB1\fP, neber \fIi\fP\-tý parametr \fBgrep\fP jako volbu, i
+kdyby to vypadalo, že to volba je. Shell může dát tuto proměnnou do
+prostředí pro každý příkaz který spouští, aby určil, které
+parametry jsou výsledkem rozvinutí jmen souborů "žolíkovými" znaky (*
+a ?) a nemají být brány jako volby. Toho chování je možné jen s
+knihovnou \s-1GNU\s0 C a jen když není nastaveno \fBPOSIXLY_CORRECT\fP.
+.SH "NÁVRATOVÉ HODNOTY"
+.PP
+Normálně je výstupní hodnota 0, když jsou nalezeny shody nebo 1 když
+žádné nalezeny nejsou. Výstupní hodnota je 2, pokud došlo k chybě,
+ledaže byla použita volba \fB\-q\fP nebo \fB\-\^\-quiet\fP nebo \fB\-\^\-silent\fP a
+byla nalezena odpovídající řádka.
+.SH CHYBY
+.PP
+Hlášení o chybách posílejte na \fBbug\-grep@gnu.org\fP (anglicky).
+.PP
+Velké počty opakování v konstrukci \fB{\fP\fIm\fP\fB,\fP\fIn\fP\fB}\fP můžou vést k
+tomu, že grep použije dost paměti. Navíc některé jiné neobvyklé
+regulární výrazy mají exponenciální nároky na čas a prostor a mohou
+způsobit, že \fBgrep\fP spotřebuje všechnu paměť.
+.PP
+.\" Work around problems with some troff -man implementations.
+Zpětné odkazy jsou velmi pomalé a doba jejich zpracování může růst
+exponenciálně.
+.br

@@ -1,0 +1,31 @@
+.TH ATEXIT 3  "26.prosince 1996" "GNU" "Linux - příručka programátora"
+.do hla cs
+.do hpf hyphen.cs
+.SH JMÉNO
+atexit \- registruje funkci, která se má vyvolat při ukončení procesu.
+.SH SYNTAXE
+.nf
+.B #include <stdlib.h>
+.sp
+.BI "int atexit(void (* function)(void));"
+.fi
+.SH POPIS
+Funkce \fBatexit()\fP zařadí \fIfunction()\fP do seznamu funkcí, které jsou
+vyvolány při normálním ukončení programu, ať už funkcí
+.BR exit (2)
+nebo návratem z funkce \fBmain\fP.
+Funkce takto registrované jsou volány v obráceném pořadí jejich registrace;
+nejsou jim poskytnuty žádné argumenty.
+.SH NÁVRATOVÁ HODNOTA
+Funkce \fBatexit()\fP vrací hodnotu 0, byla-li úspěšná, jinak je vrácena
+hodnota -1 a globální proměnná \fIerrno\fP je nastavena k indikaci chyby.
+.SH CHYBY
+.TP 
+.B ENOMEM
+Není k dispozici potřebné množství paměti pro přidání funkce.
+.SH SPLŇUJE STANDARDY
+SVID 3, BSD 4.3, ISO 9899 
+.SH DALŠÍ INFORMACE
+.BR exit "(3), " on_exit (3)
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

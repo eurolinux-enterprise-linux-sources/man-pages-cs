@@ -1,0 +1,118 @@
+.\" slabtop.1 - manpage for the slabtop(1) utility, part of procps
+.\"
+.\" Copyright (C) 2003 Chris Rivera
+.\" Licensed under the terms of the GNU Library General Public License, v2
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH SLABTOP 1 "13.září 2003" Linux "Linux \- Příručka uživatele"
+.SH JMÉNO
+slabtop \- zobrazuje informace o vyrovnávací paměti jádra v reálném
+čase
+
+.SH POUŽITÍ
+\fBslabtop [ \fP\fIvolby\fP\fB ] \fP
+
+.SH POPIS
+\fBslabtop (1)\fP zobrazuje informace o vyrovnávací paměti jádra v
+reálném čase. Zobrazuje seznam cache seřazených podle jednoho z
+možných kritérií.  Také zobrazuje v záhlaví statistiku ohledně
+vrstvy vyrovnávací paměti.
+
+.SH VOLBY
+Standartní spuštění \fBslabtop\fP(1)  nevyžaduje žádné
+volby. Nicméně, jeho chování může být být ovlivněno použitím
+následujících přepínačů:
+.TP 
+\fB\-\-delay=n, \-d n\fP
+Obnovuje zobrazení každých n sekund Standartně \fBslabtop\fP(1)  obnovuje
+obraz každé tři sekundy. K vypnutí programu stiskněte \fBq\fP.
+.TP 
+\fB\-\^\-sort=S, \-s S\fP
+Seřadit podle S, kde S je jedním z třídících kritérií.
+.TP 
+\fB\-\^\-once, \-o\fP
+Zobrazí pouze jeden výstup a skončí.
+.TP 
+\fB\-\^\-version, \-V\fP
+Zobrazí informaci o verzi a skončí.
+.TP 
+\fB\-\^\-help\fP
+Zobrazí stručnou nápovědu a skončí.
+
+.SH "TŘÍDÍCÍ KRITÉRIA"
+Následující položky jsou platnými třídícími kritérii, které
+ovlivňují jaké cache jsou na vrcholu výpisu. Standartně jsou položky
+tříděny podle počtu objektů ("o").
+
+Třídící kritéria můžou být kdykoliv v průběhu programu změněna
+stisknutím odpovídající klávesy.
+.TP 
+\fBa:\fP
+seřadí podle počtu aktivních objektů
+.TP 
+\fBb:\fP
+seřadí podle počtu objektů na jeden slab (slab = jedna nebo více
+spojitých stránek obsahujících alokované nebo volné objekty)
+.TP 
+\fBc:\fP
+seřadí podle velikosti cache
+.TP 
+\fBl:\fP
+seřadí podle počtu slabů
+.TP 
+\fBv\fP
+seřadí podle počtu aktivních slabů
+.TP 
+\fBn:\fP
+seřadí podle jména
+.TP 
+\fBo:\fP
+seřadí podle počtu objektů
+.TP 
+\fBp:\fP
+seřadí podle počtu stránek na jeden slab
+.TP 
+\fBs:\fP
+seřadí podle velikostí objektů
+.TP 
+\fBu:\fP
+seřadí podle používanosti cache
+
+.SH PŘÍKAZY
+\fBslabtop\fP(1)  přijímá klávesové příkazy od uživatele. Jsou
+podporovány následující příkazy.  Velikost písmen nehraje roli.
+
+Každý platný třídící znak je také přijat, viz sekce \fITŘÍDÍCÍ
+KRITÉRIA\fP.
+
+.TP 
+\fB<MEZERNÍK>\fP
+Obnoví obrazovku.
+.TP 
+\fBq\fP
+Ukončí program.
+
+.SH SOUBORY
+\fI/proc/slabinfo\fP \-\- informace o slabech
+
+.SH "DALŠÍ INFORMACE"
+\fBfree\fP(1), \fBps\fP(1), \fBtop\fP(1), \fBvmstat\fP(8)
+
+.SH POZNÁMKY
+V současné době potřebuje \fBslabtop\fP(1)  jádro řady 2.4 nebo
+novější (konkrétně verzi 1.1 nebo novější \fI/proc/slabinfo\fP).
+Kernel 2.2 bude možná podporován v budoucnu.
+
+.SH AUTOŘI
+Napsali Chris Rivera a Robert Love.
+
+\fBslabtop\fP(1)  byl inspirován skriptem v perlu \fBvmtop\fP od Martina Blighta.
+
+Balík procps je udržován Robertem Lovem a byl vytvořen Michaelem
+Johnsonem.
+
+Chyby týkající se programu prosím zasílejte na
+<procps\-list@redhat.com>.

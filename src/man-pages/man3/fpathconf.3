@@ -1,0 +1,135 @@
+.TH FPATHCONF 3  "26.prosince 1996" "GNU" "Linux - příručka programátora"
+.do hla cs
+.do hpf hyphen.cs
+.SH JMÉNO
+fpathconf, pathconf \- získej konfigurační hodnoty pro soubory
+.SH SYNTAXE
+.nf
+.B #include <unistd.h>
+.sp
+.BI "long fpathconf(int " filedes ", int " name ");"
+.nl
+.BI "long pathconf(char *" path ", int " name ");"
+.fi
+.SH POPIS
+.B fpathconf()
+vrátí hodnotu systémového parametru
+.I name
+pro otevřený file deskriptor
+.IR filedes .
+.PP
+.B pathconf()
+vrátí hodnotu systémového parametru
+.I name
+pro soubor se jménem
+.IR path .
+.PP
+Odpovídající makra definovaná v 
+.B <unistd.h>
+obsahují minimální hodnoty; jestliže aplikace bude chtít využít hodnot,
+které se mohou měnit, je lépe použít volání 
+.B fpathconf()
+nebo
+.B pathconf(), 
+které vrátí aktuální hodnoty.
+.PP
+Proměnná
+.I name
+může nabývat těchto konfiguračních hodnot:
+.TP
+.B _PC_LINK_MAX
+vrátí maximální počet odkazů na soubor. Jestliže
+.I filedes
+nebo
+.I path
+ukazují na adresář tak se hodnota vztahuje k celému adresáři.
+Odpovídající makro je
+.BR _POSIX_LINK_MAX .
+.TP
+.B _PC_MAX_CANON
+vrací maximální délku zformátované vstupní řádky, kde
+.I filedes
+nebo
+.I path
+musí ukazovat na terminál.
+Odpovídající makro je
+.BR _POSIX_MAX_CANON .
+.TP
+.B _PC_MAX_INPUT
+vrací maximální délku vstupní řádky, kde
+.I filedes
+nebo
+.I path
+musí ukazovat na terminál.
+Odpovídající makro je
+.BR _POSIX_MAX_INPUT .
+.TP
+.B _PC_NAME_MAX
+vrací maximální délku jména souboru v adresáři
+.I path
+nebo
+.IR filedes ,
+který může proces vytvořit.
+Odpovídající makro je
+.BR _POSIX_MAX_ .
+.TP
+.B _PC_PATH_MAX
+vrací maximální délku relativní cesty, když
+.I path
+nebo
+.I filedes
+je současný pracovní adresář. Odpovídající makro je
+_POSIX_PATH_MAX.
+.TP
+.B _PC_PIPE_BUF
+vrací velikost bufferu roury, kde
+.I filedes
+musí ukazovat na rouru nebo FIFO (pojmenovaná roura) a
+.I path
+musí ukazovat na FIFO. Odpovídající makro je
+.BR _POSIX_PIPE_BUF .
+.TP
+.B _PC_CHOWN_RESTRICTED
+vrací nenulovou hodnotu, jestliže volání
+.BR chown (2)
+nemůže být použito na tento soubor. Jestliže
+.I filedes
+nebo
+.I path
+ukazují na adresář, tak to platí pro všechny soubory v tomto adresáři.
+Odpovídající makro je
+.BR _POSIX_CHOWN_RESTRICTED .
+.TP
+.B _PC_NO_TRUNC
+vrací nenulovou hodnotu, jestliže přístup k souborům, jejichž název je delší
+než
+.B _POSIX_NAME_MAX
+znamená chybu. Odpovídající makro je
+.BR _POSIX_NO_TRUNC .
+.TP
+.B _PC_VDISABLE
+vrací nenulovou hodnotu, je-li možno zakázat zpracování speciálních znaků,
+kde
+.I filedes
+nebo
+.I path
+musí ukazovat na terminál.
+.SH NÁVRATOVÁ HODNOTA
+Existuje-li příslušný limit, je vrácen. Neexistuje-li limit, je vrácena -1 a
+.I errno
+zůstane nezměněna. Je-li způsobena chyba, je vrácena -1 a 
+.I errno
+obsahuje její bližší popis.
+.SH SPLŇUJE STANDARDY
+POSIX.1
+Soubory jejichž název je delší než hodnota vrácená pro
+.I name
+rovno
+.B _PC_NAME_MAX
+mohou existovat v daném adresáři.
+.PP
+Některé vrácené hodnoty mohou být velké, nehodí se k alokování paměti.
+.SH DALŠÍ INFORMACE
+.BR getconf "(1), " statfs "(2), " open "(2), " sysconf (3)
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

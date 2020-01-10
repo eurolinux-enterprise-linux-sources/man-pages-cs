@@ -1,0 +1,68 @@
+.\" Copyright (c) 1994 Andries Brouwer (aeb@cwi.nl), Mon Oct 31 21:03:19 MET 1994
+.\"
+.\" This is free documentation; you can redistribute it and/or
+.\" modify it under the terms of the GNU General Public License as
+.\" published by the Free Software Foundation; either version 2 of
+.\" the License, or (at your option) any later version.
+.\"
+.\" Modified, Sun Feb 26 14:58:45 1995, faith@cs.unc.edu
+.\" "
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH CONSOLE 4 1994\-10\-31 Linux "Linux \- příručka programátora"
+.SH JMÉNO
+console \- konzola a virtuální konzoly
+.SH POPIS
+Linux může mít až 63 \fIvirtuálních konzol\fP (znakových speciálních
+souborů s hlavním číslem 4 a vedlejším 1 až 63), které se obvykle
+jmenují \fI/dev/tty\fP\fIn\fP kde 1 \(<= \fIn\fP \(<= 63.  Současná
+konzola je také adresována jako \fI/dev/console\fP nebo \fI/dev/tty0\fP s
+hlavním číslem 4 a vedlejším 0.  Speciální soubory /dev/* jsou
+obvykle vytvářeny skriptem MAKEDEV, nebo použitím příkazu
+\fBmknod\fP(1).  Obvykle mají přístupová práva 0622 a jejich vlastníkem
+je root.tty.
+.LP
+Ve verzích jádra před 1.1.54 byl počet virtuálních konzol přímo v
+jádře (v tty.h: #define NR_CONSOLES 8) a mohl být změněn editorem a
+poté rekompilací jádra. Od verze 1.1.54 jsou virtuální konzoly
+vytvářeny dynamicky v případě jejich potřeby.
+.LP
+Obvyklé způsoby spuštění procesu na konzole jsou: (a) řekneme programu
+\fBinit\fP(8)  (v \fBinittab\fP(5)), aby spustil \fBmingetty\fP(8)  (nebo
+\fBagetty\fP(8))  na konzole; (b) řekneme utilitě \fBopenvt\fP(1)\fB,\fP aby
+spustila proces na konzole; (c) spustíme X\-Window Systém \(em najde první
+nepoužitou konzolu a svůj výstup na ní zobrazí.  (Existuje také
+starobylý \fBdoshell\fP(8).)
+.LP
+Obvyklé způsoby přepínání kláves jsou: (a) klávesy Alt+F\fIn\fP nebo
+Ctrl+Alt+F\fIn\fP k přepnutí na konzolu \fIn\fP; AltGr+F\fIn\fP pro přepnutí na
+konzolu \fIn\fP+12 [Alt znamená levý Alt a AltGr pravý]; (b) klávesy
+Alt+šipka_doprava nebo Alt+šipka_doleva slouží k cyklickému
+přepínání mezi konzolami, které jsou alokovány. (c) použít program
+\fBchvt\fP(1).  (Mapování klávesnice je nastavitelné uživatelem, viz
+\fBloadkeys\fP(1); uvedené kombinace kláves jsou standardní.)
+.LP
+Příkaz \fBdeallocvt\fP(1)  (dříve \fBdisalloc\fP) uvolní paměť, kterou
+zabírají obrazovkové buffery konzol, které nemají žádný asociovaný
+proces.
+.SS Vlastnosti
+Virtuální konzoly se mohou nacházet v mnoha různých stavech.  Doufám,
+že se mi je podaří někdy zdokumentovat.  Nejpodstatnějším faktem je,
+že konzoly simulují terminály vt100.  Zejména např. reset konzole se
+provede vytištěním znaků ESC c.  Všechny escape sekvence se nacházejí
+v \fBconsole_codes\fP(4).
+.SH SOUBORY
+\fI/dev/console\fP
+.br
+\fI/dev/tty*\fP
+.SH "DALŠÍ INFORMACE"
+\fBchvt\fP(1), \fBdeallocvt\fP(1), \fBloadkeys\fP(1), \fBmknod\fP(1), \fBopenvt\fP(1),
+\fBconsole_codes\fP(4), \fBconsole_ioctl\fP(4), \fBtty\fP(4), \fBttyS\fP(4),
+\fBcharsets\fP(7), \fBagetty\fP(8), \fBinit\fP(8), \fBmapscrn\fP(8), \fBmingetty\fP(8),
+\fBresizecons\fP(8), \fBsetfont\fP(8)
+.SH TIRÁŽ
+Tato stránka je součástí projektu Linux \fIman\-pages\fP.  Popis projektu a
+informace o hlášení chyb najdete na http://www.kernel.org/doc/man\-pages/.

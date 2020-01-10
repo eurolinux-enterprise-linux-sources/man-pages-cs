@@ -1,0 +1,70 @@
+.\" Copyright 1995-2000 David Engel (david@ods.com)
+.\" Copyright 1995 Rickard E. Faith (faith@cs.unc.edu)
+.\" Copyright 2000 Ben Collins (bcollins@debian.org)
+.\"    Redone for GLibc 2.2
+.\" Copyright 2000 Jakub Jelinek (jakub@redhat.com)
+.\"    Corrected.
+.\" Most of this was copied from the README file.
+.\" Do not restrict distribution.
+.\" May be distributed under the GNU General Public License
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH LDD 1 2000\-10\-30 "" "Linux \- příručka programátora"
+.SH JMÉNO
+ldd \- vytiskne závislosti na sdílených knihovnách
+.SH POUŽITÍ
+\fBldd\fP [VOLBA]... SOUBOR...
+.SH POPIS
+\fBldd\fP tiskne sdílené knihovny vyžadované každým programem nebo
+sdílenou knihovnou určenými na příkazovém řádku.
+.SH VOLBY
+.TP 
+\fB\-\-version\fP
+Vypíše číslo verze programu \fBldd\fP.
+.TP 
+[přibližně] \fB\-v, \-\-verbose\fP
+Bude vypisovat všechny informace, včetně např.  symbol versioning
+information.
+.TP 
+\fB\-u\ \-\-unused\fP
+Vypíše nepoužité přímé závislosti.  (od glibc 2.3.4.)
+.TP 
+\fB\-d\ \-\-data\-relocs\fP
+Provede relokace a nahlásí všechny chybějící objekty (jen ELF).
+.TP 
+\fB\-r\ \-\-function\-relocs\fP
+Provede relokace datových objektů i funkcí a nahlásí všechny
+chybějící objekty nebo funkce (jen ELF).
+.TP 
+\fB\-\-help\fP
+Informace o použití programu.
+.SH POZNÁMKY
+Standardní verze programu \fBldd\fP je přiložena ke glibc2. Libc5 obsahovala
+starší verzi, která je stále ještě přítomna v některých
+systémech.  Dlouhé volby nejsou ve verzi z libc5 podporovány.  Na druhou
+stranu verze z glibc2 nepodporuje volbu \fB\-V\fP a má pouze její ekvivalent
+\fB\-\-version\fP.
+.LP
+Pokud jméno knihovny dané na příkazovém řádku obsahuje \(aq/\(aq,
+použije verze tohoto programu z libc5 jméno tak, jak je; v opačném
+případě ji bude hledat na standardních umístěních.  Pro použití na
+sdílené knihovně v aktuálním adresáři uvedte před jejím jménem
+"./".
+.SH CHYBY
+\fBldd\fP nefunguje na sdílených knihovnách a.out.
+.PP
+.\" .SH AUTHOR
+.\" David Engel.
+.\" Roland McGrath and Ulrich Drepper.
+\fBldd\fP nefunguje na některých zvláště starých programech a.out, které
+byly sestaveny předtím, než byla podpora \fBldd\fP přidána do
+kompilátorů.  Pokud na takový program použijete \fBldd\fP, pokusí se
+spustit s \fIargc\fP = 0 a výsledky budou nepředvídatelné.
+.SH "DALŠÍ INFORMACE"
+\fBld.so\fP(8), \fBldconfig\fP(8)
+.SH TIRÁŽ
+Tato stránka je součástí projektu Linux \fIman\-pages\fP.  Popis projektu a
+informace o hlášení chyb najdete na http://www.kernel.org/doc/man\-pages/.

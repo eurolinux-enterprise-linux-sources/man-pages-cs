@@ -1,0 +1,40 @@
+.\" -*- nroff -*-
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH PS2PS 1 "9. květen 2005" 8.16 "Ghostscript Tools"
+.\" $Id: ps2ps.1,v 1.4 2005/05/09 22:04:37 Arabidopsis Exp $
+.SH JMÉNO
+ps2ps, eps2eps \- Ghostscript PostScript "distiller"
+.SH POUŽITÍ
+\fBps2ps\fP [ \fIvolby\fP ] \fIvstup.ps výstup.ps\fP
+.br
+\fBeps2eps\fP [ \fIvolby\fP ] \fIvstup.eps výstup.eps\fP
+.SH POPIS
+\fBps2ps\fP používá \fIgs\fP(1) ke konverzi souboru formátu \fBPostScript\fP(tm)
+"vstup.ps" na jednodušší, normalizovaný a (obvykle) rychlejší
+PostScript soubor "výstup.ps".  Normálně je ve výstupu povoleno
+použití PostScript Level 2 nebo Level 3 konstrukcí, ale volba
+\fB\-dLanguageLevel=1\fP omezí výstup pouze na Level 1.
+.PP
+\fBeps2eps\fP provádí stejnou optimalizaci pro soubory typu Encapsulated
+PostScript (EPS).
+.PP
+Oba příkazy akceptují volby příkazové řádky programu Ghostscript a
+také volby specifické pro zařízení pswrite resp. epswrite.
+.SH SOUBORY
+Spuštěním "\fBgs \-h\fP" zjistíte umístění dokumentace balíku
+Ghostscript ve vašem systému, ze které se dozvíte více podrobností.
+.SH CHYBY
+Zařízení pswrite, používané programem \fBps2ps\fP i \fBeps2eps\fP vytváří
+výstupy na mnohem nižší úrovni než je potřeba. Používejte s
+rozvahou.
+.SH "DALŠÍ INFORMACE"
+ps2pdf(1), ps2ascii(1), ps2epsi(1)
+.SH VERZE
+Tento dokument byl naposledy revidován pro Ghostscript verze 8.16.
+.SH AUTOR
+artofcode LLC a Artifex Software jsou hlavními udržovateli balíku
+Ghostscript.  Chyby prosím hlaste na <bug\-gs@ghostscript.com>

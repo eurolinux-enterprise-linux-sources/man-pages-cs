@@ -1,0 +1,79 @@
+.\" -*- nroff -*-
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH PS2EPSI 1 "9. květen 2005" 8.16 "Ghostscript Tools"
+.\" $Id: ps2epsi.1,v 1.4 2005/05/09 22:04:37 Arabidopsis Exp $
+.SH JMÉNO
+ps2epsi \- generuje platný Encapsulated PostScript
+.SH POUŽITÍ
+\fBps2epsi\fP \fIvstup.ps\fP [ \fIvýstup.epsi\fP ] \fB(Unix)\fP
+.br
+\fBps2epsi\fP \fIvstup.ps\fP [ \fIvýstup.epi\fP ] \fB(DOS)\fP
+.SH POPIS
+\fBps2epsi\fP používá \fBgs\fP(1) ke zpracování souboru ve formátu
+\fBPostScript\fP(tm) a generuje jako výstup nový soubor, který odpovídá
+formátu Adobe's \fBEncapsulated PostScript Interchange\fP (EPSI).  EPSI je
+speciální formou zapouzdřeného PostScriptu (EPS), který přidá na
+začátek souboru (ve formě PostScript komentářů) bitmapovou verzi
+konečné podoby stránky.  Programy, které čtou EPSI (obvykle textové
+procesory nebo programy DTP) mohou použít tuto bitmapu pro generování
+náhledu na daný PostScript dokument.  Zobrazovaná kvalita náhledu často
+není příliš vysoká (např. malé rozlišení, žádné barvy), ale
+konečná tištěná verze používá skutečný PostScript a tedy
+normální PostScriptovou kvalitu.
+.SH POUŽITÍ
+V Unixových systémech vyvoláte \fBps2epsi\fP takto:
+.PP
+.br
+    \fBps2epsi\fP \fIvstup.ps\fP [ \fIvýstup.epsi\fP ]
+.PP
+kde "vstup.ps" je vstupní soubor a "výstup.epsi" je výsledný soubor ve
+formátu EPSI.  Pokud je jméno výstupního souboru vynecháno, vygeneruje
+se ze jména vstupního souboru. Je\-li použita standardní přípona
+(".ps", ".cps", ".eps" nebo ".epsf"), je nahrazena příponou ".epsi".  V
+systémech na bázi DOS příkaz vypadá takto:
+.PP
+.br
+    \fBps2epsi\fP \fIvstup.ps výstup.epi\fP
+.PP
+kde "vstup.ps" je původní soubor ve formátu PostScript a "výstup.epi" je
+jméno výstupního souboru.
+.SH OMEZENÍ
+Ne každý PostScriptový soubor může být takto zapouzdřen úspěšně,
+protože existují určitá omezení, jaké konstrukce PostScriptu se mohou
+vyskytnout v korektním EPSI souboru.  \fBps2epsi\fP dělá ještě nějakou
+práci navíc ve snaze napomoci zapouzdření a automaticky počítá
+velikost hraničního obdélníku, který je potřeba pro každý soubor
+obsahující zapouzdřený PostScript (EPSI), takže většinou vše funguje
+tak, jak má.  Přesto v určitých případech zapouzdření nefunguje,
+kvůli obsahu původního PostScriptového souboru.
+.SH KOMPATIBILITA
+\fBFramemaker\fP DTP systém je jednou z aplikací, která umí číst soubory
+typu EPSI a se kterými byl \fBps2epsi\fP testován na řadě diagramů ve
+formátu PostScript pocházejících z různých zdrojů.  Při testech byl
+použit Framemaker 3.0 na pracovní stanici Sun.  Framemaker na jiných
+platformách by měl být schopen použít stejné soubory, přestože jsem
+nebyl schopen to otestovat.
+.SH SOUBORY
+.TS
+tab(>);
+l l.
+ps2epsi            Unix shell script
+
+ps2epsi.bat        DOS batch file
+
+ps2epsi.ps         program pro Ghostscript, který provádí převod
+
+.TE
+.fi
+.SH "DALŠÍ INFORMACE"
+gs (1)
+.SH VERZE
+Tento dokument byl naposledy revidován pro Ghostscript verze 8.16.  Přesto
+její obsah může být zastaralý nebo nekonzistentní se souborem
+ps2epsi.txt.
+.SH AUTOR
+George Cameron

@@ -1,0 +1,173 @@
+List of people who contributed to pre 0.17 translations:
+Marek Kubita <Kubitovi@mbox.lantanet.cz>:
+	man?/sig*
+
+Petr Bláha <pet@penguin.vscht.cz>:
+	man5/passwd.5
+	man5/shadow.5
+
+Milan Kopačka <mkop5230@ss1000.ms.mff.cuni.cz>:
+	man1/lynx.1
+
+Jindřich Vavruška <netplus@comp.cz>:
+	man5/procmailrc.5
+
+Petr Kolář <Petr.Kolar@vslib.cz>:
+	man1/basename.1
+	man1/chgrp.1
+	man1/chmod.1
+	man1/chown.1
+	man1/chroot.1
+	man1/cp.1
+	man1/date.1
+	man1/dd.1
+	man1/df.1
+	man1/dircolors.1
+	man1/dirname.1
+	man1/du.1
+	man1/echo.1
+	man1/env.1
+	man1/expr.1
+	man1/false.1
+	man1/groups.1
+	man1/id.1
+	man1/install.1
+	man1/ln.1
+	man1/logname.1
+	man1/ls.1
+	man1/make-ssh-known-hosts.1
+	man1/make-ssh-known-hosts1.1
+	man1/man.1
+	man1/mkdir.1
+	man1/mkfifo.1
+	man1/mknod.1
+	man1/mn.1
+	man1/nice.1
+	man1/nohup.1
+	man1/patchk.1
+	man1/printenv.1
+	man1/printf.1
+	man1/pwd.1
+	man1/rm.1
+	man1/rmdir.1
+	man1/sleep.1
+	man1/scp.1
+	man1/scp1.1
+        man1/slogin.1
+        man1/slogin1.1
+	man1/ssh.1
+	man1/ssh1.1
+	man1/sshd.8
+	man1/sshd1.8
+	man1/ssh-add.1
+	man1/ssh-add1.1
+	man1/ssh-agent.1
+	man1/ssh-agent1.1
+	man1/ssh-keygen.1
+	man1/ssh-keygen1.1
+	man1/stty.1
+	man1/su.1
+	man1/tee.1
+	man1/test.1
+	man1/touch.1
+	man1/true.1
+	man1/tty.1
+	man1/uname.1
+	man1/users.1
+	man1/w.1
+	man1/who.1
+	man1/whoami.1
+	man1/yes.1
+
+Luděk Brukner <Ludek.Brukner@barco.com>:
+	man7/mailaddr.7
+	man5/charmap.5
+	man5/exports.5
+	man5/fs.5
+	man5/fstab.5
+
+Zdeněk Pytela <letty@mrakoplas.phil.muni.cz>:
+	korekce v man1/lynx.1
+	korekce v man1/ssh-keygen.1
+
+Jiří Pavlovský <pavlovsk@ff.cuni.cz>:
+	korekce v man4/null.4
+	korekce v man4/mouse.4
+	korekce v man4/logname.4
+	korekce v man7/bootparam.7
+	korekce v man7/unicode.7
+
+Jirka Santolik <jiri.santolik@st.ms.mff.cuni.cz>:
+	man2/access.2
+	man1/ar.1
+
+Michal Ambrož <Michal.Ambroz@post.cz>, Jun 27 2000:
+	man1/dvipdf.1
+	man1/eps2eps.1
+	man1/font2c.1
+	man1/ghostscript.1
+	man1/gs.1
+	man1/gsbj.1
+	man1/gsdj.1
+	man1/gsdj500.1
+	man1/gslj.1
+	man1/gslp.1
+	man1/gsnd.1
+	man1/pdf2dsc.1
+	man1/pdf2ps.1
+	man1/pf2afm.1
+	man1/pfbtopfa.1
+	man1/printafm.1
+	man1/ps2ascii.1
+	man1/ps2epsi.1
+	man1/ps2pdf.1
+	man1/ps2pdf12.1
+	man1/ps2pdf13.1
+	man1/ps2pdfwr.1
+	man1/ps2ps.1
+	man1/wftopfa.1
+
+Ondřej Kavka (ondrej.kavka@pslib.cz), září 2001:
+        man8/atd.8
+        man8/atrun.8
+        man8/at.1
+
+Karel Dušek (kargee.dusek@seznam.cz), září 2001:
+        man1/bzip2.1
+
+Petr Kusko (petr.kusko@pslib.cz), září 2001:
+        man1/cdp.1
+
+Václav Doubek (vaclav.doubek@pslib.cz), září 2001:
+        man1/finger.1
+
+Tomáš Andrle (tomas.andrle@pslib.cz), září 2001:
+        man1/grep.1
+
+Ondřej Pavlíček (mox@post.cz), září 2001:
+        man8/lastlog.8
+
+Ondřej Zvolský (ondrej.zvolsky@pslib.cz),
+Milan Keršláger (kerslage@linux.cz), září 2001:
+        man1/saned.1
+
+Václav Doubek (vaclav.doubek@pslib.cz), září 2001:
+        man2/socketcall.2
+
+Martin Wollmann (martin.wollmann@pslib.cz), září 2001:
+        man1/talk.1
+
+Ondřej Pavlíček (mox@post.cz), září 2001:
+        man1/write.1
+
+Martin Dostál (martin.dostal@pslib.cz), září 2001:
+        man8/traceroute.8
+
+Jan Jasanský (jan.jasansky@pslib.cz), září 2001:
+        man8/ipchains.8
+
+Tomáš Řezáč <tomas.rezac@pslib.cz>, Milan Keršláger <kerslage@linux.cz>, září 2001:
+        man1/top.1  (ještě by chtělo začistit)
+
+Martin Kačena (martin.kacena@pslib.cz)
+        man1/wget.1

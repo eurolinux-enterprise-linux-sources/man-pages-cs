@@ -1,0 +1,42 @@
+.\"             -*-Nroff-*-
+.\"  This page Copyright (C) 1993 Matt Welsh, mdw@tc.cornell.edu.
+.\"  Freely distributable under the terms of the GPL
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH TLOAD 1 "20.březen 1993 " "Cohesive Systems" "Linux \- Příručka uživatele"
+.SH JMÉNO
+tload \- grafické znázornění vytížení systému
+.SH POUŽITÍ
+\fBtload\fP [\fB\-V\fP] [\fB\-s\fP \fIměřítko\fP] [ \fB\-d\fP\fI interval\fP ] [\fIkonzole\fP]
+.SH POPIS
+\fBtload\fP tiskne graf aktuálního vytížení systému na danou \fIkonzoli\fP
+(nebo, v případě že není zadána, na konzoli v níž je spuštěn
+tload).
+.SS VOLBY
+Volba \fB\-s\fP\fI měřítko\fP umožňuje specifikovat vertikální měřítko
+pro zobrazení; menší hodnota znamená hrubší měřítko, větší
+jemnější.
+
+Volba \fB\-d\fP\fI interval\fP Nastavuje čas (v sekundách), za který se obnovuje
+graf.
+.PP
+.SH SOUBORY
+\fI/proc/loadavg\fP informace o průměrném vytížení systému
+
+.SH "DALŠÍ INFORMACE"
+\fBps\fP(1), \fBtop\fP(1), \fBuptime\fP(1), \fBw\fP(1)
+
+.SH CHYBY
+Parametr \fB\-d\fP \fIinterval\fP nastavuje čas pro \fBalarm\fP(2); pokud je
+nastaveno \-d 0, alarm je nastaven na 0, což nikdy nevyšle \fBSIGALRM\fP a
+tedy neobnoví graf.
+
+.SH AUTOŘI
+Branko Lankester, David Engel <david@ods.com>, a Michael K. Johnson
+<johnsonm@redhat.com>.
+
+Chyby týkající se programu prosím zasílejte na
+<albert@users.sf.net>

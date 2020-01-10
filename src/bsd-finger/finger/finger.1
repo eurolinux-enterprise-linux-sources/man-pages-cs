@@ -1,0 +1,205 @@
+.\" Copyright (c) 1989, 1990 The Regents of the University of California.
+.\" All rights reserved.
+.\"
+.\" Redistribution and use in source and binary forms, with or without
+.\" modification, are permitted provided that the following conditions
+.\" are met:
+.\" 1. Redistributions of source code must retain the above copyright
+.\"    notice, this list of conditions and the following disclaimer.
+.\" 2. Redistributions in binary form must reproduce the above copyright
+.\"    notice, this list of conditions and the following disclaimer in the
+.\"    documentation and/or other materials provided with the distribution.
+.\" 3. All advertising materials mentioning features or use of this software
+.\"    must display the following acknowledgement:
+.\"	This product includes software developed by the University of
+.\"	California, Berkeley and its contributors.
+.\" 4. Neither the name of the University nor the names of its contributors
+.\"    may be used to endorse or promote products derived from this software
+.\"    without specific prior written permission.
+.\"
+.\" THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+.\" ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+.\" IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+.\" ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+.\" FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+.\" DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+.\" OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+.\" HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+.\" LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+.\" OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+.\" SUCH DAMAGE.
+.\"
+.\"	from: @(#)finger.1	6.14 (Berkeley) 7/27/91
+.\"	$Id: finger.1,v 1.18 2000/07/30 23:56:57 dholland Exp $
+.\"
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.Dd 15.srpen 1999
+.Dt FINGER 1
+.Os "Linux NetKit (0.17)"
+.Sh JMÉNO
+.Nm finger
+.Nd program vyhledávající informace o uživateli
+.Sh POUŽITÍ
+.Nm finger
+.Op Fl lmsp
+.Op Ar user ...
+.Op Ar user@host ...
+.Sh POPIS
+.Nm finger
+zobrazuje informace o uživatelích systému.
+.Pp
+Jeho volby jsou:
+.Bl -tag -width flag
+.It Fl s
+.Nm Finger
+zobrazuje o uživateli přihlašovací jméno, skutečné
+jméno, jméno terminálu a stav záznamu (``*'' za jménem terminálu když
+je zakázán zápis), čas zahálení (idle time), čas přihlášení,
+umístění a telefonní číslo kanceláře.
+.Pp
+Jestliže je uživatel připojen méně než 6 měsíců, je čas
+přihlášení zobrazen jako měsíce, dny, hodiny a minuty, v opačném
+případě je zobrazen rok a chybí hodiny a minuty.
+.Pp
+Neznámá zařízení stejně jako neexistující čas zahálení nebo čas
+přihlášení jsou zobrazeny jako hvězdička.
+.Pp
+.It Fl l
+Výstup má mnohořádkový formát a obsahuje všechny informace popsané
+pro volbu
+.Fl s
+spolu s domovským adresářem uživatele, soukromé
+telefonní číslo, přihlašovací shell, stav pošty a obsahy souborů
+.Dq Pa .plan ,
+.Dq Pa .project ,
+.Dq Pa .pgpkey
+a
+.Dq Pa .forward
+z domovského adresáře uživatele.
+.Pp
+Jedenáctimístná telefonní čísla jsou vypisována jako
+``+N-NNN-NNN-NNNN''.  Čísla určená deseti nebo sedmi číslicemi jsou
+vypisována jako příslušná část tohoto řetězce.  Čísla určená
+pěti číslicemi jsou vypisována jako ``xN-NNNN''.  Čísla určená
+čtyřmi číslicemi jsou vypisována jako ``xNNNN''.
+.Pp
+Jestliže je zakázán zápis na zařízení, hláška ``(messages off)'' je
+připojena k řádce obsahující jméno tohoto zařízení.  Při použití
+volby
+.Fl l
+je zobrazen jeden záznam na uživatele; jestliže je
+uživatel přihlášen vícekrát, informace o terminálu se pro každé
+přihlášení opakuje.
+.Pp
+Stav pošty je zobrazován jako ``No Mail.'', jestliže není žádná
+pošta, ``Mail last read DDD MMM ## HH:MM YYYY (TZ)'', jestliže se
+uživatel díval do schránky s poštou a novou poštu si přečetl a nebo
+``New mail received ...'', `` Unread since ...'', jestliže přišla nová
+zpráva.
+.Pp
+.It Fl p
+Zabraňuje volbě
+.Fl l
+ve
+.Nm fingeru
+v zobrazování obsahu souborů
+.Dq Pa .plan ,
+.Dq Pa .project
+a
+.Dq Pa .pgpkey .
+.It Fl m
+Zabránit setřídění
+.Ar uživatelských
+jmen.
+.Ar Uživatel
+je
+obyčejně přihlašovací jméno, avšak třídění je prováděno s
+reálnými jmény uživatelů, pokud nepoužijete volbu
+.Fl m .
+Při
+srovnávání jmen prováděném ve
+.Nm fingeru
+je brán ohled na velká
+a malá písmena.
+.El
+.Pp
+Jestliže nejsou specifikovány žádné volby, ale jsou zadány parametry
+.Nm finger
+standardně zobrazí výstup jako s volbou
+.Fl l ,
+jsou-li
+zadány parametry, pak jako s volbou
+.Fl s .
+Všimněte si že určité
+části mohou být vynechány, jestliže informace není dostupná.
+.Pp
+Jestliže nejsou specifikovány žádné argumenty,
+.Nm finger
+bude
+vypíše každého uživatele právě přihlášeného do systému.
+.Pp
+.Nm Finger
+se používá pro vyhledávání uživatelů připojených na
+vzdáleném systému.  Pro určení
+.Ar uživatele
+používá formát
+.Dq Li user@host ,
+nebo
+.Dq Li @host ,
+kde standardní výstupní
+formát je v prvním případě styl
+.Fl l
+a ve druhém potom styl
+.Fl s .
+Pro vzdálený systém může být použita pouze volba
+.Fl l .
+.Pp
+Pokud je standardní výstup socket,
+.Nm finger
+bude vysílat znak
+návratu vozíku (CR, resp. ^M) před každým znakem přechodu na nový
+řádek (LF, resp. ^J). To platí pro zpracování požadavků vzdáleného
+fingera programem
+.Xr fingerd 8 .
+.Sh SOUBORY
+.Bl -tag -width mmmmmmmmmmmmmmm
+.It Pa ~/.nofinger
+Jestliže finger najde tento soubor v domovském adresáři uživatele, bude
+fingeru, který pochází mimo tento počítač, zapírat existenci tohoto
+uživatele.  Aby to fungovalo, musí být démon
+.Xr fingerd 8
+schopný
+číst soubor
+.Pa .nofinger .
+To většinou znamená, že domovský
+adresář obsahující tento soubor musí mít nastaven bit
+other-users-execute (o+x). Viz příkaz
+.Xr chmod 1 .
+Pokud chcete tuto
+vlastnost používat pro zajištění většího soukromí, otestujte ji pro
+jistotu nejprve pomocí příkazu ``finger @localhost'' před tím, než se
+na ni spolehnete.
+.It ~/.plan
+.It ~/.project
+.It ~/.pgpkey
+Tyto soubory jsou vypsány při použití dlouhého formátu. Soubor
+.Pa .project
+je limitován na jednu řádku (pozn.překl: to zřejmě není
+pravda); soubor
+.Pa .plan
+může být jakkoliv dlouhý.
+.El
+.Sh DALŠÍ INFORMACE
+.Xr chfn 1 ,
+.Xr passwd 1 ,
+.Xr w 1 ,
+.Xr who 1
+.Sh HISTORIE
+Příkaz
+.Nm finger
+se objevil ve verzi
+.Bx 3.0 .

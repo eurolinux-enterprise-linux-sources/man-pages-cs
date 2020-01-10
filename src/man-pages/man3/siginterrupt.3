@@ -1,0 +1,40 @@
+.TH SIGINTERRUPT 3  "26. února 1997" "" "Linux - příručka Programátora"
+.do hla cs
+.do hpf hyphen.cs
+.SH JMÉNO
+siginterrupt \- dovoluje signálům přerušovat systémová volání
+.SH SYNTAXE
+.nf
+.B #include <signal.h>
+.sp
+.BI "int siginterrupt(int " sig ", int " flag );
+.fi
+.SH POPIS
+Funkce \fBsiginterrupt()\fP určuje, co se stane, je\-li vstupně/výstupní 
+systémové volání přerušeno signálem \fIsig\fP.  Je\-li parametr \fIflag\fP 
+nulový,  budou systémová volání při příchodu signálu \fIsig\fP restartována.
+Toto je v Linuxu standardní chování. Pokud je však funkcí \fBsignal\fP(2)
+specifikována nová obslužná funkce signálu, je systémové volání
+signálem přerušeno.
+.PP
+
+Je\-li parametr \fIflags\fP roven jedné a nebyla\-li dosud přenesena žádná
+data, pak systémové volání přerušené signálem \fIsig\fP vrátí \-1 a globální
+proměnná \fIerrno\fP bude nastavena na \fBEINTR\fP.
+.PP
+Je\-li parametr \fIflags\fP roven jedné a systémové volání je přerušeno
+ve stavu, kdy už byl zahájen přenos dat, bude systémové volání přerušeno
+a vrátí objem dosud přenesených dat.
+.SH "NÁVRATOVÁ HODNOTA"
+Funkce \fBsiginterrupt()\fP vrací při úspěchu nulu. Je\-li zadán neplatný
+signál \fIsig\fP, vrací \-1.
+.SH "CHYBOVÉ HODNOTY"
+.TP
+.B EINVAL
+Zadané číslo signálu je neplatné.
+.SH "SPLŇUJE STANDARDY"
+BSD 4.3
+.SH "DALŠÍ INFORMACE"
+.BR signal (2)
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

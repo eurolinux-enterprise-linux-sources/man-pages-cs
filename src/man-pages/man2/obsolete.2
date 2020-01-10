@@ -1,0 +1,24 @@
+.TH OBSOLETE 2 "5.ledna 1997" "Linux 1.3.6" "Linux - příručka programátora"
+.do hla cs
+.do hpf hyphen.cs
+.SH JMÉNO
+oldfstat, oldlstat, oldstat, oldolduname, olduname \- zastaralá volání jádra
+.SH SYNTAXE
+Zastaralá volání jádra.
+.SH POPIS
+Linux 1.3.6 implementuje tato volání pouze z důvodů podpory starých
+spustitelných programů. Tato volání vrací struktury, které se změnily od
+jejich první implementace, ale staré programy musí dostávat staré, menší
+struktury.
+.PP
+Novější programy by měly být linkovány s novými knihovnami a tato volání by
+neměly používat.
+.SH DALŠÍ INFORMACE
+.BR fstat "(2), "
+.BR lstat "(2), "
+.BR stat "(2), "
+.BR uname "(2), "
+.BR undocumented "(2), "
+.BR unimplemented "(2)"
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

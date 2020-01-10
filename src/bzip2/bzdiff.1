@@ -1,0 +1,30 @@
+
+
+.\"Shamelessly copied from zmore.1 by Philippe Troin <phil@fifi.org>
+.\"for Debian GNU/Linux
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH BZDIFF 1   
+.SH JMÉNO
+bzcmp, bzdiff \- porovnávají dva soubory zkomprimované pomocí bzip2
+.SH POUŽITÍ
+\fBbzcmp\fP [ volby_cmp ] soubor1 [ soubor2 ]
+.br
+\fBbzdiff\fP [ volby_diff ] soubor1 [ soubor2 ]
+.SH POPIS
+\fIBzcmp\fP a \fIbzdiff\fP jsou používány k volání programu \fIcmp\fP nebo
+\fIdiff\fP na souborech skomprimovaných pomocí bzip2.  Všechny volby
+specifikované při volání bzdiff a bzcmp jsou přeposlány přímo
+programu \fIcmp\fP nebo \fIdiff\fP.  Pokud je specifikován pouze jeden
+porovnávaný soubor, jsou porovnány soubory \fIsoubor1\fP a dekomprimovaný
+\fIsoubor1\fP.bz2.  Pokud jsou specifikovány dva porovnávané soubory, jsou
+dle potřeby dekomprimovány a poslány programu \fIcmp\fP či \fIdiff\fP.
+Návratová hodnota programu \fIcmp\fP či \fIdiff\fP je zachována.
+.SH "DALŠÍ INFORMACE"
+cmp(1), diff(1), bzmore(1), bzless(1), bzgrep(1), bzip2(1)
+.SH CHYBY
+Zprávy od \fIcmp\fP či \fIdiff\fP se dovolávají na dočasně dekomprimované
+soubory místo původních archivů.

@@ -1,0 +1,46 @@
+.TH SHUTDOWN 2 "4. dubna 1997" "BSD Man Page" "Linux - příručka programátora"
+.do hla cs
+.do hpf hyphen.cs
+.SH JMÉNO
+shutdown \- ukonči část plně duplexního spojení
+.SH SYNTAXE
+.B #include <sys/socket.h>
+.sp
+.BI "int shutdown(int " s ", int " how );
+.SH POPIS
+The
+.I shutdown
+může ukončit část nebo celé spojení soketu
+.I s .
+Je-li 
+.I how
+0, další data nebudou přijímána. Je-li
+.I how
+1, další data nebudou posílána. Je-li
+.I how
+2, nebudou přijímána ani vysílána žádná data.
+.SH NÁVRATOVÁ HODNOTA
+Je-li volání úspěšné, vrací se 0, jinak \-1 a je nastavena proměnná
+.I errno
+
+.SH CHYBY
+.TP 0.8i
+.TP
+.B EBADF
+.I s
+není platným deskriptorem.
+.TP
+.B ENOTSOCK
+.I s
+je soubor, ne soket.
+.TP
+.B ENOTCONN
+Specifikovaný soket není spojen.
+.SH SPLŇUJE STANDARDY
+4.4BSD (volání
+.B shutdown
+se poprvé objevilo v 4.2BSD).
+.SH DALŠÍ INFORMACE
+.BR connect "(2), " socket (2)
+.SH VAROVÁNÍ
+Překlad je pravděpodobně zastaralý. Pokud chcete pomoci s jeho aktualizací, zamiřte na http://man-pages-cs-wiki.homelinux.net/

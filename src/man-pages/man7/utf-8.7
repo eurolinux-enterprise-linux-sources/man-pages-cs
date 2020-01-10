@@ -1,0 +1,196 @@
+.\" Hey Emacs! This file is -*- nroff -*- source.
+.\"
+.\" Copyright (C) Markus Kuhn, 1996, 2001
+.\"
+.\" This is free documentation; you can redistribute it and/or
+.\" modify it under the terms of the GNU General Public License as
+.\" published by the Free Software Foundation; either version 2 of
+.\" the License, or (at your option) any later version.
+.\"
+.\" The GNU General Public License's references to "object code"
+.\" and "executables" are to be interpreted as the output of any
+.\" document formatting or typesetting system, including
+.\" intermediate and printed output.
+.\"
+.\" This manual is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public
+.\" License along with this manual; if not, write to the Free
+.\" Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111,
+.\" USA.
+.\"
+.\" 1995-11-26  Markus Kuhn <mskuhn@cip.informatik.uni-erlangen.de>
+.\"      First version written
+.\" 2001-05-11  Markus Kuhn <mgk25@cl.cam.ac.uk>
+.\"      Update
+.\"
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH UTF\-8 7 2001\-05\-11 GNU "Linux \- příručka programátora"
+.SH JMÉNO
+UTF\-8 \- vícebytové Unicode kódování, kompatibilní s ASCII
+.SH POPIS
+Znaková sada \fBUnicode 3.0\fP je 16 bitová. Nejběžnější kódování
+(známé jako \fBUCS\-2\fP)  je sekvencí 16\-bitových slov. Řetězce z
+takovýchto slov obsahují mnoho 8\-bitových znaků jako je \(aq\e0\(aq nebo
+\(aq/\(aq, které mají speciální význam ve jménech souborů i v
+argumentech funkcí jazyka C. Navíc, naprostá většina UNIXových
+nástrojů očekává ASCII soubory a nemohou číst 16\-bitové znaky bez
+významných změn kódu. Z těchto důvodů není \fBUCS\-2\fP vhodným
+kódováním \fBUnicode\fP ve jménech souborů, v textových souborech,
+proměnných prostředí atd.  \fBISO 10646 Universal Character Set (UCS)\fP je
+nadmnožinou Unicode, zabírá 31\-bitový prostor, jehož kódování
+\fBUCS\-4\fP (sekvence 32\-bitových slov) má tytéž problémy.
+
+Kódování \fBUTF\-8\fP pro \fBUnicode\fP a \fBUCS\fP tyto problémy nemá, a proto
+je obvyklou cestou pro využívání \fBUnicode\fP v Unixových (a podobných)
+operačních systémech.
+.SS Vlastnosti
+Kódování \fBUTF\-8\fP má několik pěkných vlastností:
+.TP  0.2i
+*
+znaky \fBUCS\fP 0x00000000 \- 0x0000007f (klasické znaky \fBUS\-ASCII ) \fP jsou
+kódovány jako byty 0x00 až 0x7f (kompatibilní s ASCII). To znamená, že
+soubory a řetězce obsahující pouze 7\-bitové ASCII jsou kódovány
+stejně v \fBASCII\fP i v \fBUTF\-8\fP.
+.TP 
+*
+Všechny znaky \fBUCS\fP větší než 0x7f jsou kódovány jako sekvence bytů
+v rozmezí od 0x80 do 0xfd, takže se zde neobjeví žádný znak ASCII ani
+nevznikají problémy se znaky jako \(aq\e0\(aq nebo \(aq/\(aq.
+.TP 
+*
+Lexikografické uspořádání znaků z \fBUCS\-4\fP se zachovává.
+.TP 
+*
+Libovolnou z 2^31 kombinací UCS lze zakódovat pomocí \fBUTF\-8\fP.
+.TP 
+*
+Kódy 0xfe a 0xff nejsou použity v kódování \fBUTF\-8\fP.
+.TP 
+*
+První byte vícebytové sekvence reprezentující jeden ne\-ASCII znak
+\fBUCS\fP je vždy v intervalu 0xc0 až 0xfd a indikuje, jak dlouhá je
+sekvence bytů.  Všechny následující byty jsou v rozmezí 0x80 až
+0xbf. Toto umožňuje jednoduchou resynchronizaci při výpadku bytu(ů),
+protože se jedná o bezstavové kódování.
+.TP 
+*
+\fBUTF\-8\fP kóduje znaky \fBUCS\fP až do šestibytových sekvencí, nicméně
+standard \fBUnicode\fP nespecifikuje znaky nad 0x10ffff, takže Unicode znaky
+mohou být v \fBUTF\-8\fP dlouhé nejvýše čtyři byty.
+.SS Kódování
+Následující sekvence jsou použity pro reprezentování znaků. Typ
+použité sekvence závisí na kódu UCS daného znaku:
+.TP  0.4i
+0x00000000 \- 0x0000007F:
+0\fIxxxxxxx\fP
+.TP 
+0x00000080 \- 0x000007FF:
+110\fIxxxxx\fP 10\fIxxxxxx\fP
+.TP 
+0x00000800 \- 0x0000FFFF:
+1110\fIxxxx\fP 10\fIxxxxxx\fP 10\fIxxxxxx\fP
+.TP 
+0x00010000 \- 0x001FFFFF:
+11110\fIxxx\fP 10\fIxxxxxx\fP 10\fIxxxxxx\fP 10\fIxxxxxx\fP
+.TP 
+0x00200000 \- 0x03FFFFFF:
+111110\fIxx\fP 10\fIxxxxxx\fP 10\fIxxxxxx\fP 10\fIxxxxxx\fP 10\fIxxxxxx\fP
+.TP 
+0x04000000 \- 0x7FFFFFFF:
+1111110\fIx\fP 10\fIxxxxxx\fP 10\fIxxxxxx\fP 10\fIxxxxxx\fP 10\fIxxxxxx\fP 10\fIxxxxxx\fP
+.PP
+The \fIxxx\fP pozice jsou zaplněny bity z kódu znaku v binární
+reprezentaci. Vždy je použita nejkratší možná sekvence pro daný znak.
+.PP
+Hodnoty kódu \fBUCS\fP 0xd800\(en0xdfff (zástupci UTF\-16), stejně jako
+0xfffe a 0xffff (neznaky UCS)  byse v platných \fBUTF\-8\fP proudech neměly
+objevit.
+.SS PŘÍKLAD
+Znak
+\fBUnicode\fP
+ 0xa9 = 1010 1001 (copyright) je kódován v UTF\-8 jako:
+.PP
+.RS
+11000010 10101001 = 0xc2 0xa9
+.RE
+.PP
+a znak 0x2260 = 0010 0010 0110 0000 (není rovno) je kódován jako:
+.PP
+.RS
+11100010 10001001 10100000 = 0xe2 0x89 0xa0
+.RE
+.SS "Praktické poznámky"
+Uživatelé musejí vybrat \fBUTF\-8\fP locale, např. pomocí
+.PP
+.RS
+export LANG=en_GB.UTF\-8
+.RE
+.PP
+aby aktivovali podporu \fBUTF\-8\fP v aplikacích.
+.PP
+Application software that has to be aware of the used character encoding
+should always set the locale with for example
+.PP
+.RS
+setlocale(LC_CTYPE, "")
+.RE
+.PP
+and programmers can then test the expression
+.PP
+.RS
+strcmp(nl_langinfo(CODESET), "UTF\-8") == 0
+.RE
+.PP
+to determine whether a \fBUTF\-8\fP locale has been selected and whether
+therefore all plaintext standard input and output, terminal communication,
+plaintext file content, filenames and environment variables are encoded in
+\fBUTF\-8\fP.
+.PP
+Programmers accustomed to single\-byte encodings such as \fBUS\-ASCII\fP or \fBISO
+8859\fP have to be aware that two assumptions made so far are no longer valid
+in \fBUTF\-8\fP locales.  Firstly, a single byte does not necessarily correspond
+any more to a single character.  Secondly, since modern terminal emulators
+in \fBUTF\-8\fP mode also support Chinese, Japanese, and Korean \fBdouble\-width
+characters\fP as well as non\-spacing \fBcombining characters\fP, outputting a
+single character does not necessarily advance the cursor by one position as
+it did in \fBASCII\fP.  Library functions such as \fBmbsrtowcs\fP(3)  and
+\fBwcswidth\fP(3)  should be used today to count characters and cursor
+positions.
+.PP
+The official ESC sequence to switch from an \fBISO 2022\fP encoding scheme (as
+used for instance by VT100 terminals) to \fBUTF\-8\fP is ESC % G ("\ex1b%G").
+The corresponding return sequence from \fBUTF\-8\fP to ISO 2022 is ESC % @
+("\ex1b%@").  Other ISO 2022 sequences (such as for switching the G0 and G1
+sets) are not applicable in UTF\-8 mode.
+.PP
+It can be hoped that in the foreseeable future, \fBUTF\-8\fP will replace
+\fBASCII\fP and \fBISO 8859\fP at all levels as the common character encoding on
+POSIX systems, leading to a significantly richer environment for handling
+plain text.
+.SS Security
+The \fBUnicode\fP and \fBUCS\fP standards require that producers of \fBUTF\-8\fP shall
+use the shortest form possible, for example, producing a two\-byte sequence
+with first byte 0xc0 is non\-conforming.  \fBUnicode 3.1\fP has added the
+requirement that conforming programs must not accept non\-shortest forms in
+their input.  This is for security reasons: if user input is checked for
+possible security violations, a program might check only for the \fBASCII\fP
+version of "/../" or ";" or NUL and overlook that there are many
+non\-\fBASCII\fP ways to represent these things in a non\-shortest \fBUTF\-8\fP
+encoding.
+.SS STANDARDY
+.\" .SH AUTHOR
+.\" Markus Kuhn <mgk25@cl.cam.ac.uk>
+ISO/IEC 10646\-1:2000, Unicode 3.1, RFC\ 2279, Plan 9.
+.SH "DALŠÍ INFORMACE"
+\fBnl_langinfo\fP(3), \fBsetlocale\fP(3), \fBcharsets\fP(7), \fBunicode\fP(7)
+.SH TIRÁŽ
+Tato stránka je součástí projektu Linux \fIman\-pages\fP.  Popis projektu a
+informace o hlášení chyb najdete na http://www.kernel.org/doc/man\-pages/.
